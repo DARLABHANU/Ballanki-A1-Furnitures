@@ -105,7 +105,7 @@ export default function HomePage() {
         {/* ==============================================================================
             BRIGHT WOODEN HERO CAROUSEL SECTION 
         ============================================================================== */}
-        <section className="relative w-full h-[85vh] min-h-[600px] flex items-center justify-center bg-wood-100 overflow-hidden">
+        <section className="relative w-full h-[65vh] md:h-[85vh] min-h-[480px] md:min-h-[600px] flex items-center justify-center bg-wood-100 overflow-hidden">
 
           {/* Images */}
           {heroSlides.map((slide, index) => (

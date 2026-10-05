@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, LayoutGrid, Heart, ShoppingBag, ShieldCheck } from "lucide-react";
+import { Home, LayoutGrid, Heart, ShoppingBag, User } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useAuthStore } from "@/store/authStore";
@@ -13,19 +13,19 @@ const HIDDEN_PREFIXES = ["/admin", "/promoter", "/support"];
 
 const navItems = [
   {
-    label: "Showroom",
+    label: "Home",
     href: "/",
     icon: Home,
     match: (path: string) => path === "/",
   },
   {
-    label: "Collection",
+    label: "Categories",
     href: "/customer/products",
     icon: LayoutGrid,
     match: (path: string) => path.startsWith("/customer/products"),
   },
   {
-    label: "Favorites",
+    label: "Wishlist",
     href: "/customer/wishlist",
     icon: Heart,
     match: (path: string) => path.startsWith("/customer/wishlist"),
@@ -39,10 +39,14 @@ const navItems = [
     badge: "cart",
   },
   {
-    label: "Admin Panel",
-    href: "/admin/dashboard", // Direct to admin panel since auth is bypassed in this demo
-    icon: ShieldCheck,
-    match: (path: string) => path.startsWith("/admin"),
+    label: "Profile",
+    href: "/customer/profile",
+    icon: User,
+    match: (path: string) =>
+      path.startsWith("/customer/profile") ||
+      path.startsWith("/customer/orders") ||
+      path.startsWith("/customer/dashboard") ||
+      path.startsWith("/auth/"),
   },
 ];
 
@@ -90,7 +94,7 @@ export default function BottomNav() {
               {isActive && (
                 <span
                   className="absolute top-0 left-1/2 -translate-x-1/2 rounded-b-full transition-all duration-300"
-                  style={{ width: 28, height: 3, background: "#44220A" }}
+                  style={{ width: 28, height: 3, background: "#bd740f" }}
                 />
               )}
 
@@ -99,7 +103,7 @@ export default function BottomNav() {
                 <Icon
                   size={22}
                   strokeWidth={isActive ? 2.2 : 1.8}
-                  style={{ color: isActive ? "#44220A" : "#C08C50" }}
+                  style={{ color: isActive ? "#bd740f" : "#D99443" }}
                   className="transition-colors duration-200"
                 />
                 {badge > 0 && (
@@ -111,7 +115,7 @@ export default function BottomNav() {
                       minWidth: 17,
                       height: 17,
                       fontSize: 9.5,
-                      background: "#44220A",
+                      background: "#bd740f",
                       paddingInline: 3,
                     }}
                   >
@@ -126,7 +130,7 @@ export default function BottomNav() {
                   marginTop: 4,
                   fontSize: 10,
                   fontWeight: isActive ? 700 : 500,
-                  color: isActive ? "#44220A" : "#A66D35",
+                  color: isActive ? "#bd740f" : "#bd740f",
                   lineHeight: 1,
                   fontFamily: "var(--font-outfit, sans-serif)",
                 }}

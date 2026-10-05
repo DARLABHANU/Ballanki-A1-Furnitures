@@ -13,6 +13,20 @@ export const api = axios.create({
   timeout: 45000,
 });
 
+// ── Demo-mode guard: silently swallow network errors (no backend running) ──────
+// This prevents raw AxiosError "Network Error" spam in the console when the
+// app is running as a frontend-only demo without a live backend.
+api.interceptors.response.use(
+  (res) => res,
+  (error: AxiosError) => {
+    if (!error.response) {
+      // Network Error or timeout — backend is offline in demo mode, ignore silently
+      return Promise.resolve({ data: null, status: 0, headers: {}, config: error.config, statusText: "" });
+    }
+    return Promise.reject(error);
+  }
+);
+
 // ── Request interceptor: attach token ─────────────────────────────────────────
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = Cookies.get("access_token");

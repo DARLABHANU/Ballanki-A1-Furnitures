@@ -10,16 +10,17 @@ const config: Config = {
     extend: {
       colors: {
         wood: {
-          50: "#FAF6F0",   // Warm Cream
-          100: "#F2E8D9",  // Light Birch
-          200: "#E3CDB0",  // Light Oak
-          300: "#D1AC7F",  // Warm Oak / Caramel
-          400: "#C08C50",  // Rich Teak
-          500: "#A66D35",  // Solid Brown Wood
-          600: "#865123",  // Chestnut
-          700: "#6A3C17",  // Walnut
-          800: "#552E10",  // Dark Walnut
-          900: "#44220A",  // Deep Mahogany (Clearly brown, not black)
+          50: "#FFF6EB",
+          100: "#FDECDE",
+          200: "#F5D6A8",
+          300: "#EBB978",
+          400: "#D99443",
+          500: "#C77A16",
+          600: "#bd740f",  // The requested theme color
+          700: "#965B0B",
+          800: "#7A480A",
+          900: "#4D2D06",  // Dark enough for high-contrast text on white
+          950: "#2B1803",
         },
         charcoal: {
           50: "#F2F2F2",
@@ -34,18 +35,19 @@ const config: Config = {
           900: "#1A1A1A",
           950: "#0D0D0D",
         },
-        primary: "#44220A", // Deep wood
-        secondary: "#A66D35", // Warm wood
-        accent: "#D1AC7F", // Light wood accent
-        background: "#FAF6F0", // Warm Cream
+        brand: "#bd740f", // Explicit brand variable
+        primary: "#bd740f",
+        secondary: "#965B0B",
+        accent: "#D99443",
+        background: "#FFF6EB",
         // Keeping legacy class names but mapping them to new furniture theme to avoid breaking existing pages too hard
         gold: {
-          50: "#FAF6F0", 100: "#F2E8D9", 200: "#D1AC7F", 300: "#C08C50", 400: "#A66D35",
-          500: "#A66D35", 600: "#865123", 700: "#6A3C17", 800: "#552E10", 900: "#44220A",
+          50: "#FFF6EB", 100: "#F5D6A8", 200: "#EBB978", 300: "#C77A16", 400: "#bd740f",
+          500: "#bd740f", 600: "#965B0B", 700: "#7A480A", 800: "#4D2D06", 900: "#2B1803",
         },
-        brown: "#552E10",
-        cream: "#FAF6F0",
-        muted: "#C08C50",
+        brown: "#7A480A",
+        cream: "#FFF6EB",
+        muted: "#D99443",
       },
       fontFamily: {
         inter: ["var(--font-inter)", "sans-serif"],
