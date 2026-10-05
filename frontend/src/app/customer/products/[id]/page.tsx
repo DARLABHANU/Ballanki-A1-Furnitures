@@ -15,7 +15,7 @@ import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useDeliveryLocationStore } from "@/store/deliveryLocationStore";
 import BargainPanel from "@/components/customer/BargainPanel";
-import { getMockProductById, getMockProducts } from "@/lib/mockData";
+import { productApi } from "@/lib/api";
 import ProductCard from "@/components/customer/ProductCard";
 
 export default function ProductDetailPage() {
@@ -37,16 +37,24 @@ export default function ProductDetailPage() {
     if (!id) return;
     setIsLoading(true);
 
-    // Simulate Network
-    setTimeout(() => {
-      const p = getMockProductById(Number(id));
-      if (p) {
+    productApi.get(Number(id))
+      .then((res: any) => {
+        const p = res.data;
         setProduct(p);
-        const similar = getMockProducts({ category: p.category?.slug }).items.filter(x => x.id !== p.id).slice(0, 4);
-        setSimilarProducts(similar);
-      }
-      setIsLoading(false);
-    }, 400);
+
+        // Fetch similar
+        productApi.list({ limit: 4 }).then((similarRes: any) => {
+          const items = similarRes.data.items || similarRes.data.data || [];
+          setSimilarProducts(items.filter((x: Product) => x.id !== p.id).slice(0, 4));
+        });
+      })
+      .catch((err: any) => {
+        console.error(err);
+        toast.error("Failed to load product details.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
 
   }, [id]);
 

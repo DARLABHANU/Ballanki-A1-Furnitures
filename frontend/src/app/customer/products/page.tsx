@@ -6,7 +6,7 @@ import { Search, X, ChevronLeft, ChevronRight, Sparkles, Filter } from "lucide-r
 import { ProductListResponse } from "@/types";
 import ProductCard from "@/components/customer/ProductCard";
 import FilterSidebar from "@/components/customer/FilterSidebar";
-import { getMockProducts } from "@/lib/mockData";
+import { productApi } from "@/lib/api";
 
 const SORT_OPTIONS = [
   { value: "created_at:desc", label: "Newest Arrivals" },
@@ -58,7 +58,7 @@ function ProductsContent() {
 
     // Simulate network delay
     setTimeout(() => {
-      const res = getMockProducts({
+      const res = productApi.list({
         page: currentPage,
         search: search || undefined,
         sort_by,

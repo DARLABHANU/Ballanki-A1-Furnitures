@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
+import { productApi } from "@/lib/api";
 import Footer from "@/components/layout/Footer";
 import { useDeliveryLocationStore } from "@/store/deliveryLocationStore";
 import {
@@ -67,12 +68,16 @@ export default function HomePage() {
 
   useEffect(() => {
     setIsLoadingProducts(true);
-    setTimeout(() => {
-      import("@/lib/mockData").then((module) => {
-        setProducts(module.getMockProducts({}).items.slice(0, 4));
+    productApi.list({ limit: 4 })
+      .then((res: any) => {
+        setProducts(res.data.items || res.data.data || res.data || []);
+      })
+      .catch((err: any) => {
+        console.error("Failed to load products", err);
+      })
+      .finally(() => {
         setIsLoadingProducts(false);
       });
-    }, 400);
   }, []);
 
   const handleSubscribe = (e: React.FormEvent) => {

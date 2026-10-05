@@ -102,10 +102,10 @@ export default function MerchantProductsPage() {
 
   const loadProducts = async () => {
     try {
-      const { getMockProducts } = await import("@/lib/mockData");
-      const items = getMockProducts({}).items;
+      const response = await productApi.myProducts({ page });
+      const items = response.data.items || response.data.data || [];
       setProducts(items);
-      setTotal(items.length);
+      setTotal(response.data.total || items.length);
 
       // Calculate stats based on fetched items
       let active = 0, inactive = 0, outOfStock = 0;

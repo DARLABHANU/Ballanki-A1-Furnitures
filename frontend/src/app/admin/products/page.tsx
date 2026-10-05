@@ -37,8 +37,8 @@ function ProductsContent() {
   const loadProducts = async () => {
     setIsLoading(true);
     try {
-      const { getMockProducts } = await import("@/lib/mockData");
-      const { items, total, pages } = getMockProducts({});
+      const response = await productApi.list({ page, category: categoryFilter });
+      const { items, total, pages } = response.data;
 
       if (items && items.length > 0) {
         setProducts(items);

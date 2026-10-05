@@ -12,8 +12,8 @@ export default function LoginPage() {
   const { setAuth, setUser } = useAuthStore();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("admin@ballanki@gmail.com");
+  const [password, setPassword] = useState("Ballanki@sai");
 
   const handleCredentialsLogin = (e: React.FormEvent) => {
     e.preventDefault();
