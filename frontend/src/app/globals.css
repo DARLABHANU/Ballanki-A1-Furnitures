@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --wood-dark: #3D2A18;
+  --wood-light: #C4B299;
+  --linen: #F8F5F0;
+  --charcoal: #1A1A1A;
+  
+  /* Fallbacks for older components */
+  --gold: #C4B299;
+  --gold-light: #EFEBE3;
+  --gold-dark: #8B6B46;
+  --cream: var(--linen);
+  --ivory: #F2F2F2;
+  --deep: var(--charcoal);
+  --brown: var(--wood-dark);
+  --muted: #808080;
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee { animation: marquee 30s linear infinite; }
+
+@layer base {
+  body {
+    @apply bg-background text-primary;
+    background-color: var(--linen);
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-playfair), serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-background font-inter tracking-wide px-8 py-3.5
+           border border-transparent transition-all duration-300
+           hover:bg-wood-700 hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed
+           rounded-md;
+  }
+  .btn-outline {
+    @apply bg-transparent text-primary font-inter tracking-wide px-8 py-3.5
+           border border-primary transition-all duration-300
+           hover:bg-primary hover:text-background disabled:opacity-50
+           rounded-md;
+  }
+  .btn-ghost {
+    @apply bg-transparent text-muted font-inter tracking-wide px-4 py-2
+           transition-colors hover:text-primary rounded-md;
+  }
+  .input-field {
+    @apply w-full border border-wood-300 bg-white px-4 py-3
+           font-inter text-base text-primary placeholder-muted
+           focus:outline-none focus:border-wood-500 focus:ring-1 focus:ring-wood-500
+           transition-colors rounded-md shadow-sm;
+  }
+  .card {
+    @apply bg-white border border-gold-300 shadow-sm rounded-lg;
+  }
+  .section-tag {
+    @apply font-cinzel text-xs tracking-widest text-gold-500 block mb-3;
+  }
+  .section-title {
+    @apply font-cormorant text-4xl font-light text-brown leading-tight;
+  }
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 font-cinzel text-xs tracking-wide bg-gold-600 text-cream;
+  }
+  .table-th {
+    @apply font-cinzel text-xs tracking-widest text-muted uppercase px-4 py-3
+           border-b border-gold-300 text-left;
+  }
+  .table-td {
+    @apply px-4 py-3 border-b border-gold-200 text-sm;
+  }
+  .sidebar-link {
+    @apply flex items-center gap-3 px-4 py-2.5 font-cinzel text-xs tracking-wider
+           text-gold-200 hover:text-gold-100 hover:bg-white/10 transition-colors;
+  }
+  .sidebar-link.active {
+    @apply text-cream bg-white/10;
+  }
+  .divider-gold {
+    @apply w-12 h-px bg-gold-500 mx-auto my-4;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 3px; }
+
+/* Hide scrollbar for horizontal scroll strips */
+.scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
+/* Explicit Visual Themes (Burgundy & Biscuit combination) */
+.sidebar-bg {
+  background-color: #4A0F0F !important;
+}
+.dashboard-bg {
+  background-color: #FAF6EE !important;
+}
+/* ── Mobile Bottom Nav Global Clearance ── */
+/* Ensures content on EVERY page is never hidden behind the fixed bottom nav */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 80px;
+  }
+}

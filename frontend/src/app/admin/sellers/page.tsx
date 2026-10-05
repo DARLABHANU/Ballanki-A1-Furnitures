@@ -1,0 +1,233 @@
+"use client";
+
+import { useEffect, useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Loader2, Search, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import toast from "react-hot-toast";
+import { adminApi } from "@/lib/api";
+import { useAuthStore } from "@/store/authStore";
+import { formatDate, formatPrice, getApiError } from "@/lib/utils";
+
+function SellersContent() {
+  const router = useRouter();
+  const params = useSearchParams();
+  const { isAuthenticated, role } = useAuthStore();
+
+  const [merchants, setMerchants] = useState<any[]>([]);
+  const [totalSellers, setTotalSellers] = useState(0);
+  const [activeSellers, setActiveSellers] = useState(0);
+  const [inactiveSellers, setInactiveSellers] = useState(0);
+  const [pendingApproval, setPendingApproval] = useState(0);
+  
+  const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  useEffect(() => {
+    if (!isAuthenticated || !["admin", "support"].includes(role || "")) {
+      router.push("/auth/login");
+      return;
+    }
+    loadSellers();
+  }, [isAuthenticated, role, page, filter]);
+
+  const loadSellers = async () => {
+    setIsLoading(true);
+    try {
+      const { data } = await adminApi.merchants({ page, page_size: 20 });
+      if (data && data.items) {
+        setMerchants(data.items);
+        setTotalSellers(data.total);
+        setTotalPages(data.pages || 1);
+        
+        let active = 0;
+        let inactive = 0;
+        let pending = 0;
+        
+        data.items.forEach((m: any) => {
+          if (!m.is_approved) {
+            pending++;
+          }
+          if (m.user?.is_active) {
+            active++;
+          } else {
+            inactive++;
+          }
+        });
+        
+        setActiveSellers(active);
+        setInactiveSellers(inactive);
+        setPendingApproval(pending);
+      } else {
+        setMerchants([]);
+      }
+    } catch {
+      setMerchants([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleExport = () => {
+    toast.success("Exporting Merchants list CSV...");
+  };
+
+  const displayList = merchants
+    .filter(m => 
+      (m.business_name || "").toLowerCase().includes(search.toLowerCase()) || 
+      (m.user?.full_name || "").toLowerCase().includes(search.toLowerCase())
+    )
+    .map((m) => ({
+      id: m.id,
+      merchant_name: m.user?.full_name || `Merchant #${m.id}`,
+      store_name: m.business_name || "Jewellery Store",
+      sales: formatPrice(m.total_sales || 0),
+      joined_on: formatDate(m.created_at || new Date().toISOString())
+    }));
+
+  return (
+    <div className="space-y-6 text-[#1A1A1A] font-garamond">
+      
+      {/* Title */}
+      <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Merchants Management</h1>
+
+      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+        
+        {/* ── 1. Top Summary Metrics (4 Columns) ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-6 border-b border-[#EFEBE3]">
+          <div>
+            <span className="text-xs font-medium text-[#666666] block mb-1">Total Merchants</span>
+            <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{totalSellers.toLocaleString()}</span>
+          </div>
+          <div>
+            <span className="text-xs font-medium text-[#666666] block mb-1">Active Merchants</span>
+            <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{activeSellers.toLocaleString()}</span>
+          </div>
+          <div>
+            <span className="text-xs font-medium text-[#666666] block mb-1">Inactive Merchants</span>
+            <span className="font-cormorant text-3xl font-extrabold text-[#B85C00]">{inactiveSellers.toLocaleString()}</span>
+          </div>
+          <div>
+            <span className="text-xs font-medium text-[#666666] block mb-1">Pending Approval</span>
+            <span className="font-cormorant text-3xl font-extrabold text-[#B85C00]">{pendingApproval.toLocaleString()}</span>
+          </div>
+        </div>
+
+        {/* ── 2. Filter & Export Controls Bar ── */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          
+          {/* Search Box */}
+          <div className="relative w-full sm:w-80">
+            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#808080]" />
+            <input
+              type="text"
+              placeholder="Search merchants..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+            />
+          </div>
+
+          {/* Filter Dropdown + Export */}
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+            <div className="relative border border-[#E2DAC8] rounded-xl px-3 py-2 bg-[#F8F5F0]">
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                className="text-xs font-semibold text-[#1A1A1A] bg-transparent appearance-none pr-6 focus:outline-none cursor-pointer"
+              >
+                <option value="all">All Merchants</option>
+                <option value="active">Active Merchants</option>
+                <option value="pending">Pending Approval</option>
+              </select>
+            </div>
+
+            <button
+              onClick={handleExport}
+              className="inline-flex items-center gap-1.5 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#0D0D0D] hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
+            >
+              <Download size={14} />
+              <span>Export</span>
+            </button>
+          </div>
+
+        </div>
+
+        {/* ── 3. Sellers Table ── */}
+        <div className="overflow-x-auto">
+          {isLoading ? (
+            <div className="h-48 flex items-center justify-center">
+              <Loader2 className="animate-spin text-[#0D0D0D]" size={32} />
+            </div>
+          ) : (
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
+                  <th className="pb-3 px-3">Merchant Name</th>
+                  <th className="pb-3 px-3">Store Name</th>
+                  <th className="pb-3 px-3">Sales</th>
+                  <th className="pb-3 px-3">Joined On</th>
+                  <th className="pb-3 px-3"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#EFEBE3]">
+                {displayList.length === 0 ? (
+                  <tr><td colSpan={5} className="py-8 text-center text-[#808080]">No merchants found.</td></tr>
+                ) : (
+                  displayList.map((mItem) => (
+                    <tr key={mItem.id} className="hover:bg-[#F8F5F0]/60 transition-colors">
+                      <td className="py-3.5 px-3 font-bold text-[#1A1A1A]">{mItem.merchant_name}</td>
+                      <td className="py-3.5 px-3 font-semibold text-[#1A1A1A]">{mItem.store_name}</td>
+                      <td className="py-3.5 px-3 font-extrabold text-[#1A1A1A]">{mItem.sales}</td>
+                      <td className="py-3.5 px-3 text-[#666666] font-medium">{mItem.joined_on}</td>
+                      <td className="py-3.5 px-3 text-right">
+                        <button
+                          onClick={() => router.push(`/admin/sellers/${mItem.id}`)}
+                          className="bg-[#0D0D0D] hover:bg-[#333333] text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-colors"
+                        >
+                          Manage
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        <div className="flex items-center justify-between pt-4 border-t border-[#EFEBE3]">
+          <span className="text-[11px] text-[#808080] font-medium">Page {page} of {totalPages}</span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-[#F8F5F0] disabled:opacity-50 transition-colors"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              onClick={() => setPage(p => p + 1)}
+              disabled={page >= totalPages}
+              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-[#F8F5F0] disabled:opacity-50 transition-colors"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  );
+}
+
+export default function AdminSellersPage() {
+  return (
+    <Suspense fallback={<div className="h-48 flex items-center justify-center"><Loader2 className="animate-spin text-[#0D0D0D]" size={28} /></div>}>
+      <SellersContent />
+    </Suspense>
+  );
+}

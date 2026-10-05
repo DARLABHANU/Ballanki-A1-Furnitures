@@ -1,0 +1,338 @@
+"use client";
+
+import { useEffect, useState, Suspense } from "react";
+import { useRouter } from "next/navigation";
+import { Loader2, Search, Plus, Edit2, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import toast from "react-hot-toast";
+import { adminApi, productApi } from "@/lib/api";
+import { useAuthStore } from "@/store/authStore";
+import { Product } from "@/types";
+import { formatPrice, getApiError } from "@/lib/utils";
+
+function ProductsContent() {
+  const router = useRouter();
+  const { isAuthenticated, role } = useAuthStore();
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [activeProducts, setActiveProducts] = useState(0);
+  const [inactiveProducts, setInactiveProducts] = useState(0);
+  const [outOfStock, setOutOfStock] = useState(0);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [togglingId, setTogglingId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!isAuthenticated || !["admin", "support"].includes(role || "")) {
+      router.push("/auth/login");
+      return;
+    }
+    loadProducts();
+  }, [isAuthenticated, role, page, categoryFilter]);
+
+  const loadProducts = async () => {
+    setIsLoading(true);
+    try {
+      const { getMockProducts } = await import("@/lib/mockData");
+      const { items, total, pages } = getMockProducts({});
+
+      if (items && items.length > 0) {
+        setProducts(items);
+        setTotalProducts(total);
+        setTotalPages(pages || 1);
+
+        let active = 0;
+        let inactive = 0;
+        let oos = 0;
+        items.forEach((p: any) => {
+          if (p.is_active) active++;
+          else inactive++;
+
+          if (p.stock_quantity <= (p.low_stock_threshold || 5)) oos++;
+        });
+
+        setActiveProducts(active);
+        setInactiveProducts(inactive);
+        setOutOfStock(oos);
+      } else {
+        setProducts([]);
+      }
+    } catch {
+      setProducts([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteProduct = async (prod: any) => {
+    if (!confirm(`Are you sure you want to permanently delete product "${prod.name}"?`)) return;
+    setTogglingId(prod.id);
+    try {
+      await adminApi.deleteProduct(prod.id);
+      toast.success("Product deleted successfully");
+      loadProducts();
+    } catch (err) {
+      toast.error(getApiError(err));
+    } finally {
+      setTogglingId(null);
+    }
+  };
+
+  const handleToggleActive = async (prod: any) => {
+    setTogglingId(prod.id);
+    try {
+      await productApi.update(prod.id, { is_active: !prod.is_active });
+      toast.success(`Product ${prod.is_active ? "hidden" : "displayed"} successfully`);
+      loadProducts();
+    } catch (err) {
+      toast.error(getApiError(err));
+    } finally {
+      setTogglingId(null);
+    }
+  };
+
+  const handleApproveProduct = async (prod: any) => {
+    setTogglingId(prod.id);
+    try {
+      await adminApi.approveProduct(prod.id, { is_approved: true });
+      toast.success("Product approved for listing.");
+      loadProducts();
+    } catch (err) {
+      toast.error(getApiError(err));
+    } finally {
+      setTogglingId(null);
+    }
+  };
+
+  const displayList = products
+    .filter(p => categoryFilter === "all" || p.category?.name?.toLowerCase() === categoryFilter.toLowerCase())
+    .map((p) => ({
+      id: p.id,
+      name: p.name,
+      category: p.category?.name || "General",
+      price: p.price,
+      status: p.is_active ? "Active" : "Inactive",
+      is_active: p.is_active,
+      is_approved: p.is_approved,
+      stock: p.stock_quantity,
+      image: p.images?.[0] || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=200&auto=format&fit=crop"
+    }));
+
+  return (
+    <div className="space-y-6 text-[#1A1A1A] font-garamond">
+
+      {/* Page Title */}
+      <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Products Management</h1>
+
+      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+
+        {/* ── 1. Top Summary Metrics (4 Columns) ── */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-6 border-b border-[#EFEBE3]">
+          <div>
+            <span className="text-xs font-medium text-[#666666] block mb-1">Total Products</span>
+            <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{totalProducts.toLocaleString()}</span>
+          </div>
+          <div>
+            <span className="text-xs font-medium text-[#666666] block mb-1">Active Products</span>
+            <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{activeProducts.toLocaleString()}</span>
+          </div>
+          <div>
+            <span className="text-xs font-medium text-[#666666] block mb-1">Inactive Products</span>
+            <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{inactiveProducts.toLocaleString()}</span>
+          </div>
+          <div>
+            <span className="text-xs font-medium text-[#666666] block mb-1">Out of Stock</span>
+            <span className="font-cormorant text-3xl font-extrabold text-[#1A1A1A]">{outOfStock.toLocaleString()}</span>
+          </div>
+        </div>
+
+        {/* ── 2. Filter & Add Product Controls Bar ── */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+
+          {/* Search Box */}
+          <div className="relative w-full sm:w-80">
+            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#808080]" />
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+            />
+          </div>
+
+          {/* Category Filter + Add Product Button */}
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+            <div className="relative border border-[#E2DAC8] rounded-xl px-3 py-2 bg-[#F8F5F0]">
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="text-xs font-semibold text-[#1A1A1A] bg-transparent appearance-none pr-6 focus:outline-none cursor-pointer"
+              >
+                <option value="all">All Categories</option>
+                <option value="chains">Chains</option>
+                <option value="bangles">Bangles</option>
+                <option value="sarees">Sarees</option>
+                <option value="earrings">Earrings</option>
+                <option value="rings">Rings</option>
+              </select>
+            </div>
+
+            <button
+              onClick={() => router.push("/merchant/products/add")}
+              className="inline-flex items-center gap-1.5 bg-[#0D0D0D] hover:bg-[#333333] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
+            >
+              <Plus size={15} />
+              <span>Add Product</span>
+            </button>
+          </div>
+
+        </div>
+
+        {/* ── 3. Products Table ── */}
+        <div className="overflow-x-auto">
+          {isLoading ? (
+            <div className="h-48 flex items-center justify-center">
+              <Loader2 className="animate-spin text-[#0D0D0D]" size={32} />
+            </div>
+          ) : (
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
+                  <th className="pb-3 px-3">Product</th>
+                  <th className="pb-3 px-3">Category</th>
+                  <th className="pb-3 px-3">Price</th>
+                  <th className="pb-3 px-3">Status</th>
+                  <th className="pb-3 px-3">Stock</th>
+                  <th className="pb-3 px-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#EFEBE3]">
+                {displayList.map((item) => (
+                  <tr key={item.id} className="hover:bg-[#F8F5F0]/60 transition-colors">
+
+                    {/* Image & Product Name */}
+                    <td className="py-3 px-3">
+                      <div className="flex items-center gap-3">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-10 h-10 rounded-lg object-cover border border-[#E2DAC8]"
+                        />
+                        <span className="font-bold text-[#1A1A1A] text-xs">{item.name}</span>
+                      </div>
+                    </td>
+
+                    {/* Category */}
+                    <td className="py-3 px-3 text-[#666666] font-semibold">{item.category}</td>
+
+                    {/* Price */}
+                    <td className="py-3 px-3 font-extrabold text-[#1A1A1A]">{formatPrice(item.price)}</td>
+
+                    {/* Status */}
+                    <td className="py-3 px-3">
+                      <span className={`text-[10px] font-bold px-2.5 py-1 rounded-md inline-block ${!item.is_approved
+                        ? "bg-amber-50 text-amber-600 border border-amber-200"
+                        : item.is_active
+                          ? "bg-[#EFEBE3] text-[#2E7D32]"
+                          : "bg-red-50 text-red-700"
+                        }`}>
+                        {!item.is_approved ? "Pending Approval" : item.status}
+                      </span>
+                    </td>
+
+                    {/* Stock */}
+                    <td className="py-3 px-3 font-bold text-[#1A1A1A]">{item.stock}</td>
+
+                    {/* Actions */}
+                    <td className="py-3 px-3 text-right">
+                      <div className="flex items-center justify-end gap-3">
+                        {togglingId === item.id ? (
+                          <Loader2 size={14} className="animate-spin text-[#0D0D0D]" />
+                        ) : (
+                          <>
+                            <button
+                              onClick={() => router.push(`/merchant/products/add?id=${item.id}`)}
+                              className="p-1 text-[#666666] hover:text-[#0D0D0D] transition-colors"
+                              title="Edit Product"
+                            >
+                              <Edit2 size={14} />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteProduct(item)}
+                              className="p-1 text-red-500 hover:text-red-700 transition-colors"
+                              title="Delete Product"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                            <button
+                              onClick={() => handleToggleActive(item)}
+                              className={`p-1 transition-colors ${item.is_active ? 'text-[#808080] hover:text-amber-600' : 'text-[#666666] hover:text-[#2E7D32]'}`}
+                              title={item.is_active ? "Hide Product" : "Display Product"}
+                            >
+                              {item.is_active ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" x2="22" y1="2" y2="22" /></svg>
+                              ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                              )}
+                            </button>
+                            {!item.is_approved && (
+                              <button
+                                onClick={() => handleApproveProduct(item)}
+                                className="p-1 text-amber-500 hover:text-amber-700 transition-colors"
+                                title="Approve Product"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                              </button>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </td>
+
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        {/* ── 4. Pagination Dock ── */}
+        <div className="flex items-center justify-between pt-4 border-t border-[#EFEBE3]">
+          <span className="text-[11px] text-[#808080] font-medium">Page {page} of {totalPages}</span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-[#F8F5F0] disabled:opacity-50 transition-colors"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              onClick={() => setPage(p => p + 1)}
+              disabled={page >= totalPages}
+              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-[#F8F5F0] disabled:opacity-50 transition-colors"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  );
+}
+
+export default function AdminProductsPage() {
+  return (
+    <Suspense fallback={<div className="h-48 flex items-center justify-center"><Loader2 className="animate-spin text-[#0D0D0D]" size={28} /></div>}>
+      <ProductsContent />
+    </Suspense>
+  );
+}
