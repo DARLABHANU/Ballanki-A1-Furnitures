@@ -33,25 +33,25 @@ export default function HomePage() {
 
   const heroSlides = [
     {
-      img: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80&w=2000",
-      pill: "The Summer Oak Collection",
-      titleTop: "Comfort Rooted",
-      titleItalic: "in Nature.",
-      desc: "Elevate your home with sustainably sourced teak and oak. Every piece of Ballanki A1 furniture brings the warmth of raw nature into your living space."
+      img: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=2000",
+      pill: "Carved Masterpieces",
+      titleTop: "Royal Wooden",
+      titleItalic: "Beds.",
+      desc: "Transform your bedroom into a sanctuary with our masterfully hand-carved solid teak wood beds. Polished to perfection for a royal finish."
     },
     {
-      img: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&q=80&w=2000",
-      pill: "Minimalist Modern",
-      titleTop: "Simplicity That",
-      titleItalic: "Speaks Volumes.",
-      desc: "Discover the elegant balance of minimalist design and maximum comfort. Premium beige linens seamlessly paired with rich hardwood frames."
+      img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=2000",
+      pill: "Opulent Seating",
+      titleTop: "Handcrafted",
+      titleItalic: "Sofas.",
+      desc: "Experience unmatched luxury with our intricately carved wooden sofas. Deep mahogany polish meets plush comfort for your living room."
     },
     {
-      img: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=2000",
-      pill: "Bespoke Dining",
-      titleTop: "Gather Around",
+      img: "https://images.unsplash.com/photo-1540574163026-643ea20ade25?auto=format&fit=crop&q=80&w=2000",
+      pill: "Bespoke Details",
+      titleTop: "Timeless",
       titleItalic: "Elegance.",
-      desc: "Create lasting memories around our handcrafted dining tables. Built to endure generations of laughter, love, and living."
+      desc: "Every curve and carving tells a story. Discover our premium collection of polished wooden furniture that lasts for generations."
     }
   ];
 
@@ -218,31 +218,7 @@ export default function HomePage() {
           </button>
         </div>
 
-        {/* ==============================================================================
-            TRUST BADGES BAR (Warm theme)
-        ============================================================================== */}
-        <div className="border-y border-wood-200 bg-white">
-          <div className="max-w-7xl mx-auto px-6 py-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {[
-                { icon: <Truck size={24} className="text-wood-600" />, title: "White Glove Delivery", desc: "Expert assembly included" },
-                { icon: <ShieldCheck size={24} className="text-wood-600" />, title: "Lifetime Warranty", desc: "Craftsmanship guaranteed" },
-                { icon: <RefreshCw size={24} className="text-wood-600" />, title: "Bespoke Requests", desc: "Customized to your vision" },
-                { icon: <Headphones size={24} className="text-wood-600" />, title: "Concierge Support", desc: "24/7 dedicated assistance" },
-              ].map((badge, idx) => (
-                <div key={idx} className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left group">
-                  <div className="w-12 h-12 rounded-full bg-wood-50 flex items-center justify-center group-hover:bg-wood-100 transition-colors border border-wood-200">
-                    {badge.icon}
-                  </div>
-                  <div>
-                    <h4 className="font-outfit font-bold text-wood-900 text-sm md:text-base">{badge.title}</h4>
-                    <p className="font-inter text-[11px] text-wood-600 mt-0.5">{badge.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+
 
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-16 space-y-24">
 
@@ -414,6 +390,32 @@ export default function HomePage() {
             </div>
           </section>
 
+        </div>
+
+        {/* ==============================================================================
+            TRUST BADGES BAR (Warm theme)
+        ============================================================================== */}
+        <div className="border-t border-wood-200 bg-white shadow-[-px_-4px_24px_rgba(43,24,3,0.03)] z-20 relative">
+          <div className="max-w-7xl mx-auto px-6 py-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {[
+                { icon: <Truck size={24} className="text-wood-600" />, title: "White Glove Delivery", desc: "Expert assembly included" },
+                { icon: <ShieldCheck size={24} className="text-wood-600" />, title: "Lifetime Warranty", desc: "Craftsmanship guaranteed" },
+                { icon: <RefreshCw size={24} className="text-wood-600" />, title: "Bespoke Requests", desc: "Customized to your vision" },
+                { icon: <Headphones size={24} className="text-wood-600" />, title: "Concierge Support", desc: "24/7 dedicated assistance" },
+              ].map((badge, idx) => (
+                <div key={idx} className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left group">
+                  <div className="w-12 h-12 rounded-full bg-wood-50 flex items-center justify-center group-hover:bg-wood-100 transition-colors border border-wood-200">
+                    {badge.icon}
+                  </div>
+                  <div>
+                    <h4 className="font-outfit font-bold text-wood-900 text-sm md:text-base">{badge.title}</h4>
+                    <p className="font-inter text-[11px] text-wood-600 mt-0.5">{badge.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </main>
 
