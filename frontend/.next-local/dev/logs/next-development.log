@@ -1,0 +1,26 @@
+{"timestamp":"00:00:06.916","source":"Server","level":"LOG","message":""}
+{"timestamp":"00:00:06.916","source":"Server","level":"LOG","message":"  We detected TypeScript in your project and reconfigured your tsconfig.json file for you."}
+{"timestamp":"00:00:06.916","source":"Server","level":"LOG","message":"  The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:\n"}
+{"timestamp":"00:00:06.917","source":"Server","level":"LOG","message":"  \t- include was updated to add '.next-local/types/**/*.ts'"}
+{"timestamp":"00:00:06.917","source":"Server","level":"LOG","message":"  \t- include was updated to add '.next-local/dev/types/**/*.ts'"}
+{"timestamp":"00:00:06.917","source":"Server","level":"LOG","message":""}
+{"timestamp":"00:00:07.826","source":"Server","level":"LOG","message":""}
+{"timestamp":"00:00:21.772","source":"Server","level":"LOG","message":"○ Compiling / ..."}
+{"timestamp":"00:01:06.636","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:01:26.664","source":"Server","level":"LOG","message":"○ Compiling /customer/products ..."}
+{"timestamp":"00:01:45.274","source":"Server","level":"ERROR","message":"⨯ Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}
+{"timestamp":"00:01:50.115","source":"Server","level":"ERROR","message":"Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}
+{"timestamp":"00:01:50.122","source":"Server","level":"ERROR","message":"Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}
+{"timestamp":"00:01:50.287","source":"Server","level":"ERROR","message":"⨯ Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}
+{"timestamp":"00:01:50.289","source":"Server","level":"ERROR","message":"Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}
+{"timestamp":"00:01:50.291","source":"Server","level":"ERROR","message":"Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}
+{"timestamp":"00:01:50.321","source":"Server","level":"ERROR","message":"⨯ Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}
+{"timestamp":"00:01:50.323","source":"Server","level":"ERROR","message":"Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}
+{"timestamp":"00:01:50.326","source":"Server","level":"ERROR","message":"Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}
+{"timestamp":"00:01:57.970","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:02:02.826","source":"Server","level":"ERROR","message":"⨯ Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}
+{"timestamp":"00:02:02.828","source":"Server","level":"ERROR","message":"Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}
+{"timestamp":"00:02:02.830","source":"Server","level":"ERROR","message":"Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}
+{"timestamp":"00:02:02.849","source":"Server","level":"ERROR","message":"⨯ Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}
+{"timestamp":"00:02:02.850","source":"Server","level":"ERROR","message":"Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}
+{"timestamp":"00:02:02.851","source":"Server","level":"ERROR","message":"Error: EPERM: operation not permitted, mkdir 'C:\\Users\\daarl\\OneDrive\\Desktop\\Ratnamayuri - Copy\\frontend\\.next-local\\dev\\static\\chunks\\app\\customer\\products'"}

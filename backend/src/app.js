@@ -1,78 +1,21 @@
-const express = require('express');
-const cors = require('cors');
-const config = require('./config');
-const router = require('./routes');
-const errorMiddleware = require('./middleware/error');
-
-const app = express();
-app.set('trust proxy', true);
-
-// 1. STRICT CORS CONFIGURATION (Must be the very first middleware)
-const allowedOrigins = [
-  config.frontendUrl,                                         // Dynamically loaded frontend URL
-  'https://ballanki-a1-furnitures.vercel.app',                          // Production frontend
-  'https://ballanki-a1-furnitures-tbu8.vercel.app',                     // Early preview branch
-  'https://ballanki-a1-furnitures.me',                                   // Root custom domain
-  'https://www.ballanki-a1-furnitures.me',                               // WWW custom domain variation
-  'http://localhost:3000'                                    // Local testing environment
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow server-to-server or tools like Postman (which don't send an Origin header)
-    if (!origin) return callback(null, true);
-    
-    // Check direct matching arrays OR evaluate dynamic vercel preview subdomains
-    const isAllowed = allowedOrigins.includes(origin) || /https:\/\/ballanki-a1-furnitures.*\.vercel\.app$/.test(origin);
-    
-    if (isAllowed) {
-      callback(null, true);
-    } else {
-      callback(new Error(`CORS policy blockage: Origin ${origin} unauthorized`));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
-}));
-
-// 2. Preflight Option Interceptor (Forces instant 200 OK responses to browser preflight validations)
-app.options('*', cors());
-
-// Body Parsing Middleware
-app.use(express.json({ limit: 5242880 }));
-app.use(express.urlencoded({ limit: 5242880, extended: true }));
-
-// Static Files serving for uploads
-const path = require('path');
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
-
-// Health Check
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    app: config.appName,
-    env: config.appEnv
-  });
+const express=require('express');const cors=require('cors');const mongoose=require('mongoose');const path=require('path');
+const app=express();app.disable('x-powered-by');app.use(express.json({limit:'8mb'}));
+app.use(cors({origin:(origin,cb)=>{const allowed=(process.env.FRONTEND_URL||'http://localhost:3000').split(',').map(s=>s.trim());if(!origin||allowed.includes(origin)||origin==='http://127.0.0.1:3000')cb(null,true);else cb(Object.assign(new Error('Origin is not allowed'),{status:403}));}}));
+app.use((req,res,next)=>{res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Cache-Control','no-store');next();});
+app.get('/api/health',(req,res)=>res.status(mongoose.connection.readyState===1?200:503).json({status:mongoose.connection.readyState===1?'ok':'unavailable',database:mongoose.connection.readyState===1?'connected':'disconnected',payment_mode:'local_pending'}));
+app.get('/api/v1',(req,res)=>res.json({version:'1.1',payment_mode:'local_pending'}));
+app.use('/uploads',express.static(path.resolve(__dirname,'../uploads'),{dotfiles:'deny',setHeaders:res=>res.setHeader('Content-Security-Policy',"default-src 'none'")}));
+app.use('/api/v1/auth',require('./routes/authRoutes'));
+app.use('/api/v1/products',require('./routes/productRoutes'));
+app.use('/api/v1/admin',require('./routes/adminRoutes'));
+app.use('/api/v1/merchant',(req,res)=>res.status(410).json({error:'This portal has been retired. Store management is available to administrators.'}));
+app.use('/api/v1',require('./routes/serviceRoutes'));
+app.use('/api/v1',require('./routes/commerceRoutes'));
+app.use((req,res)=>res.status(404).json({error:'Endpoint not found'}));
+app.use((err,req,res,next)=>{
+ const status=err.status||(err.code===11000?409:['ValidationError','CastError','SyntaxError'].includes(err.name)?400:500);
+ const message=err.code===11000?'This record already exists':status>=500?'The service could not complete the request. Please retry.':err.message;
+ if(status>=500)console.error('Request failed:',req.method,req.path,err.name,err.message);
+ res.status(status).json({error:message,detail:message});
 });
-
-// Root welcome route
-app.get('/', (req, res) => {
-  res.json({
-    message: `Welcome to ${config.appName} API`,
-    docs: '/api/docs'
-  });
-});
-
-// API Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/v1', router);
-
-// Direct /api/create-order and /api/verify-payment endpoints
-app.post('/api/create-order', (req, res, next) => require('./routes/orders').createOrderHandler(req, res, next));
-app.post('/api/verify-payment', (req, res, next) => require('./routes/orders').verifyPaymentHandler(req, res, next));
-
-// Global Error Handler
-app.use(errorMiddleware);
-
-module.exports = app;
+module.exports=app;

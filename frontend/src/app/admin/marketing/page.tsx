@@ -5,12 +5,12 @@ import { Megaphone, Send, Mail, MessageSquare, Share2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function MarketingToolsPage() {
-  const [broadcastSubject, setBroadcastSubject] = useState("Festival Special Offers on Silk Sarees & Jewellery!");
-  const [broadcastMessage, setBroadcastMessage] = useState("Explore our newly arrived handcrafted gold plated chains, bangles, and bridal sarees with exclusive discounts.");
+  const [broadcastSubject, setBroadcastSubject] = useState("Festival Special Offers on Premium Furniture!");
+  const [broadcastMessage, setBroadcastMessage] = useState("Explore our newly arrived handcrafted wooden beds, velvet sofas, and premium dining sets with exclusive discounts.");
 
   const handleSendBroadcast = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Marketing broadcast email sent to all registered customers!");
+    toast.error("Email delivery is not configured. No broadcast was sent.");
   };
 
   return (
@@ -78,7 +78,7 @@ export default function MarketingToolsPage() {
               </div>
               <p className="text-[#666666] text-[11px]">Send instant promo codes and product links to top promoter WhatsApp groups.</p>
               <button
-                onClick={() => toast.success("Promoter WhatsApp links generated!")}
+                onClick={() => toast("Open the promoter portal to copy an existing coupon link.")}
                 className="w-full bg-[#0D0D0D] text-white py-2 rounded-xl text-xs font-bold hover:bg-[#333333] transition-colors"
               >
                 Generate WhatsApp Blast
@@ -92,7 +92,7 @@ export default function MarketingToolsPage() {
               </div>
               <p className="text-[#666666] text-[11px]">Activate top marquee sale banner across customer storefront pages.</p>
               <button
-                onClick={() => toast.success("Hero Sale Banner updated across site!")}
+                onClick={() => toast("Banner editing is not available in this local release.")}
                 className="w-full border border-[#0D0D0D] text-[#0D0D0D] py-2 rounded-xl text-xs font-bold hover:bg-[#0D0D0D] hover:text-white transition-colors"
               >
                 Update Store Banners

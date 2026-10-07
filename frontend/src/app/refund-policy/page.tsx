@@ -36,8 +36,8 @@ export default function RefundPolicyPage() {
               </p>
               <ul className="list-disc pl-5 space-y-1">
                 <li><strong>Condition</strong>: Items must be entirely unworn, unused, unwashed, and in pristine condition with all security seals intact.</li>
-                <li><strong>Packaging</strong>: The item must be returned in its original luxury case, including jewelry boxes, protective pouches, security tags, silk weave tags, and certificates of authenticity.</li>
-                <li><strong>Exclusion Signs</strong>: Any sign of wear, perfume traces, makeup smudges, saree pleat deformations, or alterations will result in immediate disqualification of the return request.</li>
+                <li><strong>Packaging</strong>: The item must be returned in its original luxury case, including protective foam, transport crates, hardware security tags, and care manuals, and certificates of authenticity.</li>
+                <li><strong>Exclusion Signs</strong>: Any sign of wear, stains, upholstery smudges, wood scratches, or structural deformations, or alterations will result in immediate disqualification of the return request.</li>
               </ul>
             </section>
 
@@ -47,8 +47,8 @@ export default function RefundPolicyPage() {
                 Certain categories of products are meticulously tailored or sanitized and are therefore exempt from standard returns:
               </p>
               <ul className="list-disc pl-5 space-y-1">
-                <li><strong>Customized &amp; Bespoke Pieces</strong>: Custom jewelry sizes, custom-engraved silver products, and personalized bridal sarees.</li>
-                <li><strong>Sarees with Stitching Services</strong>: Sarees ordered with pre-stitched blouses, custom falls, or tailored edgings.</li>
+                <li><strong>Customized &amp; Bespoke Pieces</strong>: Custom wood dimensions, engraved furniture, and personalized upholstery selections.</li>
+                <li><strong>Custom Furniture Framing</strong>: Sofa sets ordered with custom dimensions, specific upholstery fabrics, or tailored edgings.</li>
                 <li><strong>Gift Cards &amp; Store Credits</strong>: E-gift cards are non-refundable and cannot be redeemed for cash.</li>
               </ul>
             </section>

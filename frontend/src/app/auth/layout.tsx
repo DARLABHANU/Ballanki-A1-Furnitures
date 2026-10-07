@@ -25,7 +25,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             <div>
               <h1 className="font-cormorant text-2xl font-bold tracking-widest text-white">BALLANKI A1 FURNITURES</h1>
               <p className="text-[10px] font-semibold tracking-widest text-wood-400 uppercase">
-                HANDCRAFTED JEWELLERY &amp; SILK SAREES
+                PREMIUM CRAFTED FURNITURE &amp; DECOR
               </p>
             </div>
           </div>

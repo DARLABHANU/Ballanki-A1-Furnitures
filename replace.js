@@ -1,10 +1,20 @@
-﻿const fs = require('fs');
-const file = 'frontend/src/app/admin/products/page.tsx';
-let data = fs.readFileSync(file, 'utf8');
+const fs = require('fs');
+const path = require('path');
 
-data = data.replace(/const \{ getMockProducts \} = await import\("@\/lib\/mockData"\);[\s\S]*?const \{ items, total, pages \} = getMockProducts\(\{\}\);/m, 
-const { productApi } = require('@/lib/api');
-      const response = await productApi.list({});
-      const { items, total, pages } = response.data;);
+function processDir(dir) {
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const fullPath = path.join(dir, file);
+    if (fs.statSync(fullPath).isDirectory()) {
+      processDir(fullPath);
+    } else if (fullPath.endsWith('.tsx')) {
+      let content = fs.readFileSync(fullPath, 'utf8');
+      content = content.replace(/Chains/g, 'Tables')
+                       .replace(/Bangles/g, 'Chairs')
+                       .replace(/Gold Plated Chain/g, 'Velvet Accent Chair');
+      fs.writeFileSync(fullPath, content);
+    }
+  }
+}
 
-fs.writeFileSync(file, data);
+processDir('frontend/src/app/admin');

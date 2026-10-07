@@ -1,16 +1,10 @@
-FROM node:18-alpine
-
-WORKDIR /usr/src/app
-
-# Copy backend package files
+FROM node:20-alpine
+WORKDIR /app
 COPY backend/package*.json ./
-
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy backend source files
-COPY backend/ .
-
+RUN npm ci --omit=dev
+COPY backend/src ./src
+RUN mkdir -p uploads && chown -R node:node /app
+USER node
+ENV NODE_ENV=production HOST=0.0.0.0
 EXPOSE 8000
-
 CMD ["node", "src/server.js"]

@@ -6,12 +6,10 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
-  Store,
   Megaphone,
   Package,
   ShoppingBag,
-  CircleDollarSign,
-  Wallet,
+  MessageCircle,
   Tag,
   BarChart3,
   HelpCircle,
@@ -43,8 +41,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/admin/users?role=promoter", label: "Promoters", icon: Megaphone },
   { href: "/admin/products", label: "Products", icon: Package, hasDropdown: true },
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
-  { href: "/admin/commissions", label: "Earnings & Commission", icon: CircleDollarSign },
-  { href: "/admin/settlements", label: "Payouts & Withdrawals", icon: Wallet },
+  { href: "/admin/enquiries", label: "Price Enquiries", icon: MessageCircle },
   { href: "/admin/coupons", label: "Coupons & Offers", icon: Tag },
   { href: "/admin/reports", label: "Reports & Analytics", icon: BarChart3 },
   { href: "/admin/return-requests", label: "Disputes & Support", icon: HelpCircle },
@@ -320,8 +317,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {[
               { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
               { href: "/admin/users", label: "Users", icon: Users },
-              { href: "/admin/commissions", label: "Earnings", icon: CircleDollarSign },
-              { href: "/admin/settlements", label: "Payouts", icon: Wallet },
             ].map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href || (item.href !== "/admin/dashboard" && pathname.startsWith(item.href));

@@ -1,28 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Globe, Save, Image as ImageIcon, Layout, ShieldCheck } from "lucide-react";
+import { api } from "@/lib/api";
 import toast from "react-hot-toast";
 
 export default function WebsiteSettingsPage() {
-  const [siteName, setSiteName] = useState("Ballanki A1 Furnitures Jewellery & Sarees");
+  const [siteName, setSiteName] = useState("Ballanki A1 Furnitures");
   const [footerText, setFooterText] = useState("© 2026 Ballanki A1 Furnitures. All Rights Reserved. Crafted with Elegance in Guntur, Andhra Pradesh.");
-  const [seoTitle, setSeoTitle] = useState("Ballanki A1 Furnitures | Handcrafted Jewellery & Silk Sarees");
-  const [seoMeta, setSeoMeta] = useState("Shop exquisite handcrafted gold plated chains, kundan bangles, designer sarees, and bridal accessories.");
+  const [seoTitle, setSeoTitle] = useState("Ballanki A1 Furnitures | Premium Crafted Furniture & Decor");
+  const [seoMeta, setSeoMeta] = useState("Shop exquisite handcrafted wooden furniture, modern sofas, classic dining sets, and premium home decor.");
 
-  const handleSave = (e: React.FormEvent) => {
+  useEffect(() => { api.get('/admin/website-settings').then(({data}) => { if(data.siteName !== undefined) setSiteName(String(data.siteName)); if(data.footerText !== undefined) setFooterText(String(data.footerText)); if(data.seoTitle !== undefined) setSeoTitle(String(data.seoTitle)); if(data.seoMeta !== undefined) setSeoMeta(String(data.seoMeta)); }).catch(() => toast.error('Could not load settings')); }, []);
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Website configuration updated successfully!");
+    try { await api.put('/admin/website-settings', { siteName, footerText, seoTitle, seoMeta }); toast.success('Settings saved'); } catch (err: any) { toast.error(err.response?.data?.error || 'Could not save settings'); }
   };
 
   return (
     <div className="space-y-6 text-[#1A1A1A] font-garamond">
-      
+
       {/* Title */}
       <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Website Configuration &amp; Branding</h1>
 
       <form onSubmit={handleSave} className="space-y-6">
-        
+
         {/* Card 1: General Branding */}
         <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
           <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">

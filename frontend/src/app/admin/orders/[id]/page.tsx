@@ -1,213 +1,38 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Printer, PhoneCall, Loader2 } from "lucide-react";
-import toast from "react-hot-toast";
+import { ArrowLeft, Loader2, Printer, RefreshCw } from "lucide-react";
 import { adminApi } from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, getApiError } from "@/lib/utils";
 
 export default function OrderDetailsPage() {
-  const params = useParams();
+  const params = useParams<{ id: string }>();
   const router = useRouter();
   const { isAuthenticated, role } = useAuthStore();
   const [order, setOrder] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const load = useCallback(async () => {
+    setLoading(true); setError("");
+    try { const { data } = await adminApi.order(params.id); setOrder(data); }
+    catch (err) { setError(getApiError(err)); setOrder(null); }
+    finally { setLoading(false); }
+  }, [params.id]);
 
-  useEffect(() => {
-    if (!isAuthenticated || !["admin", "support"].includes(role || "")) {
-      router.push("/auth/login");
-      return;
-    }
-    loadOrderDetails();
-  }, [params.id, isAuthenticated, role]);
+  useEffect(() => { if (!isAuthenticated || role !== "admin") { router.replace("/auth/login"); return; } void load(); }, [isAuthenticated, role, router, load]);
 
-  const loadOrderDetails = async () => {
-    setIsLoading(true);
-    try {
-      if (params.id) {
-        const { data } = await adminApi.orders({ page: 1, page_size: 20 });
-        const found = data?.items?.find((o: any) => String(o.id) === String(params.id) || String(o.order_number) === String(params.id));
-        if (found) setOrder(found);
-      }
-    } catch {
-      // Fallback demo order matching reference screenshot
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handlePrint = () => {
-    window.print();
-  };
-
-  const handleContact = () => {
-    toast.success("Contacting customer via phone/WhatsApp...");
-  };
-
-  // Demo fallback matching reference image
-  const displayOrder = order || {
-    id: 12568,
-    order_number: "ORD12568",
-    status: "Delivered",
-    order_date: "30 May, 2025 | 10:30 AM",
-    items: [
-      {
-        name: "Gold Plated Chain",
-        qty: 1,
-        image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=200&auto=format&fit=crop"
-      }
-    ],
-    customer: {
-      name: "Priya Sharma",
-      phone: "+91 98765 43210",
-      address: "123, MG Park, Guntur, Andhra Pradesh - 522001",
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop"
-    },
-    summary: {
-      item_total: 699,
-      shipping: 40,
-      discount: -50,
-      total_amount: 689
-    }
-  };
-
-  return (
-    <div className="space-y-6 text-[#1A1A1A] font-garamond">
-      
-      {/* Back Button & Header */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => router.back()}
-          className="w-8 h-8 rounded-full border border-[#E2DAC8] bg-white flex items-center justify-center text-[#1A1A1A] hover:bg-[#F8F5F0] transition-colors"
-        >
-          <ArrowLeft size={16} />
-        </button>
-        <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Order Details</h1>
-      </div>
-
-      {isLoading ? (
-        <div className="h-64 bg-white rounded-3xl border border-[#E2DAC8] flex items-center justify-center">
-          <Loader2 className="animate-spin text-[#0D0D0D]" size={32} />
-        </div>
-      ) : (
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-8 shadow-xs space-y-8">
-          
-          {/* ── 4 Columns Grid ── */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 divide-y md:divide-y-0 md:divide-x divide-[#EFEBE3]">
-            
-            {/* Column 1: Order ID & Date */}
-            <div className="space-y-4">
-              <div>
-                <span className="text-xs text-[#808080] block mb-1">Order ID</span>
-                <div className="flex items-center gap-3">
-                  <span className="font-cormorant text-xl font-bold text-[#1A1A1A]">#{displayOrder.order_number}</span>
-                  <span className="text-[10px] font-bold px-2.5 py-1 rounded-md bg-[#EFEBE3] text-[#2E7D32]">
-                    {displayOrder.status}
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                <span className="text-xs text-[#808080] block mb-1">Order Date</span>
-                <span className="text-xs font-semibold text-[#1A1A1A]">{displayOrder.order_date}</span>
-              </div>
-            </div>
-
-            {/* Column 2: Order Items */}
-            <div className="pt-6 md:pt-0 md:pl-8 space-y-3">
-              <span className="text-xs font-bold text-[#1A1A1A] block">Order Items</span>
-              
-              {displayOrder.items.map((item: any, idx: number) => (
-                <div key={idx} className="flex items-center gap-3">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-14 h-14 rounded-xl object-cover border border-[#E2DAC8]"
-                  />
-                  <div>
-                    <p className="font-bold text-xs text-[#1A1A1A]">{item.name}</p>
-                    <p className="text-xs text-[#808080]">Qty: {item.qty}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Column 3: Customer Details */}
-            <div className="pt-6 md:pt-0 md:pl-8 space-y-3">
-              <span className="text-xs font-bold text-[#1A1A1A] block">Customer Details</span>
-              
-              <div className="flex items-center gap-3">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={displayOrder.customer.avatar}
-                  alt={displayOrder.customer.name}
-                  className="w-8 h-8 rounded-full object-cover border border-[#E2DAC8]"
-                />
-                <div>
-                  <p className="font-bold text-xs text-[#1A1A1A]">{displayOrder.customer.name}</p>
-                  <p className="text-xs text-[#666666]">{displayOrder.customer.phone}</p>
-                </div>
-              </div>
-
-              <p className="text-xs text-[#666666] leading-relaxed max-w-xs pt-1">
-                {displayOrder.customer.address}
-              </p>
-            </div>
-
-            {/* Column 4: Order Summary */}
-            <div className="pt-6 md:pt-0 md:pl-8 space-y-3">
-              <span className="text-xs font-bold text-[#1A1A1A] block">Order Summary</span>
-              
-              <div className="space-y-2 text-xs">
-                <div className="flex justify-between text-[#666666]">
-                  <span>Item Total</span>
-                  <span className="font-semibold text-[#1A1A1A]">{formatPrice(displayOrder.summary.item_total)}</span>
-                </div>
-
-                <div className="flex justify-between text-[#666666]">
-                  <span>Shipping</span>
-                  <span className="font-semibold text-[#1A1A1A]">{formatPrice(displayOrder.summary.shipping)}</span>
-                </div>
-
-                <div className="flex justify-between text-[#666666]">
-                  <span>Discount</span>
-                  <span className="font-semibold text-[#1A1A1A]">-{formatPrice(Math.abs(displayOrder.summary.discount))}</span>
-                </div>
-
-                <div className="flex justify-between pt-2 border-t border-[#EFEBE3] font-bold text-sm">
-                  <span className="text-[#1A1A1A]">Total Amount</span>
-                  <span className="text-[#2E7D32]">{formatPrice(displayOrder.summary.total_amount)}</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* ── Bottom Action Buttons ── */}
-          <div className="flex items-center justify-center gap-4 pt-6 border-t border-[#EFEBE3]">
-            <button
-              onClick={handlePrint}
-              className="inline-flex items-center gap-2 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#0D0D0D] hover:text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-2xs"
-            >
-              <Printer size={15} />
-              <span>Print Invoice</span>
-            </button>
-
-            <button
-              onClick={handleContact}
-              className="inline-flex items-center gap-2 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#0D0D0D] hover:text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-2xs"
-            >
-              <PhoneCall size={15} />
-              <span>Contact Customer</span>
-            </button>
-          </div>
-
-        </div>
-      )}
-
-    </div>
-  );
+  if (loading) return <div className="flex h-80 items-center justify-center"><Loader2 className="animate-spin"/></div>;
+  return <section className="space-y-5 text-wood-900 font-garamond">
+    <header className="flex items-center justify-between gap-3"><div className="flex items-center gap-3"><button onClick={() => router.push("/admin/orders")} className="rounded-full border bg-white p-2" aria-label="Back to orders"><ArrowLeft size={16}/></button><div><h1 className="font-cormorant text-3xl font-bold">Order details</h1><p className="text-xs text-[#666]">{order?.order_number || "Order"}</p></div></div><button onClick={() => window.print()} className="inline-flex items-center gap-2 rounded-lg border bg-white px-3 py-2 text-xs"><Printer size={14}/>Print</button></header>
+    {error && <div role="alert" className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800"><span>{error}</span><button onClick={() => void load()} className="inline-flex items-center gap-1 font-bold underline"><RefreshCw size={13}/>Retry</button></div>}
+    {order && <div className="space-y-5 rounded-2xl border border-[#E2DAC8] bg-white p-5 md:p-7">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[["Order",order.order_number||order.id],["Placed",order.created_at?new Date(order.created_at).toLocaleString():"Not recorded"],["Status",String(order.status||"unknown").replaceAll("_"," ")],["Payment",String(order.payment_status||"unknown").replaceAll("_"," ")]].map(([label,value])=><div key={label}><p className="text-[11px] text-[#777]">{label}</p><p className="mt-1 text-sm font-semibold capitalize">{value}</p></div>)}</div>
+      <div className="grid gap-5 border-t pt-5 md:grid-cols-2"><div><h2 className="mb-2 text-sm font-bold">Customer</h2><p className="text-sm">{order.customer?.full_name||"Customer details unavailable"}</p>{order.customer?.email&&<p className="text-xs text-[#666]">{order.customer.email}</p>}{order.customer?.phone&&<p className="text-xs text-[#666]">{order.customer.phone}</p>}</div><div><h2 className="mb-2 text-sm font-bold">Delivery address</h2><p className="text-sm">{order.shipping_address?.full_name||"Address unavailable"}</p><p className="text-xs text-[#666]">{[order.shipping_address?.line1,order.shipping_address?.line2,order.shipping_address?.city,order.shipping_address?.state,order.shipping_address?.pincode].filter(Boolean).join(", ")||"No saved address on this order"}</p></div></div>
+      <div className="border-t pt-5"><h2 className="mb-3 text-sm font-bold">Items</h2>{order.items?.length?<div className="divide-y">{order.items.map((item:any,index:number)=><div key={item.id||item.product_id||index} className="flex items-center justify-between gap-4 py-3"><div className="min-w-0"><p className="truncate text-sm font-semibold">{item.product_name||"Product"}</p><p className="text-xs text-[#666]">Qty {item.quantity} · {formatPrice(item.unit_price||0)} each</p></div><strong className="shrink-0 text-sm">{formatPrice(item.total_price||0)}</strong></div>)}</div>:<p className="text-xs text-[#777]">This order has no item lines.</p>}</div>
+      <div className="ml-auto max-w-sm space-y-2 border-t pt-4 text-sm">{[["Subtotal",order.subtotal],["Discount",order.discount_amount], ["Shipping",order.shipping_amount]].map(([label,value])=><div key={label} className="flex justify-between"><span className="text-[#666]">{label}</span><span>{formatPrice(Number(value)||0)}</span></div>)}<div className="flex justify-between border-t pt-2 font-bold"><span>Total</span><span>{formatPrice(order.total_amount||0)}</span></div></div>
+    </div>}
+    {!loading&&!order&&!error&&<p className="rounded-xl border bg-white p-8 text-center text-sm text-[#666]">Order not found.</p>}
+  </section>;
 }

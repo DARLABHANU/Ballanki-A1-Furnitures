@@ -1,49 +1,9 @@
 const mongoose = require('mongoose');
-const Counter = require('./Counter');
-
-const UserSchema = new mongoose.Schema({
-  id: { type: Number, unique: true, index: true },
-  email: { type: String, required: true, unique: true, index: true, lowercase: true, trim: true },
-  phone: { type: String, unique: true, sparse: true, trim: true },
-  hashed_password: { type: String, required: true },
-  full_name: { type: String, required: true, trim: true },
-  role: { type: String, enum: ['customer', 'merchant', 'admin', 'support'], default: 'customer' },
-  account_number: { type: String, unique: true, index: true },
-  is_active: { type: Boolean, default: true },
-  is_verified: { type: Boolean, default: false },
-  is_first_login: { type: Boolean, default: true },
-  avatar_url: { type: String, default: null },
-  payout_bank_name: { type: String, default: null },
-  payout_account_number: { type: String, default: null },
-  payout_ifsc_code: { type: String, default: null },
-  payout_account_holder_name: { type: String, default: null },
-  payout_upi_id: { type: String, default: null },
-  created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date, default: Date.now }
-}, {
-  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
-});
-
-// Compound index
-UserSchema.index({ email: 1, role: 1 });
-
-// Auto-increment sequence hook
-UserSchema.pre('save', async function (next) {
-  if (this.isNew) {
-    try {
-      const counter = await Counter.findByIdAndUpdate(
-        'userId',
-        { $inc: { seq: 1 } },
-        { new: true, upsert: true }
-      );
-      this.id = counter.seq;
-    } catch (err) {
-      return next(err);
-    }
-  }
-  next();
-});
-
-const User = mongoose.model('User', UserSchema);
-
-module.exports = User;
+const schema = new mongoose.Schema({
+ email: { type:String,required:true,unique:true,lowercase:true,trim:true }, hashed_password:{type:String,required:true,select:false}, full_name:{type:String,required:true}, phone:String,
+ role:{type:String,enum:['customer','admin','merchant','support'],default:'customer'}, is_active:{type:Boolean,default:true}, is_verified:{type:Boolean,default:false}, is_promoter:{type:Boolean,default:false}, token_version:{type:Number,default:0},
+ merchant_profile:{type:mongoose.Schema.Types.Mixed,default:null}, payout_settings:mongoose.Schema.Types.Mixed,
+ reset_hash:{type:String,select:false},reset_expires:{type:Date,select:false},reset_attempts:{type:Number,default:0,select:false}
+},{timestamps:true});
+schema.set('toJSON',{transform:(doc,r)=>{r.id=String(r._id);r.account_number=String(r._id).slice(-8).toUpperCase();r.created_at=r.createdAt;for(const k of ['_id','__v','hashed_password','token_version','reset_hash','reset_expires','reset_attempts'])delete r[k];return r;}});
+module.exports=mongoose.model('User',schema);

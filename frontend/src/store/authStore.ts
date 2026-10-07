@@ -1,5 +1,8 @@
 import { create } from "zustand";
 import { User, UserRole } from "@/types";
+import { api, setAuthCookies } from "@/lib/api";
+import { useCartStore } from "./cartStore";
+import { useWishlistStore } from "./wishlistStore";
 import Cookies from "js-cookie";
 
 interface AuthState {
@@ -8,7 +11,7 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   setUser: (user: User) => void;
-  setAuth: (tokens: { access_token: string; refresh_token: string; role: UserRole; user_id: number }) => void;
+  setAuth: (tokens: { access_token: string; refresh_token: string; role: UserRole; user_id: string | number }) => void;
   logout: () => void;
   setLoading: (v: boolean) => void;
   rehydrateFromCookies: () => void;
@@ -23,8 +26,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   setUser: (user) => set({ user, isAuthenticated: true, role: user.role, isLoading: false }),
 
   setAuth: ({ access_token, refresh_token, role, user_id }) => {
-    Cookies.set("access_token", access_token, { expires: 1, path: "/" });
-    Cookies.set("refresh_token", refresh_token, { expires: 30, path: "/" });
+    setAuthCookies(access_token, refresh_token);
     Cookies.set("user_role", role, { path: "/" });
     Cookies.set("user_id", String(user_id), { path: "/" });
 
@@ -32,6 +34,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: () => {
+    void api.post("/auth/logout").catch(() => {});
+    useCartStore.getState().resetCart();
+    useWishlistStore.getState().clearWishlist();
+    localStorage.removeItem("ballanki-cart-storage");
+    sessionStorage.removeItem("checkout-key");
     Cookies.remove("access_token", { path: "/" });
     Cookies.remove("refresh_token", { path: "/" });
     Cookies.remove("user_role", { path: "/" });

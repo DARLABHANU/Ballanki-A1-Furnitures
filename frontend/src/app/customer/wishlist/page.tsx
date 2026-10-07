@@ -79,7 +79,7 @@ export default function WishlistPage() {
     };
   });
 
-  const handleRemoveItem = (id: number) => {
+  const handleRemoveItem = (id: string | number) => {
     toggleWishlist(id);
     toast.success("Removed from Wishlist");
   };
@@ -210,7 +210,7 @@ export default function WishlistPage() {
                   </div>
                   <button
                     onClick={() => {
-                      addItem(product.id, 1);
+                      void addItem(product.id, 1).catch(() => {});
                       toast.success("Added to cart!");
                     }}
                     className="w-full bg-[#0D0D0D] text-white py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5"

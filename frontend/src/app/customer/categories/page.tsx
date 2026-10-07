@@ -11,14 +11,14 @@ const DEFAULT_CATEGORIES = [
     name: "Sofas",
     sub: "Unmatched Comfort",
     img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=200",
-    href: "/customer/products?category=jewellery",
+    href: "/customer/products?category=living-room",
     bg: "#F8F5F0",
   },
   {
     name: "Dining",
     sub: "Gather Around",
     img: "https://images.unsplash.com/photo-1567016432779-094069958ea5?auto=format&fit=crop&q=80&w=200",
-    href: "/customer/products?category=sarees",
+    href: "/customer/products?category=bedroom",
     bg: "#F8F5F0",
   },
   {

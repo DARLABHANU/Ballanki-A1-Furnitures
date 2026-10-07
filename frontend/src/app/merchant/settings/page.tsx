@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Save, Lock, Bell, Palette, Globe } from "lucide-react";
+import { authApi, setAuthCookies, api } from "@/lib/api";
 import toast from "react-hot-toast";
 
 export default function MerchantSettingsPage() {
@@ -13,11 +14,10 @@ export default function MerchantSettingsPage() {
   const [withdrawalAlerts, setWithdrawalAlerts] = useState(true);
   const [reviewAlerts, setReviewAlerts] = useState(false);
 
-  const handlePasswordChange = () => {
+  const handlePasswordChange = async () => {
     if (!currentPassword || !newPassword || !confirmPassword) { toast.error("All password fields are required"); return; }
     if (newPassword !== confirmPassword) { toast.error("New passwords don't match"); return; }
-    toast.success("Password updated successfully!");
-    setCurrentPassword(""); setNewPassword(""); setConfirmPassword("");
+    try { const {data} = await authApi.changePassword({current_password:currentPassword,new_password:newPassword}); setAuthCookies(data.access_token,data.refresh_token); toast.success("Password updated"); setCurrentPassword("");setNewPassword("");setConfirmPassword(""); } catch(err:any) {toast.error(err.response?.data?.error || "Password could not be updated");}
   };
 
   return (

@@ -1,0 +1,109 @@
+frontend/src/app/promoter\dashboard\page.tsx:222:            <p className="text-xs">Please contact support or the administrator at <strong className="text-[#0D0D0D]">admin@ballankia1furnitures.live</strong> to generate your unique referral codes.</p>
+frontend/src/app/merchant\analytics\page.tsx:28:      setAnalytics(res.data);
+frontend/src/app/support\dashboard\page.tsx:75:      if (data.length === 0) toast("No users found", { icon: "ℹ️" });
+frontend/src/app/support\dashboard\page.tsx:88:      setUserOrders(data.items);
+frontend/src/app/support\dashboard\page.tsx:105:        token: data.impersonation_token,
+frontend/src/app/support\dashboard\page.tsx:106:        auditLogId: data.audit_log_id,
+frontend/src/app/support\dashboard\page.tsx:107:        user: data.target_user,
+frontend/src/app/support\dashboard\page.tsx:110:      Cookies.set("impersonation_token", data.impersonation_token, { expires: 1 / 24 });
+frontend/src/app/support\dashboard\page.tsx:111:      Cookies.set("impersonation_audit_id", String(data.audit_log_id), { expires: 1 / 24 });
+frontend/src/app/support\dashboard\page.tsx:112:      Cookies.set("impersonation_target_name", data.target_user.full_name, { expires: 1 / 24 });
+frontend/src/app/support\dashboard\page.tsx:114:      toast.success(`Impersonation active for ${data.target_user.full_name}. You can view the store from their perspective.`);
+frontend/src/app/support\dashboard\page.tsx:126:      setAuditLogs(data.items);
+frontend/src/app/support\dashboard\page.tsx:160:        setTicketOrders(data.items);
+frontend/src/app/merchant\customers\page.tsx:33:      if (data && data.items) {
+frontend/src/app/merchant\customers\page.tsx:34:        setCustomers(data.items);
+frontend/src/app/merchant\customers\page.tsx:35:        setTotalCustomers(data.total);
+frontend/src/app/merchant\customers\page.tsx:37:        const repeats = data.items.filter((c: any) => c.total_orders > 1).length;
+frontend/src/app/merchant\customers\page.tsx:42:        const recentCount = data.items.filter((c: any) => {
+frontend/src/app/merchant\coupons\page.tsx:35:        setTotalCoupons(data.length);
+frontend/src/app/merchant\coupons\page.tsx:36:        setActiveCoupons(data.filter((c: any) => c.is_active).length);
+frontend/src/app/merchant\coupons\page.tsx:37:        setTotalRedemptions(data.reduce((sum: number, c: any) => sum + (c.used_count || 0), 0));
+frontend/src/app/merchant\products\page.tsx:38:}).refine(data => !data.compare_price || data.compare_price >= data.price, {
+frontend/src/app/merchant\products\page.tsx:106:      const items = response.data.items || response.data.data || [];
+frontend/src/app/merchant\products\page.tsx:108:      setTotal(response.data.total || items.length);
+frontend/src/app/merchant\products\page.tsx:189:      const parsedTags = data.tags ? data.tags.split(",").map((s) => s.trim()).filter(Boolean) : [];
+frontend/src/app/merchant\products\page.tsx:190:      if (data.subcategory && !parsedTags.some(t => t.toLowerCase() === data.subcategory!.toLowerCase())) {
+frontend/src/app/merchant\products\page.tsx:191:        parsedTags.push(data.subcategory);
+frontend/src/app/merchant\products\page.tsx:193:      if (data.main_category && !parsedTags.some(t => t.toLowerCase() === data.main_category!.toLowerCase())) {
+frontend/src/app/merchant\products\page.tsx:194:        parsedTags.push(data.main_category);
+frontend/src/app/merchant\products\page.tsx:197:      const sellerBasePrice = Number(data.price);
+frontend/src/app/merchant\products\page.tsx:204:        category_id: data.category_id ? Number(data.category_id) : null,
+frontend/src/app/merchant\products\page.tsx:205:        subcategory: data.subcategory || null,
+frontend/src/app/merchant\products\page.tsx:206:        subcategory_slug: data.subcategory ? data.subcategory.toLowerCase().replace(/\s+/g, '-') : null,
+frontend/src/app/merchant\products\page.tsx:207:        images: data.images ? data.images.split(",").map((s) => s.trim()).filter(Boolean) : [],
+frontend/src/app/merchant\products\page.tsx:263:          const uploadedUrl: string = res.data.url;
+frontend/src/app/admin\dashboard\page.tsx:56:  const totalSalesFormatted = data ? formatPrice(data.total_revenue || 0) : "—";
+frontend/src/app/admin\dashboard\page.tsx:67:          Here's what's happening with Ballanki A1 Furnitures.
+frontend/src/app/admin\dashboard\page.tsx:356:            {data?.recent_orders && data.recent_orders.length > 0 ? (
+frontend/src/app/admin\dashboard\page.tsx:357:              data.recent_orders.slice(0, 4).map((ord) => {
+frontend/src/app/admin\coupons\page.tsx:38:      if (data && data.items) {
+frontend/src/app/admin\coupons\page.tsx:39:        setCoupons(data.items);
+frontend/src/app/admin\coupons\page.tsx:40:        setTotalCoupons(data.total || 0);
+frontend/src/app/admin\coupons\page.tsx:44:        data.items.forEach((c: any) => {
+frontend/src/app/merchant\profile\page.tsx:58:          setValue("logo_url", res.data.url);
+frontend/src/app/merchant\profile\page.tsx:78:        setProfile(res.data);
+frontend/src/app/merchant\profile\page.tsx:83:        setProfile(res.data);
+frontend/src/app/merchant\wallet\page.tsx:35:      setAvailableBalance(formatPrice(walletRes.data.available_balance || 0));
+frontend/src/app/merchant\wallet\page.tsx:36:      setTotalWithdrawn(formatPrice(walletRes.data.total_withdrawn || 0));
+frontend/src/app/merchant\wallet\page.tsx:37:      setWithdrawals(withdrawalsRes.data.items || []);
+frontend/src/app/merchant\orders\[id]\page.tsx:65:          setStatus(data.status || "pending");
+frontend/src/app/merchant\orders\[id]\page.tsx:66:          setTrackingNumber(data.tracking_number || "");
+frontend/src/app/merchant\orders\[id]\page.tsx:67:          setCurrentLocation(data.current_location || "");
+frontend/src/app/admin\commissions\page.tsx:35:      if (data && data.items) {
+frontend/src/app/admin\commissions\page.tsx:36:        setCommissions(data.items);
+frontend/src/app/admin\commissions\page.tsx:37:        setTotalPages(data.pages || 1);
+frontend/src/app/admin\commissions\page.tsx:39:          total_platform_earnings: data.total_platform_earnings || 0,
+frontend/src/app/admin\commissions\page.tsx:40:          total_seller_commission: data.total_seller_commission || 0,
+frontend/src/app/admin\commissions\page.tsx:41:          total_promoter_profit: data.total_promoter_profit || 0,
+frontend/src/app/admin\commissions\page.tsx:42:          pending_payouts: data.pending_payouts || 0
+frontend/src/app/merchant\orders\page.tsx:71:      if (data && data.items) {
+frontend/src/app/merchant\orders\page.tsx:72:        setOrders(data.items);
+frontend/src/app/merchant\orders\page.tsx:73:        setTotalOrders(data.total || data.items.length);
+frontend/src/app/merchant\orders\page.tsx:74:        setTotalPages(data.pages || 1);
+frontend/src/app/merchant\orders\page.tsx:79:        data.items.forEach((o: any) => {
+frontend/src/app/merchant\dashboard\page.tsx:50:      if (ordersRes.data.items && ordersRes.data.items.length > 0) {
+frontend/src/app/merchant\dashboard\page.tsx:51:        setRecentOrders(ordersRes.data.items);
+frontend/src/app/admin\sellers\page.tsx:40:      if (data && data.items) {
+frontend/src/app/admin\sellers\page.tsx:41:        setMerchants(data.items);
+frontend/src/app/admin\sellers\page.tsx:42:        setTotalSellers(data.total);
+frontend/src/app/admin\sellers\page.tsx:43:        setTotalPages(data.pages || 1);
+frontend/src/app/admin\sellers\page.tsx:49:        data.items.forEach((m: any) => {
+frontend/src/app/admin\reports\page.tsx:29:    { name: "Tables", amount: formatPrice(data?.total_revenue ? data.total_revenue * 0.34 : 0), percent: 34.1 },
+frontend/src/app/admin\reports\page.tsx:30:    { name: "Chairs", amount: formatPrice(data?.total_revenue ? data.total_revenue * 0.28 : 0), percent: 28.3 },
+frontend/src/app/admin\reports\page.tsx:31:    { name: "Sofas", amount: formatPrice(data?.total_revenue ? data.total_revenue * 0.20 : 0), percent: 19.7 },
+frontend/src/app/admin\reports\page.tsx:32:    { name: "Earrings", amount: formatPrice(data?.total_revenue ? data.total_revenue * 0.11 : 0), percent: 10.8 },
+frontend/src/app/admin\reports\page.tsx:33:    { name: "Rings", amount: formatPrice(data?.total_revenue ? data.total_revenue * 0.07 : 0), percent: 7.1 }
+frontend/src/app/admin\reports\page.tsx:46:  const totalEarningsFormatted = formatPrice(data?.total_platform_fee || data?.total_revenue ? (data.total_revenue * 0.15) : 0);
+frontend/src/app/admin\orders\page.tsx:52:      if (data && data.items) {
+frontend/src/app/admin\orders\page.tsx:53:        setOrders(data.items);
+frontend/src/app/admin\orders\page.tsx:54:        setTotalOrders(data.total);
+frontend/src/app/admin\orders\page.tsx:55:        setTotalPages(data.pages || 1);
+frontend/src/app/admin\orders\page.tsx:60:        data.items.forEach((o: any) => {
+frontend/src/app/admin\return-requests\page.tsx:39:      if (data && data.items) {
+frontend/src/app/admin\return-requests\page.tsx:40:        setRequests(data.items);
+frontend/src/app/admin\return-requests\page.tsx:41:        setTotalDisputes(data.total);
+frontend/src/app/admin\return-requests\page.tsx:42:        setTotalPages(data.pages || 1);
+frontend/src/app/admin\return-requests\page.tsx:48:        data.items.forEach((r: any) => {
+frontend/src/app/admin\users\page.tsx:83:      if (data && data.items) {
+frontend/src/app/admin\users\page.tsx:84:        setUsers(data.items);
+frontend/src/app/admin\users\page.tsx:85:        setTotal(data.total);
+frontend/src/app/admin\users\page.tsx:86:        setTotalPages(data.pages || 1);
+frontend/src/app/admin\users\page.tsx:91:        data.items.forEach((u: any) => {
+frontend/src/app/admin\users\page.tsx:111:      setMerchants(data.items);
+frontend/src/app/admin\users\page.tsx:112:      setMerchantsTotal(data.total);
+frontend/src/app/admin\users\page.tsx:115:      data.items.forEach((m: any) => {
+frontend/src/app/admin\products\page.tsx:41:      const { items, total, pages } = response.data;
+frontend/src/app/admin\settings\page.tsx:12:  const [supportEmail, setSupportEmail] = useState("support@ballankia1furnitures.live");
+frontend/src/app/admin\promoters\page.tsx:41:      if (data && data.items) {
+frontend/src/app/admin\promoters\page.tsx:42:        setPromoters(data.items);
+frontend/src/app/admin\promoters\page.tsx:43:        setTotalPromoters(data.total || 0);
+frontend/src/app/admin\promoters\page.tsx:44:        setTotalPages(data.pages || 1);
+frontend/src/app/admin\promoters\page.tsx:45:        setActivePromoters(data.items.filter((u: any) => u.is_active).length);
+frontend/src/app/admin\promoters\page.tsx:50:        data.items.forEach((p: any) => {
+frontend/src/app/admin\products\add\page.tsx:75:      await api.post("/products", payload);
+frontend/src/app/admin\settlements\page.tsx:39:      if (data && data.items) {
+frontend/src/app/admin\settlements\page.tsx:40:        setSettlements(data.items);
+frontend/src/app/admin\settlements\page.tsx:41:        setTotalPages(data.pages || 1);
+frontend/src/app/admin\settlements\page.tsx:48:        data.items.forEach((item: any) => {
+frontend/src/app/admin\website-settings\page.tsx:9:  const [footerText, setFooterText] = useState("© 2026 Ballanki A1 Furnitures. All Rights Reserved. Crafted with Elegance in Guntur, Andhra Pradesh.");

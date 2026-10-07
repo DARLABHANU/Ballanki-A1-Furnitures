@@ -6,6 +6,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { Loader2, ShieldCheck, Sparkles, User, Mail, Lock } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
+import { authApi } from "@/lib/api";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -16,34 +17,37 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password || !fullName.trim()) return;
 
     setIsLoading(true);
-    // Simulate authentication
-    setTimeout(() => {
-      setAuth({
-        access_token: "mock-token",
-        refresh_token: "mock-refresh",
-        role: "customer",
-        user_id: 2,
-      });
-
-      setUser({
-        id: 2,
-        email: email.trim().toLowerCase(),
+    try {
+      const res = await authApi.signup({
         full_name: fullName.trim(),
-        role: "customer",
-        account_number: "OH-CUST-2",
-        is_active: true,
-        is_verified: true,
-        created_at: new Date().toISOString()
+        email: email.trim().toLowerCase(),
+        password,
+        role: "customer"
       });
+      const { access_token, refresh_token, role, user_id, user } = res.data;
+
+      setAuth({ access_token, refresh_token, role, user_id });
+
+      if (user) {
+        setUser(user);
+      } else {
+        const meRes = await authApi.me();
+        setUser(meRes.data);
+      }
 
       toast.success("Account created successfully. Welcome to Ballanki A1 Furnitures!");
       router.push("/");
-    }, 1000);
+    } catch (err: any) {
+      const message = err?.response?.data?.message || err?.response?.data?.error || "Registration failed. Please try again.";
+      toast.error(message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

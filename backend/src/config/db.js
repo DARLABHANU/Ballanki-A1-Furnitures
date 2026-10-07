@@ -1,15 +1,16 @@
-const dns = require('dns');
-try { dns.setServers(['8.8.8.8', '1.1.1.1']); } catch (e) {}
-
-const mongoose = require('mongoose');
-const config = require('./index');
+﻿const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(config.mongodbUri, { family: 4 });
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    const uri = process.env.MONGODB_URI;
+    if (!uri) throw new Error("MONGODB_URI is undefined");
+
+    console.log("Attempting to connect to MongoDB...");
+    // The family: 4 option forces IPv4 to instantly prevent the dreaded 30-sec Mongoose timeout error on Windows.
+    const conn = await mongoose.connect(uri, { family: 4 });
+    console.log(`✅ MongoDB Successfully Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`Database connection error: ${error.message}`);
+    console.error(`❌ MongoDB Connection Error: ${error.message}`);
     process.exit(1);
   }
 };

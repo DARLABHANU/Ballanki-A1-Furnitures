@@ -71,7 +71,7 @@ function VerifyOtpContent() {
     setIsLoading(true);
     try {
       if (purpose === "password_reset") {
-        // Redirect to reset password page with email and verified OTP
+        await authApi.verifyOtp({ identifier: email, channel: "email", otpCode: code });
         toast.success("OTP verified successfully!");
         router.push(`/auth/reset-password?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(code)}`);
       } else {
@@ -81,6 +81,11 @@ function VerifyOtpContent() {
           channel: "email",
           otpCode: code
         });
+
+        if (res.data?.role === "merchant") {
+          toast.error("Merchant access is disabled. Please contact the store administrator.");
+          return;
+        }
         
         if (res.data?.access_token) {
           setAuth({
@@ -92,7 +97,7 @@ function VerifyOtpContent() {
         }
         
         toast.success("Verification successful!");
-        router.push(res.data?.role === "merchant" ? "/merchant/dashboard" : res.data?.role === "admin" ? "/admin/dashboard" : "/");
+        router.push(res.data?.role === "admin" ? "/admin/dashboard" : "/");
       }
     } catch (err) {
       toast.error(getApiError(err) || "Invalid OTP code. Please check and try again.");

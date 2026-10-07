@@ -1,542 +1,83 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  Loader2,
-  Search,
-  Download,
-  UserCheck,
-  UserX,
-  ShieldCheck,
-  Store,
-  Trash2,
-  Award,
-  ChevronLeft,
-  ChevronRight
-} from "lucide-react";
+import { Loader2, RefreshCw, Search, UserRound, UserX } from "lucide-react";
 import toast from "react-hot-toast";
 import { adminApi } from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
-import { User } from "@/types";
 import { formatDate, getApiError } from "@/lib/utils";
 
-const ROLE_OPTIONS: { value: string; label: string }[] = [
-  { value: "", label: "All Users" },
-  { value: "customer", label: "Buyers" },
-  { value: "merchant", label: "Merchants" },
-  { value: "promoter", label: "Promoters" },
-  { value: "support", label: "Support" },
-  { value: "admin", label: "Admins" },
-];
+type StoreUser = { id: string; full_name: string; email: string; role: string; is_active: boolean; created_at: string };
 
 function UsersContent() {
-  const router = useRouter();
   const params = useSearchParams();
+  const router = useRouter();
   const { isAuthenticated, role } = useAuthStore();
-
-  // Mode/Tab state
-  const [activeTab, setActiveTab] = useState<"users" | "merchants">("users");
-
-  // Users state
-  const [users, setUsers] = useState<User[]>([]);
+  const [items, setItems] = useState<StoreUser[]>([]);
   const [total, setTotal] = useState(0);
-  const [activeCount, setActiveCount] = useState(0);
-  const [inactiveCount, setInactiveCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState(params.get("role") || "");
   const [page, setPage] = useState(1);
-  const [actionUserId, setActionUserId] = useState<number | null>(null);
+  const [pages, setPages] = useState(1);
+  const [roleFilter, setRoleFilter] = useState(params.get("role") || "");
+  useEffect(() => { setRoleFilter(params.get("role") || ""); setPage(1); }, [params]);
+  const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [busyId, setBusyId] = useState("");
 
-  // Merchants state
-  const [merchants, setMerchants] = useState<any[]>([]);
-  const [merchantsTotal, setMerchantsTotal] = useState(0);
-  const [merchantsLoading, setMerchantsLoading] = useState(false);
-  const [merchantsPage, setMerchantsPage] = useState(1);
-  const [commissionInputs, setCommissionInputs] = useState<Record<number, number>>({});
-  const [actionMerchantId, setActionMerchantId] = useState<number | null>(null);
-
-  const [totalPages, setTotalPages] = useState(1);
-
-  useEffect(() => {
-    if (!isAuthenticated || !["admin", "support"].includes(role || "")) {
-      router.push("/auth/login");
-      return;
-    }
-    if (activeTab === "users") {
-      loadUsers();
-    } else {
-      loadMerchants();
-    }
-  }, [isAuthenticated, role, roleFilter, page, activeTab, merchantsPage]);
-
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     setIsLoading(true);
+    setError("");
     try {
-      const { data } = await adminApi.users({
-        page,
-        page_size: 20,
-        role: roleFilter || undefined,
-        search: search || undefined,
-      });
-      if (data && data.items) {
-        setUsers(data.items);
-        setTotal(data.total);
-        setTotalPages(data.pages || 1);
-        
-        // Count active/inactive from current page as an approximation if backend doesn't provide global stats
-        let active = 0;
-        let inactive = 0;
-        data.items.forEach((u: any) => {
-          if (u.is_active) active++;
-          else inactive++;
-        });
-        setActiveCount(active);
-        setInactiveCount(inactive);
-      } else {
-        setUsers([]);
-      }
-    } catch {
-      setUsers([]);
+      const { data } = await adminApi.users({ page, page_size: 20, role: roleFilter || undefined, search: search.trim() || undefined });
+      setItems(data.items || []);
+      setTotal(data.total || 0);
+      setPages(data.pages || 1);
+    } catch (err) {
+      const message = getApiError(err);
+      setError(message);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [page, roleFilter, search]);
 
-  const loadMerchants = async () => {
-    setMerchantsLoading(true);
-    try {
-      const { data } = await adminApi.merchants({ page: merchantsPage, page_size: 20 });
-      setMerchants(data.items);
-      setMerchantsTotal(data.total);
-
-      const inputs: Record<number, number> = {};
-      data.items.forEach((m: any) => {
-        inputs[m.id] = m.commission_rate ?? 10;
-      });
-      setCommissionInputs(inputs);
-    } catch (err) {
-      toast.error(getApiError(err));
-    } finally {
-      setMerchantsLoading(false);
-    }
-  };
-
-  const handleExport = () => {
-    toast.success("Exporting users list CSV...");
-  };
-
-  const handleDeleteUser = async (userToDel: any) => {
-    if (!confirm(`Are you sure you want to delete user "${userToDel.full_name}"?`)) return;
-    setActionUserId(userToDel.id);
-    try {
-      await adminApi.deleteUser(userToDel.id);
-      toast.success("User deleted successfully");
-      loadUsers();
-    } catch (err) {
-      toast.error(getApiError(err));
-    } finally {
-      setActionUserId(null);
-    }
-  };
-
-  const toggleActive = async (userToToggle: any) => {
-    setActionUserId(userToToggle.id);
-    try {
-      await adminApi.updateUser(userToToggle.id, { is_active: !userToToggle.is_active });
-      toast.success(userToToggle.is_active ? "User deactivated" : "User activated");
-      loadUsers();
-    } catch (err) {
-      toast.error(getApiError(err));
-    } finally {
-      setActionUserId(null);
-    }
-  };
-
-  const createPromoterCoupon = async (userTarget: any) => {
-    const code = window.prompt(`Create ₹199 promoter coupon code for ${userTarget.full_name}:`, `PROMO${userTarget.id}`);
-    if (!code) return;
-    setActionUserId(userTarget.id);
-    try {
-      await adminApi.createCoupon({
-        code: code.trim().toUpperCase(),
-        description: `Affiliate Promoter coupon for ${userTarget.full_name}`,
-        discount_type: "fixed",
-        discount_value: 199,
-        promoter_commission: 100,
-        platform_profit: 30,
-        promoter_id: String(userTarget.id),
-      });
-      toast.success(`Promoter coupon "${code.trim().toUpperCase()}" created for ${userTarget.full_name}!`);
-      loadUsers();
-    } catch (err) {
-      toast.error(getApiError(err));
-    } finally {
-      setActionUserId(null);
-    }
-  };
-
-  const makeUserMerchant = async (userTarget: any) => {
-    if (userTarget.role === "merchant") {
-      toast.error(`"${userTarget.full_name}" is already a Merchant!`);
+  useEffect(() => {
+    if (!isAuthenticated || role !== "admin") {
+      router.replace("/auth/login");
       return;
     }
-    if (!confirm(`Make "${userTarget.full_name}" a Merchant?\nThis will grant merchant dashboard access and automatically create their store profile.`)) return;
+    void loadUsers();
+  }, [isAuthenticated, role, router, loadUsers]);
 
-    setActionUserId(userTarget.id);
+  const toggleActive = async (user: StoreUser) => {
+    setBusyId(user.id);
     try {
-      await adminApi.updateUser(userTarget.id, { role: "merchant", is_verified: true });
-      toast.success(`User "${userTarget.full_name}" promoted to Merchant successfully!`);
-      loadUsers();
+      await adminApi.updateUser(user.id, { is_active: !user.is_active });
+      toast.success(user.is_active ? "Account deactivated." : "Account activated.");
+      await loadUsers();
     } catch (err) {
       toast.error(getApiError(err));
     } finally {
-      setActionUserId(null);
+      setBusyId("");
     }
   };
 
-  const displayUserList = users.map((u) => ({
-    id: u.id,
-    full_name: u.full_name,
-    email: u.email,
-    role: u.role,
-    is_promoter: u.is_promoter,
-    displayRole: u.is_promoter ? "Promoter" : u.role === "merchant" ? "Merchant" : u.role === "customer" ? "Buyer" : u.role,
-    is_active: u.is_active,
-    created_at: u.created_at,
-    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(u.full_name)}&background=0D2619&color=fff`
-  }));
-
-  return (
-    <div className="space-y-6 text-[#1A1A1A] font-garamond">
-      
-      {/* Page Title */}
-      <div className="flex items-center justify-between">
-        <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Users Management</h1>
-        
-        {/* Toggle Mode Tab */}
-        <div className="flex items-center gap-2 bg-white border border-[#E2DAC8] p-1 rounded-xl shadow-2xs">
-          <button
-            onClick={() => setActiveTab("users")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-              activeTab === "users" ? "bg-[#0D0D0D] text-white" : "text-[#666666] hover:text-[#1A1A1A]"
-            }`}
-          >
-            Users List
-          </button>
-          <button
-            onClick={() => setActiveTab("merchants")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
-              activeTab === "merchants" ? "bg-[#0D0D0D] text-white" : "text-[#666666] hover:text-[#1A1A1A]"
-            }`}
-          >
-            <Store size={13} /> Merchant Profiles
-          </button>
-        </div>
-      </div>
-
-      {activeTab === "users" ? (
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
-          
-          {/* ── 1. Top Summary Metrics ── */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pb-6 border-b border-[#EFEBE3]">
-            <div>
-              <span className="text-xs font-medium text-[#666666] block mb-1">Total Users</span>
-              <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{total.toLocaleString()}</span>
-            </div>
-            <div>
-              <span className="text-xs font-medium text-[#666666] block mb-1">Active Users</span>
-              <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{activeCount.toLocaleString()}</span>
-            </div>
-            <div>
-              <span className="text-xs font-medium text-[#666666] block mb-1">Inactive Users</span>
-              <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{inactiveCount.toLocaleString()}</span>
-            </div>
-          </div>
-
-          {/* ── 2. Filter & Export Controls ── */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            
-            {/* Search Box */}
-            <div className="relative w-full sm:w-80">
-              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#808080]" />
-              <input
-                type="text"
-                placeholder="Search users..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
-              />
-            </div>
-
-            {/* Filter Dropdown + Export */}
-            <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-              <div className="relative border border-[#E2DAC8] rounded-xl px-3 py-2 bg-[#F8F5F0]">
-                <select
-                  value={roleFilter}
-                  onChange={(e) => {
-                    setRoleFilter(e.target.value);
-                    setPage(1);
-                  }}
-                  className="text-xs font-semibold text-[#1A1A1A] bg-transparent appearance-none pr-6 focus:outline-none cursor-pointer"
-                >
-                  {ROLE_OPTIONS.map((r) => (
-                    <option key={r.value} value={r.value}>{r.label}</option>
-                  ))}
-                </select>
-              </div>
-
-              <button
-                onClick={handleExport}
-                className="inline-flex items-center gap-1.5 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#0D0D0D] hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
-              >
-                <Download size={14} />
-                <span>Export</span>
-              </button>
-            </div>
-
-          </div>
-
-          {/* ── 3. Users Table ── */}
-          <div className="overflow-x-auto">
-            {isLoading ? (
-              <div className="h-48 flex items-center justify-center">
-                <Loader2 className="animate-spin text-[#0D0D0D]" size={32} />
-              </div>
-            ) : (
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
-                    <th className="pb-3 px-3">User</th>
-                    <th className="pb-3 px-3">Email</th>
-                    <th className="pb-3 px-3">Role</th>
-                    <th className="pb-3 px-3">Status</th>
-                    <th className="pb-3 px-3">Joined On</th>
-                    <th className="pb-3 px-3 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#EFEBE3]">
-                {displayUserList.length === 0 ? (
-                  <tr><td colSpan={6} className="py-8 text-center text-[#808080]">No users found.</td></tr>
-                ) : (
-                  displayUserList.map((u) => (
-                    <tr key={u.id} className="hover:bg-[#F8F5F0]/60 transition-colors">
-                      
-                      {/* Avatar & Name */}
-                      <td className="py-3 px-3">
-                        <div className="flex items-center gap-3">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={u.avatar}
-                            alt={u.full_name}
-                            className="w-8 h-8 rounded-full object-cover border border-[#E2DAC8]"
-                          />
-                          <span className="font-bold text-[#1A1A1A] text-xs">{u.full_name}</span>
-                        </div>
-                      </td>
-
-                      {/* Email */}
-                      <td className="py-3 px-3 text-[#666666] font-medium">{u.email}</td>
-
-                      {/* Role */}
-                      <td className="py-3 px-3">
-                        <span className={`font-semibold ${
-                          u.displayRole === "Promoter" 
-                            ? "text-red-600 font-bold" 
-                            : "text-[#4A4033]"
-                        }`}>
-                          {u.displayRole}
-                        </span>
-                      </td>
-
-                      {/* Status */}
-                      <td className="py-3 px-3">
-                        <span className={`text-[10px] font-bold px-2.5 py-1 rounded-md inline-block ${
-                          u.is_active 
-                            ? "bg-[#EFEBE3] text-[#2E7D32]" 
-                            : "bg-red-50 text-red-700"
-                        }`}>
-                          {u.is_active ? "Active" : "Inactive"}
-                        </span>
-                      </td>
-
-                      {/* Joined On */}
-                      <td className="py-3 px-3 text-[#666666] font-medium">{formatDate(u.created_at)}</td>
-
-                      {/* Actions */}
-                      <td className="py-3 px-3 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          {actionUserId === u.id ? (
-                            <Loader2 size={14} className="animate-spin text-[#0D0D0D]" />
-                          ) : (
-                            <>
-                              {u.role !== "merchant" ? (
-                                <button
-                                  onClick={() => makeUserMerchant(u)}
-                                  title="Promote User to Merchant"
-                                  className="px-2 py-1 bg-wood-50 hover:bg-wood-100 text-[#0D0D0D] border border-wood-300 rounded-lg text-[11px] font-bold transition-all inline-flex items-center gap-1 shadow-2xs"
-                                >
-                                  <Store size={13} />
-                                  <span>Make Merchant</span>
-                                </button>
-                              ) : (
-                                <button
-                                  disabled
-                                  title="User is a Merchant"
-                                  className="px-2 py-1 bg-wood-100/60 text-wood-900 border border-wood-200 rounded-lg text-[11px] font-bold inline-flex items-center gap-1 opacity-80 cursor-default"
-                                >
-                                  <Store size={13} />
-                                  <span>Merchant</span>
-                                </button>
-                              )}
-
-                              <button
-                                onClick={() => toggleActive(u)}
-                                title={u.is_active ? "Deactivate" : "Activate"}
-                                className="p-1 text-[#666666] hover:text-[#0D0D0D] transition-colors"
-                              >
-                                {u.is_active ? <UserX size={15} /> : <UserCheck size={15} />}
-                              </button>
-                              <button
-                                onClick={() => createPromoterCoupon(u)}
-                                title="Set as Promoter (Assign Coupon Code)"
-                                className="p-1 text-amber-600 hover:text-amber-700 transition-colors"
-                              >
-                                <Award size={15} />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteUser(u)}
-                                title="Delete User"
-                                className="p-1 text-[#666666] hover:text-red-600 transition-colors"
-                              >
-                                <Trash2 size={15} />
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </td>
-
-                    </tr>
-                  ))
-                )}
-                </tbody>
-              </table>
-            )}
-          </div>
-
-          {/* ── 4. Pagination Dock ── */}
-          <div className="flex items-center justify-between pt-4 border-t border-[#EFEBE3]">
-              <span className="text-[11px] text-[#808080] font-medium">Page {page} of {totalPages}</span>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
-                  disabled={page === 1}
-                  className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-[#F8F5F0] disabled:opacity-50 transition-colors"
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                <button
-                  onClick={() => setPage(p => p + 1)}
-                  disabled={page >= totalPages}
-                  className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-[#F8F5F0] disabled:opacity-50 transition-colors"
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-          </div>
-
-        </div>
-      ) : (
-        /* Merchant Store Profiles Tab */
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
-          <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-3">
-            Merchant Stores &amp; Commissions
-          </h3>
-
-          <div className="overflow-x-auto">
-            {merchantsLoading ? (
-              <div className="h-48 flex items-center justify-center">
-                <Loader2 className="animate-spin text-[#0D0D0D]" size={32} />
-              </div>
-            ) : (
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
-                    <th className="pb-3 px-3">Store Name</th>
-                    <th className="pb-3 px-3">Merchant Owner</th>
-                    <th className="pb-3 px-3">Commission %</th>
-                    <th className="pb-3 px-3">Status</th>
-                    <th className="pb-3 px-3 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#EFEBE3]">
-                  {merchants.map((m) => (
-                    <tr key={m.id} className="hover:bg-[#F8F5F0]/60 transition-colors">
-                      <td className="py-3 px-3 font-bold text-[#1A1A1A]">{m.business_name}</td>
-                      <td className="py-3 px-3 text-[#666666]">
-                        <p className="font-semibold text-[#1A1A1A]">{m.user?.full_name}</p>
-                        <p className="text-[11px] text-[#808080]">{m.user?.email}</p>
-                      </td>
-                      <td className="py-3 px-3">
-                        <div className="flex items-center gap-1">
-                          <input
-                            type="number"
-                            value={commissionInputs[m.id] ?? m.commission_rate ?? 10}
-                            onChange={(e) => setCommissionInputs({ ...commissionInputs, [m.id]: Number(e.target.value) })}
-                            className="w-14 bg-[#F8F5F0] border border-[#E2DAC8] rounded px-2 py-1 text-xs font-bold text-[#1A1A1A]"
-                          />
-                          <span>%</span>
-                        </div>
-                      </td>
-                      <td className="py-3 px-3">
-                        <span className={`text-[10px] font-bold px-2.5 py-1 rounded-md inline-block ${
-                          m.is_approved ? "bg-[#EFEBE3] text-[#2E7D32]" : "bg-amber-100 text-amber-800"
-                        }`}>
-                          {m.is_approved ? "APPROVED" : "PENDING"}
-                        </span>
-                      </td>
-                      <td className="py-3 px-3 text-right">
-                        <button
-                          onClick={async () => {
-                            try {
-                              await adminApi.approveMerchant(m.id, {
-                                is_approved: true,
-                                commission_rate: commissionInputs[m.id] ?? 10
-                              });
-                              toast.success(`Merchant "${m.business_name}" updated!`);
-                              loadMerchants();
-                            } catch (err) {
-                              toast.error(getApiError(err));
-                            }
-                          }}
-                          className="bg-[#0D0D0D] text-white px-3 py-1 rounded-lg text-xs font-bold hover:bg-[#333333] transition-colors"
-                        >
-                          Update Rate
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {merchants.length === 0 && (
-                    <tr>
-                      <td colSpan={5} className="py-8 text-center text-[#808080] font-garamond">No merchant store profiles found</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            )}
-          </div>
-        </div>
-      )}
-
+  return <section className="space-y-5 text-wood-900 font-garamond">
+    <header className="flex flex-wrap items-end justify-between gap-3">
+      <div><h1 className="font-cormorant text-3xl font-bold">Users</h1><p className="text-xs text-[#666]">Customer and staff accounts from the store database.</p></div>
+      <button onClick={() => void loadUsers()} className="inline-flex items-center gap-2 rounded-lg border border-[#E2DAC8] bg-white px-3 py-2 text-xs font-semibold"><RefreshCw size={14}/>Refresh</button>
+    </header>
+    <div className="flex flex-wrap gap-3 rounded-2xl border border-[#E2DAC8] bg-white p-4">
+      <label className="relative min-w-52 flex-1"><Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#888]"/><input value={search} onChange={event => { setSearch(event.target.value); setPage(1); }} placeholder="Search name or email" className="w-full rounded-lg border border-[#E2DAC8] py-2 pl-9 pr-3 text-sm outline-none focus:border-[#466657]"/></label>
+      <select aria-label="Filter users by role" value={roleFilter} onChange={event => { setRoleFilter(event.target.value); setPage(1); }} className="rounded-lg border border-[#E2DAC8] bg-white px-3 py-2 text-sm"><option value="">All account types</option><option value="customer">Customers</option><option value="promoter">Promoters</option><option value="support">Support</option><option value="admin">Administrators</option></select>
     </div>
-  );
+    {error && <div role="alert" className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800"><span>{error}</span><button onClick={() => void loadUsers()} className="font-bold underline">Retry</button></div>}
+    <div className="overflow-hidden rounded-2xl border border-[#E2DAC8] bg-white">
+      <div className="border-b border-[#EFEBE3] px-5 py-3 text-xs text-[#666]">{total.toLocaleString()} accounts</div>
+      {isLoading ? <div className="flex h-40 items-center justify-center"><Loader2 className="animate-spin"/></div> : items.length ? <div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead className="bg-[#F8F5F0] text-xs text-[#666]"><tr><th className="px-5 py-3">User</th><th className="px-5 py-3">Account type</th><th className="px-5 py-3">Joined</th><th className="px-5 py-3">Status</th><th className="px-5 py-3 text-right">Action</th></tr></thead><tbody>{items.map(user => <tr key={user.id} className="border-t border-[#EFEBE3]"><td className="px-5 py-3"><div className="flex items-center gap-2"><UserRound size={16} className="text-[#718478]"/><div><p className="font-semibold">{user.full_name}</p><p className="text-xs text-[#777]">{user.email}</p></div></div></td><td className="px-5 py-3 capitalize">{user.role === "customer" ? "Customer" : user.role}</td><td className="px-5 py-3 text-xs text-[#666]">{formatDate(user.created_at)}</td><td className="px-5 py-3"><span className={user.is_active ? "text-green-700" : "text-red-700"}>{user.is_active ? "Active" : "Inactive"}</span></td><td className="px-5 py-3 text-right"><button disabled={busyId === user.id || user.role === "admin"} onClick={() => void toggleActive(user)} className="inline-flex items-center gap-1 rounded-lg border border-[#E2DAC8] px-2.5 py-1.5 text-xs disabled:opacity-40">{busyId === user.id ? <Loader2 size={13} className="animate-spin"/> : <UserX size={13}/>} {user.is_active ? "Deactivate" : "Activate"}</button></td></tr>)}</tbody></table></div> : <p className="p-10 text-center text-sm text-[#777]">No matching accounts.</p>}
+      <div className="flex items-center justify-between border-t border-[#EFEBE3] px-5 py-3 text-xs"><span>Page {page} of {pages}</span><div className="flex gap-2"><button disabled={page <= 1 || isLoading} onClick={() => setPage(value => value - 1)} className="rounded border border-[#E2DAC8] px-3 py-1.5 disabled:opacity-40">Previous</button><button disabled={page >= pages || isLoading} onClick={() => setPage(value => value + 1)} className="rounded border border-[#E2DAC8] px-3 py-1.5 disabled:opacity-40">Next</button></div></div>
+    </div>
+  </section>;
 }
 
-export default function AdminUsersPage() {
-  return (
-    <Suspense fallback={<div className="h-48 flex items-center justify-center"><Loader2 className="animate-spin text-[#0D0D0D]" size={28} /></div>}>
-      <UsersContent />
-    </Suspense>
-  );
-}
+export default function UsersPage() { return <Suspense fallback={<div className="p-8">Loading accounts…</div>}><UsersContent/></Suspense>; }

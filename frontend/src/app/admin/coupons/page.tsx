@@ -21,7 +21,7 @@ function CouponsContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<string | number | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated || !["admin", "support"].includes(role || "")) {
@@ -59,13 +59,15 @@ function CouponsContent() {
     }
   };
 
-  const handleCreateCoupon = () => {
+  const handleCreateCoupon = async () => {
     const code = window.prompt("Enter new Coupon Code (e.g. WELCOME100):");
     if (!code) return;
-    toast.success(`Coupon "${code.toUpperCase()}" created successfully!`);
+    const amount = Number(window.prompt("Discount amount in rupees:", "100"));
+    if(!Number.isFinite(amount) || amount <= 0) return toast.error("Enter a positive discount amount");
+    try { await adminApi.createCoupon({code:code.trim().toUpperCase(),discount_type:"fixed",discount_value:amount}); toast.success("Coupon saved"); await loadCoupons(); } catch (err) { toast.error(getApiError(err)); }
   };
 
-  const handleDeleteCoupon = async (id: number, code: string) => {
+  const handleDeleteCoupon = async (id: string | number, code: string) => {
     if (!confirm(`Are you sure you want to delete coupon "${code}"?`)) return;
     setDeletingId(id);
     try {
@@ -86,7 +88,7 @@ function CouponsContent() {
     discount_value: c.discount_type === "percentage" ? `${c.discount_value}% Off` : formatPrice(c.discount_value),
     promoter_commission: c.promoter_commission ? formatPrice(c.promoter_commission) : "N/A",
     platform_profit: c.platform_profit ? formatPrice(c.platform_profit) : "N/A",
-    usage_count: c.times_used || 0,
+    usage_count: c.used_count || 0,
     is_active: c.is_active,
     created_at: formatDate(c.created_at || "2025-05-30T10:00:00Z")
   }));

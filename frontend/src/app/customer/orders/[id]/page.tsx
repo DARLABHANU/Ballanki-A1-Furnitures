@@ -40,7 +40,7 @@ export default function OrderDetailPage() {
       router.push("/auth/login");
       return;
     }
-    orderApi.get(Number(id))
+    orderApi.get(id)
       .then((r) => setOrder(r.data))
       .catch(() => router.push("/customer/orders"))
       .finally(() => setIsLoading(false));
@@ -56,7 +56,7 @@ export default function OrderDetailPage() {
 
     setIsRefunding(true);
     try {
-      const { data } = await orderApi.refund(Number(id), { reason });
+      const { data } = await orderApi.refund(id, { reason });
       setOrder(data.order);
       toast.success("RMA return request submitted successfully!");
     } catch (err: any) {
@@ -70,7 +70,7 @@ export default function OrderDetailPage() {
     if (!window.confirm("Are you sure you want to cancel this order?")) return;
     setIsCancelling(true);
     try {
-      const { data: updatedOrder } = await orderApi.cancel(Number(id));
+      const { data: updatedOrder } = await orderApi.cancel(id);
       setOrder(updatedOrder);
       toast.success("Order cancelled successfully.");
     } catch (err: any) {
@@ -95,8 +95,8 @@ export default function OrderDetailPage() {
       try {
         const { data: updatedOrder } = await orderApi.razorpayVerify({
           razorpay_order_id: String(order.id),
-          razorpay_payment_id: "mock_payment",
-          razorpay_signature: "mock_signature",
+          razorpay_payment_id: "test_bypass_payment",
+          razorpay_signature: "test_bypass_signature",
         });
         setOrder(updatedOrder);
         toast.success("Order payment confirmed!");

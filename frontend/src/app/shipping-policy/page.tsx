@@ -37,8 +37,8 @@ export default function ShippingPolicyPage() {
               </p>
               <ul className="list-disc pl-5 space-y-1">
                 <li><strong>Ready-to-Ship Items</strong>: Dispatched within 24 to 48 business hours from our central warehouse.</li>
-                <li><strong>Bespoke / Custom Orders</strong>: Silver jewellery resizing, custom bridal sarees, and personalized embellishments require between 7 to 15 business days for bespoke craftsmanship before shipment.</li>
-                <li><strong>Handloom Sarees</strong>: High-value designer sarees are thoroughly steam-pressed, double-checked for weaving perfection, and secured in luxury heirloom cases prior to shipping.</li>
+                <li><strong>Bespoke / Custom Orders</strong>: Custom sofa upholstery, bespoke wood finishes, and personalized embellishments require between 7 to 15 business days for bespoke craftsmanship before shipment.</li>
+                <li><strong>Oversized Furniture</strong>: High-value furniture pieces are thoroughly polished, double-checked for structural perfection, and secured in heavy-duty padded transport crates prior to shipping.</li>
               </ul>
             </section>
 

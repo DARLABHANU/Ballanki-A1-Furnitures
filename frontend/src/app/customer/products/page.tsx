@@ -56,9 +56,8 @@ function ProductsContent() {
     setIsLoading(true);
     const [sort_by, sort_order] = sort.split(":");
 
-    // Simulate network delay
-    setTimeout(() => {
-      const res = productApi.list({
+    try {
+      const res = await productApi.list({
         page: currentPage,
         search: search || undefined,
         sort_by,
@@ -67,11 +66,15 @@ function ProductsContent() {
         max_price: maxPrice || undefined,
         category: categoryParam || undefined,
         fabric: selectedFabric || undefined,
-        wood_type: selectedWood || undefined
+        wood_type: selectedWood || undefined,
+        min_rating: minRating || undefined
       });
-      setData(res);
+      setData(res.data);
+    } catch (err) {
+      console.error("Failed to load products:", err);
+    } finally {
       setIsLoading(false);
-    }, 600);
+    }
   };
 
   useEffect(() => {
@@ -156,8 +159,8 @@ function ProductsContent() {
                 }
               }}
               className={`px-4 py-2 rounded font-semibold whitespace-nowrap transition-all flex items-center gap-2 border text-[13px] ${isActive
-                  ? "bg-wood-900 text-white border-wood-900 shadow-sm"
-                  : "bg-white text-wood-600 border-wood-200 hover:border-wood-900 hover:text-wood-900"
+                ? "bg-wood-900 text-white border-wood-900 shadow-sm"
+                : "bg-white text-wood-600 border-wood-200 hover:border-wood-900 hover:text-wood-900"
                 }`}
             >
               {pill.id === "all" ? <Sparkles size={14} className="text-amber-500" /> : null}
@@ -259,7 +262,7 @@ function ProductsContent() {
           {/* Results count */}
           {data && (
             <p className="text-sm font-medium text-wood-500">
-              Showing <strong className="text-wood-900">{data.items.length}</strong> meticulously crafted pieces
+              Showing <strong className="text-wood-900">{(data.items || []).length}</strong> meticulously crafted pieces
             </p>
           )}
 
@@ -274,7 +277,7 @@ function ProductsContent() {
                 </div>
               ))}
             </div>
-          ) : data?.items.length === 0 ? (
+          ) : data?.items?.length === 0 ? (
             <div className="text-center py-20 bg-white border border-wood-200 rounded-2xl p-8 shadow-sm">
               <p className="font-playfair text-3xl text-wood-900 mb-3 font-bold">No Pieces Found</p>
               <p className="text-sm text-wood-500 mb-8 max-w-md mx-auto">We couldn't find any furniture matching your exact specifications. Try broadening your materials, price limits, or categories.</p>
@@ -282,7 +285,7 @@ function ProductsContent() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-7">
-              {data?.items.map((product) => (
+              {data?.items?.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>

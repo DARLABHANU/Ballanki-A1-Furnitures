@@ -12,7 +12,7 @@ import {
   ShoppingBag, Truck, CheckSquare, CreditCard, Tag, Gift, HelpCircle,
   Info, LogOut, Clock, ChevronLeft
 } from "lucide-react";
-import { authApi, addressApi } from "@/lib/api";
+import { authApi, addressApi, setAuthCookies } from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
 import { Address } from "@/types";
 import { getApiError, formatDate } from "@/lib/utils";
@@ -136,7 +136,7 @@ export default function CustomerProfilePage() {
   const onPasswordSubmit = async (data: PasswordForm) => {
     setIsSaving(true);
     try {
-      await authApi.changePassword({
+      const changed = await authApi.changePassword({
         current_password: data.current_password,
         new_password: data.new_password,
       });
@@ -177,7 +177,7 @@ export default function CustomerProfilePage() {
     }
   };
 
-  const handleDeleteAddress = async (id: number) => {
+  const handleDeleteAddress = async (id: string | number) => {
     if (!confirm("Delete this address?")) return;
     try {
       await addressApi.delete(id);

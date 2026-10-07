@@ -22,7 +22,7 @@ function ReturnRequestsContent() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [actionId, setActionId] = useState<number | null>(null);
+  const [actionId, setActionId] = useState<string | number | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated || !["admin", "support"].includes(role || "")) {
@@ -64,7 +64,7 @@ function ReturnRequestsContent() {
     }
   };
 
-  const handleApproveReturn = async (id: number) => {
+  const handleApproveReturn = async (id: string | number) => {
     setActionId(id);
     try {
       await (adminApi as any).updateReturnRequest(id, { status: "approved" });

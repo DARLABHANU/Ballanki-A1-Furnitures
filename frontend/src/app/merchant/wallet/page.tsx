@@ -51,9 +51,9 @@ function MerchantWalletContent() {
       await merchantApi.requestWithdrawal({ amount: Number(withdrawAmount) });
       toast.success("Withdrawal request submitted successfully!");
       setWithdrawAmount("");
-    } catch {
-      toast.success("Withdrawal request submitted successfully!");
-      setWithdrawAmount("");
+      await loadWalletData();
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || "Withdrawal could not be submitted");
     } finally {
       setIsSubmitting(false);
     }

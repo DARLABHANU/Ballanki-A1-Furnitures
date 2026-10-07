@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Save, Lock, Building, DollarSign, Bell } from "lucide-react";
+import { api } from "@/lib/api";
 import toast from "react-hot-toast";
 
 export default function AdminSettingsPage() {
@@ -12,9 +13,10 @@ export default function AdminSettingsPage() {
   const [supportEmail, setSupportEmail] = useState("support@ballankia1furnitures.live");
   const [supportPhone, setSupportPhone] = useState("+91 98765 43210");
 
-  const handleSave = (e: React.FormEvent) => {
+  useEffect(() => { api.get('/admin/settings').then(({data}) => { if(data.platformMargin !== undefined) setPlatformMargin(String(data.platformMargin)); if(data.promoterDiscount !== undefined) setPromoterDiscount(String(data.promoterDiscount)); if(data.promoterCommission !== undefined) setPromoterCommission(String(data.promoterCommission)); if(data.platformProfit !== undefined) setPlatformProfit(String(data.platformProfit)); if(data.supportEmail !== undefined) setSupportEmail(String(data.supportEmail)); if(data.supportPhone !== undefined) setSupportPhone(String(data.supportPhone)); }).catch(() => toast.error('Could not load settings')); }, []);
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Admin Panel Settings saved successfully!");
+    try { await api.put('/admin/settings', { platformMargin, promoterDiscount, promoterCommission, platformProfit, supportEmail, supportPhone }); toast.success('Settings saved'); } catch (err: any) { toast.error(err.response?.data?.error || 'Could not save settings'); }
   };
 
   return (
@@ -41,7 +43,7 @@ export default function AdminSettingsPage() {
                 onChange={(e) => setPlatformMargin(e.target.value)}
                 className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               />
-              <p className="text-[11px] text-[#808080] mt-1">Customer Price = Merchant Base Price (Direct Listing)</p>
+              <p className="text-[11px] text-[#808080] mt-1">Customer price is set by the store administrator.</p>
             </div>
 
             <div>

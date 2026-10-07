@@ -5,6 +5,7 @@ import { Sparkles, Clock, Hammer } from "lucide-react";
 import "./globals.css";
 import AuthInitializer from "@/components/AuthInitializer";
 import ImpersonationBanner from "@/components/ImpersonationBanner";
+import SessionGate from "@/components/SessionGate";
 import BottomNav from "@/components/layout/BottomNav";
 
 const playfair = Playfair_Display({
@@ -107,7 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Sparkles className="w-4 h-4 text-[#8B6B46] animate-pulse" />
               </h2>
               <p className="font-garamond text-base md:text-lg text-[#FAF6EE]/80 font-light leading-relaxed mb-8 max-w-lg mx-auto">
-                Our online boutique is currently undergoing scheduled refinement and system upgrades. We are crafting an even more exquisite experience to showcase our fine jewellery and hand-woven silk sarees.
+                Our online boutique is currently undergoing scheduled refinement and system upgrades. We are crafting an even more exquisite experience to showcase our fine furniture and premium home decor.
               </p>
 
               {/* Decorative Luxury Divider */}
@@ -135,7 +136,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
         ) : (
-          children
+          <SessionGate>{children}</SessionGate>
         )}
         <BottomNav />
       </body>

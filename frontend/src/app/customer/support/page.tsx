@@ -66,7 +66,7 @@ export default function CustomerSupportPage() {
         category,
         priority,
         message: message.trim(),
-        order_id: selectedOrderId ? Number(selectedOrderId) : undefined,
+        order_id: selectedOrderId ? selectedOrderId : undefined,
       };
 
       const { data } = await supportApi.createTicket(payload);

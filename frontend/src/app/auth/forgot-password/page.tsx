@@ -27,10 +27,10 @@ export default function ForgotPasswordPage() {
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     try {
-      await authApi.forgotPassword({
+      const response = await authApi.forgotPassword({
         email: data.email.trim().toLowerCase(),
       });
-      toast.success("Password reset OTP sent to your email!");
+      toast.success(response.data.message, { duration: 10000 });
       
       router.push(`/auth/verify-otp?email=${encodeURIComponent(data.email.trim().toLowerCase())}&purpose=password_reset`);
     } catch (err) {
@@ -55,7 +55,7 @@ export default function ForgotPasswordPage() {
           </span>
           <h2 className="font-cormorant text-2xl sm:text-3xl font-bold text-[#1A1A1A]">Forgot Password</h2>
           <p className="text-xs text-[#808080] leading-relaxed">
-            Enter your email address. We will send you a 6-digit OTP code to reset your password.
+            For local testing, recovery codes are saved in backend/local-outbox on this computer.
           </p>
         </div>
       </div>

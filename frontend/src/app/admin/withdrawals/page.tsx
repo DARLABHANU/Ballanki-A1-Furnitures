@@ -1,5 +1,5 @@
-import AdminSettlementsPage from "../settlements/page";
+import { redirect } from "next/navigation";
 
-export default function AdminWithdrawalsPage() {
-  return <AdminSettlementsPage />;
+export default function LegacyWithdrawalsPage() {
+  redirect("/admin/dashboard");
 }

@@ -8,7 +8,7 @@ export default function MerchantSupportPage() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  const [expandedFaq, setExpandedFaq] = useState<string | number | null>(null);
 
   const faqs = [
     { q: "How do I add a new product?", a: "Navigate to the Products page and click 'Add Product'. Fill in the product details including title, description, price, and images. Your product will be listed after admin approval." },

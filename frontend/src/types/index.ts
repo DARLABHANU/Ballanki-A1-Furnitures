@@ -9,7 +9,7 @@ export type CommissionStatus = "pending" | "approved" | "paid" | "rejected";
 
 // ─── User ─────────────────────────────────────────────────────────────────────
 export interface User {
-  id: number;
+  id: string | number;
   email: string;
   full_name: string;
   phone?: string;
@@ -23,7 +23,7 @@ export interface User {
 }
 
 export interface Address {
-  id: number;
+  id: string | number;
   label: string;
   full_name: string;
   phone: string;
@@ -42,20 +42,20 @@ export interface AuthTokens {
   refresh_token: string;
   token_type: string;
   role: UserRole;
-  user_id: number;
+  user_id: string | number;
   is_first_login: boolean;
   requires_otp: boolean;
 }
 
 // ─── Product ──────────────────────────────────────────────────────────────────
 export interface Category {
-  id: number;
+  id: string | number;
   name: string;
   slug: string;
 }
 
 export interface MerchantProfileSummary {
-  id: number;
+  id: string | number;
   business_name: string;
   business_description?: string;
   gstin?: string;
@@ -64,8 +64,8 @@ export interface MerchantProfileSummary {
 }
 
 export interface Product {
-  id: number;
-  merchant_id: number;
+  id: string | number;
+  merchant_id: string | number;
   name: string;
   slug: string;
   description?: string;
@@ -130,8 +130,8 @@ export interface ProductListResponse {
 
 // ─── Cart ─────────────────────────────────────────────────────────────────────
 export interface CartItem {
-  id: number;
-  product_id: number;
+  id: string | number;
+  product_id: string | number;
   quantity: number;
   product: Product;
 }
@@ -144,8 +144,8 @@ export interface Cart {
 
 // ─── Order ────────────────────────────────────────────────────────────────────
 export interface OrderItem {
-  id: number;
-  product_id: number;
+  id: string | number;
+  product_id: string | number;
   product_name: string;
   product_image?: string;
   quantity: number;
@@ -154,7 +154,7 @@ export interface OrderItem {
 }
 
 export interface Order {
-  id: number;
+  id: string | number;
   order_number: string;
   subtotal: number;
   discount_amount: number;
@@ -196,7 +196,7 @@ export interface OrderListResponse {
 
 // ─── Coupon ───────────────────────────────────────────────────────────────────
 export interface Coupon {
-  id: number;
+  id: string | number;
   code: string;
   description?: string;
   discount_type?: "fixed" | "percentage";
@@ -215,17 +215,17 @@ export interface Coupon {
 
 // ─── Commission ───────────────────────────────────────────────────────────────
 export interface Commission {
-  id: number;
-  order_id: number;
-  coupon_id: number;
-  promoter_id: number;
+  id: string | number;
+  order_id: string | number;
+  coupon_id: string | number;
+  promoter_id: string | number;
   amount: number;
   status: CommissionStatus;
   notes?: string;
   paid_at?: string;
   created_at: string;
   promoter?: {
-    id: number;
+    id: string | number;
     email: string;
     full_name: string;
     payout_bank_name?: string;
@@ -238,8 +238,8 @@ export interface Commission {
 
 // ─── Merchant ─────────────────────────────────────────────────────────────────
 export interface MerchantProfile {
-  id: number;
-  user_id: number;
+  id: string | number;
+  user_id: string | number;
   business_name: string;
   business_description?: string;
   gstin?: string;
@@ -251,20 +251,25 @@ export interface MerchantProfile {
 
 // ─── Admin ────────────────────────────────────────────────────────────────────
 export interface AdminDashboard {
+  range: "month" | "last_month" | "year";
   total_users: number;
-  total_merchants: number;
-  total_promoters?: number;
+  total_customers: number;
+  total_products: number;
+  total_promoters: number;
   total_orders: number;
   total_revenue: number;
-  total_profit: number;
+  paid_orders: number;
   pending_orders: number;
   active_coupons: number;
-  recent_orders: Order[];
+  recent_orders: Array<Order & { customer?: { full_name?: string } | null }>;
+  order_statuses: Array<{ status: string; count: number }>;
+  sales_points: Array<{ key: string; label: string; revenue: number }>;
+  top_products: Array<{ product_id: string | null; name: string; quantity: number; order_value: number }>;
 }
 
 // ─── Support ──────────────────────────────────────────────────────────────────
 export interface AuditLog {
-  id: number;
+  id: string | number;
   performed_by: number;
   target_user_id?: number;
   action: string;

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
-import { productApi } from "@/lib/api";
+import { productApi, api } from "@/lib/api";
 import Footer from "@/components/layout/Footer";
 import { useDeliveryLocationStore } from "@/store/deliveryLocationStore";
 import {
@@ -80,11 +80,10 @@ export default function HomePage() {
       });
   }, []);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newsletterEmail.trim()) return;
-    toast.success("Thank you for subscribing to our newsletter!");
-    setNewsletterEmail("");
+    try { await api.post("/newsletter", { email: newsletterEmail }); toast.success("Subscription saved"); setNewsletterEmail(""); } catch (err: any) { toast.error(err.response?.data?.error || "Subscription could not be saved"); }
   };
 
   const displayProducts = products.map((p) => {

@@ -35,7 +35,7 @@ function AdminOrdersContent() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [updatingId, setUpdatingId] = useState<number | null>(null);
+  const [updatingId, setUpdatingId] = useState<string | number | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated || !["admin", "support"].includes(role || "")) {
@@ -75,7 +75,7 @@ function AdminOrdersContent() {
     }
   };
 
-  const handleStatusUpdate = async (orderId: number, status: OrderStatus) => {
+  const handleStatusUpdate = async (orderId: string | number, status: OrderStatus) => {
     setUpdatingId(orderId);
     try {
       await orderApi.updateStatus(orderId, { status });
@@ -88,7 +88,7 @@ function AdminOrdersContent() {
     }
   };
 
-  const handleDeleteOrder = async (orderId: number) => {
+  const handleDeleteOrder = async (orderId: string | number) => {
     if (!confirm(`Are you sure you want to delete order #${orderId}?`)) return;
     setUpdatingId(orderId);
     try {

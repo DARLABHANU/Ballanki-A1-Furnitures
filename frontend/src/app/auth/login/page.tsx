@@ -6,43 +6,56 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { Loader2, ShieldCheck, Sparkles, Mail, Lock } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
+import { authApi } from "@/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
   const { setAuth, setUser } = useAuthStore();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState("admin@ballanki@gmail.com");
-  const [password, setPassword] = useState("Ballanki@sai");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleCredentialsLogin = (e: React.FormEvent) => {
+  const handleCredentialsLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password) return;
 
     setIsLoading(true);
-    // Simulate authentication
-    setTimeout(() => {
-      setAuth({
-        access_token: "mock-token",
-        refresh_token: "mock-refresh",
-        role: "customer",
-        user_id: 1,
-      });
+    try {
+      const res = await authApi.login({ email: email.trim().toLowerCase(), password });
+      const { access_token, refresh_token, role, user_id, user } = res.data;
 
-      setUser({
-        id: 1,
-        email: email.trim().toLowerCase(),
-        full_name: "Premium Buyer",
-        role: "customer",
-        account_number: "OH-CUST-1",
-        is_active: true,
-        is_verified: true,
-        created_at: new Date().toISOString()
-      });
+      if (role === "merchant") {
+        toast.error("Merchant access is disabled. Please contact the store administrator.");
+        return;
+      }
+
+      setAuth({ access_token, refresh_token, role, user_id });
+
+      if (user) {
+        setUser(user);
+      } else {
+        // Fetch user profile
+        const meRes = await authApi.me();
+        setUser(meRes.data);
+      }
 
       toast.success("Successfully signed into Ballanki A1 Furnitures!");
-      router.push("/");
-    }, 800);
+
+      // Route based on role
+      if (role === "admin") {
+        router.push("/admin/dashboard");
+      } else if (role === "support") {
+        router.push("/support/dashboard");
+      } else {
+        router.push("/");
+      }
+    } catch (err: any) {
+      const message = err?.response?.data?.message || err?.response?.data?.error || "Invalid email or password.";
+      toast.error(message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

@@ -36,7 +36,7 @@ export default function ProductCard({ product }: Props) {
     }
     setIsAdding(true);
     try {
-      await addItem(product.id, 1);
+      await addItem(product.id, 1, product);
       toast.success(product.allow_pre_order ? "Pre-order added!" : "Added to bag!");
     } catch (err) {
       toast.error(getApiError(err));

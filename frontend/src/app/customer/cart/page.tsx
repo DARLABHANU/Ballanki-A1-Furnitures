@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Trash2, ShoppingBag, Plus, Minus, ArrowRight, ShieldCheck, Calculator, CheckCircle2, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useCartStore } from "@/store/cartStore";
+import { orderApi } from "@/lib/api";
+import { getApiError } from "@/lib/utils";
 import { formatPrice, getProductImage } from "@/lib/utils";
 
 export default function CartPage() {
@@ -18,21 +20,21 @@ export default function CartPage() {
     fetchCart();
   }, [fetchCart]);
 
-  const handleValidateCoupon = () => {
+  const handleValidateCoupon = async () => {
     if (!couponCode.trim()) return;
     setIsValidating(true);
-    setTimeout(() => {
-      if (couponCode.trim().toUpperCase() === "OAK5000") {
-        setCouponDiscount(5000);
-        setCouponMsg("Premium Studio Voucher Applied: Flat ₹5,000 Off");
-        toast.success("Voucher Applied!");
-      } else {
-        setCouponDiscount(0);
-        setCouponMsg("Invalid or expired voucher code");
-        toast.error("Invalid Voucher");
-      }
+    try {
+      const { data } = await orderApi.validateCoupon({ code: couponCode.trim() });
+      setCouponDiscount(Number(data.discount_amount || 0));
+      setCouponMsg(`Coupon ${data.coupon?.code || couponCode.trim().toUpperCase()} applied`);
+      toast.success("Coupon applied");
+    } catch (error) {
+      setCouponDiscount(0);
+      setCouponMsg(getApiError(error));
+      toast.error(getApiError(error));
+    } finally {
       setIsValidating(false);
-    }, 600);
+    }
   };
 
   const removeCoupon = () => { setCouponCode(""); setCouponDiscount(0); setCouponMsg(""); };
@@ -72,7 +74,7 @@ export default function CartPage() {
 
   const balanceRemaining = finalTotalAmount - dueToday;
 
-  const handleRemoveItem = (product_id: number) => {
+  const handleRemoveItem = (product_id: string | number) => {
     const cartItemId = itemsList.find(i => i.product_id === product_id)?.id;
     if (cartItemId) {
       removeItem(cartItemId);
@@ -178,7 +180,7 @@ export default function CartPage() {
                               // Wait, our cartStore addItem does `newItems[existing].quantity += quantity`.
                               // So pass -1.
                               // But I don't export handleQty in pure Zustand, let's just use remove if <1
-                              if (item.quantity > 1) addItem(item.product_id, -1);
+                              if (item.quantity > 1) void addItem(item.product_id, -1).catch(() => {});
                             }
                           }}
                           className="w-6 h-6 flex items-center justify-center bg-white rounded-md text-wood-600 shadow-sm border border-wood-100 hover:border-wood-300"
@@ -187,7 +189,7 @@ export default function CartPage() {
                         </button>
                         <span className="w-4 text-center text-xs font-bold text-wood-900">{item.quantity}</span>
                         <button
-                          onClick={() => addItem(item.product_id, 1)}
+                          onClick={() => { void addItem(item.product_id, 1).catch(() => {}); }}
                           className="w-6 h-6 flex items-center justify-center bg-white rounded-md text-wood-600 shadow-sm border border-wood-100 hover:border-wood-300"
                         >
                           <Plus size={12} />
@@ -252,7 +254,6 @@ export default function CartPage() {
                 )}
                 {couponDiscount > 0 && <p className="text-[10px] text-green-600 mt-2 font-bold uppercase tracking-wider">{couponMsg}</p>}
 
-                <p className="text-[10px] text-wood-500 mt-2 font-semibold">Hint: Use <span className="font-bold text-wood-900">OAK5000</span> for flat ₹5,000 off.</p>
               </div>
 
               {/* Line items */}

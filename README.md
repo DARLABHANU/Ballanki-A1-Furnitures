@@ -106,6 +106,16 @@ npm run dev
 
 ---
 
+## Negotiation and Deployment Configuration
+
+Customer negotiations use authenticated, persistent conversations and offers. Merchants reply from `/merchant/enquiries`; an accepted price is applied to one order for that product within seven days. Local checkout saves the order with payment pending. No payment gateway credentials are required for this flow.
+
+For local development, copy `backend/.env.example` to `backend/.env` and `frontend/.env.local.example` to `frontend/.env.local`, then set a MongoDB URI and a private `JWT_SECRET` of at least 32 random characters. The browser calls the same-origin `/api/v1` path; Next.js forwards it using `BACKEND_URL`.
+
+For Docker Compose, the frontend talks to `http://backend:8000` inside the Compose network. Set `FRONTEND_URL` in the backend environment to the browser-facing frontend origin, and set a production `JWT_SECRET` and MongoDB credentials. For separate frontend and backend hosts, set frontend `BACKEND_URL` to the backend HTTPS origin and backend `FRONTEND_URL` to the exact frontend origin. Provide `BACKEND_URL` during the frontend build and at runtime because Next.js uses it for the API rewrite. Never commit `.env` files.
+
+The backend health check is `GET /api/health`; it returns success only when MongoDB is connected. Run the negotiation lifecycle check with `npm run test:negotiation` from `backend/`; it creates and removes only its own randomly named test database.
+
 ## Default Credentials
 
 | Role     | Email                      | Password     |

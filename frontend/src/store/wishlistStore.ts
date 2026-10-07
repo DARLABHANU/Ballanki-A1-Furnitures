@@ -3,12 +3,12 @@ import { wishlistApi } from "@/lib/api";
 import { Product } from "@/types";
 
 interface WishlistState {
-  wishlistIds: number[];
+  wishlistIds: (string | number)[];
   wishlistItems: Product[];
   isLoading: boolean;
   fetchWishlist: () => Promise<void>;
-  toggleWishlist: (productId: number) => Promise<boolean>;
-  isWishlisted: (productId: number) => boolean;
+  toggleWishlist: (productId: string | number) => Promise<boolean>;
+  isWishlisted: (productId: string | number) => boolean;
   clearWishlist: () => void;
 }
 

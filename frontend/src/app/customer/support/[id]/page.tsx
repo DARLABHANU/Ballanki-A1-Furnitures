@@ -12,7 +12,7 @@ import { formatDate, formatDateTime, getApiError } from "@/lib/utils";
 export default function CustomerTicketDetailsPage() {
   const router = useRouter();
   const params = useParams();
-  const ticketId = Number(params.id);
+  const ticketId = String(params.id);
   const { isAuthenticated, user } = useAuthStore();
   const [ticket, setTicket] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);

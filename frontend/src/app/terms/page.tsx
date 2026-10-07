@@ -29,7 +29,7 @@ export default function TermsPage() {
             <section className="space-y-2">
               <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A]">2. Platform Services &amp; Accounts</h2>
               <p>
-                Our platform operates as a luxury e-commerce service connecting discerning customers with Silk Sarees, Bridal collections, and Fine Jewellery.
+                Our platform operates as a luxury e-commerce service connecting discerning customers with Premium Sofas, Designer Dining Tables, and Fine Furniture.
               </p>
               <ul className="list-disc pl-5 space-y-1">
                 <li>You must provide accurate, current, and complete information during registration.</li>
@@ -48,7 +48,7 @@ export default function TermsPage() {
             <section className="space-y-2">
               <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A]">4. Return &amp; Refund Policy</h2>
               <p>
-                Due to the bespoke and luxury nature of Silk Sarees, custom Bridal ensembles, and fine Gold/Jewellery, returns are subject to strict quality assessments. Jewellery items cannot be returned once security tags are removed. Sarees must be returned in original, unworn foldings within 7 days of delivery.
+                Due to the bespoke and luxury nature of custom sofas, dining sets, and fine wooden crafts, returns are subject to strict quality assessments. Furniture items cannot be returned once assembly seals are broken. Smaller items must be returned in original, untouched packaging within 7 days of delivery.
               </p>
             </section>
 

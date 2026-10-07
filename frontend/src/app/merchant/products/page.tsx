@@ -109,7 +109,7 @@ export default function MerchantProductsPage() {
 
       // Calculate stats based on fetched items
       let active = 0, inactive = 0, outOfStock = 0;
-      items.forEach(p => {
+      items.forEach((p: any) => {
         if (p.is_active) active++; else inactive++;
         if (p.stock_quantity <= p.low_stock_threshold) outOfStock++;
       });
@@ -130,14 +130,14 @@ export default function MerchantProductsPage() {
       name: "", description: "", short_description: "", price: undefined, compare_price: undefined,
       sku: "", stock_quantity: 10, low_stock_threshold: 5, weight_grams: undefined,
       is_active: true, is_featured: false, images: "", tags: "", category_id: null,
-      main_category: "Sarees", subcategory: "Kanchipuram Silk Sarees"
+      main_category: "Living Room", subcategory: "Luxury Sofas"
     });
     setShowForm(true);
   };
 
   const openEdit = (product: Product) => {
     setEditing(product);
-    let matchedMain = "Sarees";
+    let matchedMain = "Living Room";
     let matchedSub = product.subcategory || "";
 
     if (product.tags && product.tags.length > 0) {
@@ -315,8 +315,8 @@ export default function MerchantProductsPage() {
 
   const downloadTemplate = () => {
     const csvContent = "name,description,base_price,stock_quantity,sku,main_category,subcategory,images,tags\n" +
-      "Kanchipuram Silk Saree,Pure silk saree with gold zari border,4500,10,KSS-001,Sarees,Kanchipuram Silk Sarees,https://images.unsplash.com/photo-1610030469983-98e550d6193c,Kanchipuram, Silk, Gold Zari\n" +
-      "Temple Gold Necklace,Handcrafted temple design gold plated necklace,2200,5,TGN-002,Necklaces,Temple Jewellery,https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f,Temple, Gold, Kundan\n";
+      "Velvet Amber Sofa,Premium velvet sofa with amber wood finish,4500,10,VAS-001,Living Room,Luxury Sofas,https://images.unsplash.com/photo-1610030469983-98e550d6193c,Velvet, Wood, Amber Finish\n" +
+      "Walnut Coffee Table,Solid handcrafted walnut coffee table,2200,5,WCT-002,Living Room,Tables,https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f,Walnut, Wood, Matte Finish\n";
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -434,7 +434,7 @@ export default function MerchantProductsPage() {
                   <div>
                     <label className="font-bold text-[#1A1A1A] block mb-1">Subcategory *</label>
                     {(() => {
-                      const currentMain = watch("main_category") || "Sarees";
+                      const currentMain = watch("main_category") || "Living Room";
                       const suboptions = CATEGORY_TAXONOMY[currentMain] || [];
                       return (
                         <select {...register("subcategory")} className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]">

@@ -18,8 +18,8 @@ interface PromoterAnalytics {
 }
 
 interface CommissionItem {
-  id: number;
-  order_id: number;
+  id: string | number;
+  order_id: string | number;
   amount: number;
   status: "pending" | "approved" | "paid" | "rejected";
   created_at: string;

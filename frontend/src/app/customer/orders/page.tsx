@@ -6,29 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Package, ChevronRight, Loader2, ShoppingBag, CheckCircle2 } from "lucide-react";
 import { formatPrice, formatDate } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
-
-const MOCK_ORDERS = [
-  {
-    id: 991,
-    order_number: "OH-99881",
-    status: "processing",
-    created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-    total_amount: 85000,
-    items: [
-      { product_name: "The Montecito Velvet Sofa", quantity: 1 }
-    ]
-  },
-  {
-    id: 992,
-    order_number: "OH-99882",
-    status: "delivered",
-    created_at: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
-    total_amount: 28000,
-    items: [
-      { product_name: "Aura Minimalist Coffee Table", quantity: 1 }
-    ]
-  }
-];
+import { orderApi } from "@/lib/api";
 
 const ORDER_STATUS_LABELS: Record<string, string> = {
   pending: "Awaiting Deposit",
@@ -62,16 +40,21 @@ function OrdersContent() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
-    if (searchParams.get("success")) setShowSuccess(true);
+    setShowSuccess(false);
 
-    setTimeout(() => {
-      let filtered = [...MOCK_ORDERS];
-      if (statusFilter) {
-        filtered = filtered.filter(o => o.status === statusFilter);
-      }
-      setData(filtered);
-      setIsLoading(false);
-    }, 400);
+    setIsLoading(true);
+    orderApi.list({ status: statusFilter || undefined })
+      .then((res: any) => {
+        const orders = res.data.items || res.data.orders || res.data || [];
+        setData(orders);
+      })
+      .catch((err: any) => {
+        console.error("Failed to load orders:", err);
+        setData([]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [statusFilter, searchParams]);
 
   return (
@@ -83,7 +66,7 @@ function OrdersContent() {
             <CheckCircle2 size={24} className="shrink-0" />
             <div>
               <p className="font-bold text-sm uppercase tracking-wider">Reservation Confirmed</p>
-              <p className="text-xs font-medium mt-0.5">Thank you! Your deposit has been collected and your order is securely placed.</p>
+              <p className="text-xs font-medium mt-0.5">Your order has been saved. Payment is pending; no deposit has been collected.</p>
             </div>
           </div>
         </div>
@@ -106,8 +89,8 @@ function OrdersContent() {
               key={f.value}
               onClick={() => setStatusFilter(f.value)}
               className={`flex-shrink-0 font-inter text-xs font-bold px-4 py-2.5 rounded-lg transition-all border whitespace-nowrap uppercase tracking-wider ${statusFilter === f.value
-                  ? "bg-wood-900 text-white border-wood-900 shadow-sm"
-                  : "bg-white text-wood-600 border-wood-200 hover:border-wood-900 hover:text-wood-900"
+                ? "bg-wood-900 text-white border-wood-900 shadow-sm"
+                : "bg-white text-wood-600 border-wood-200 hover:border-wood-900 hover:text-wood-900"
                 }`}
             >
               {f.label}

@@ -24,7 +24,7 @@ function ProductsContent() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [togglingId, setTogglingId] = useState<number | null>(null);
+  const [togglingId, setTogglingId] = useState<string | number | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated || !["admin", "support"].includes(role || "")) {
@@ -174,16 +174,16 @@ function ProductsContent() {
                 className="text-xs font-semibold text-[#1A1A1A] bg-transparent appearance-none pr-6 focus:outline-none cursor-pointer"
               >
                 <option value="all">All Categories</option>
-                <option value="chains">Chains</option>
-                <option value="bangles">Bangles</option>
-                <option value="sarees">Sarees</option>
-                <option value="earrings">Earrings</option>
-                <option value="rings">Rings</option>
+                <option value="living-room">Living Room</option>
+                <option value="bedroom">Bedroom</option>
+                <option value="dining">Dining Room</option>
+                <option value="office">Home Office</option>
+                <option value="outdoor">Outdoor</option>
               </select>
             </div>
 
             <button
-              onClick={() => router.push("/merchant/products/add")}
+              onClick={() => router.push("/admin/products/add")}
               className="inline-flex items-center gap-1.5 bg-[#0D0D0D] hover:bg-[#333333] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
             >
               <Plus size={15} />
@@ -257,7 +257,7 @@ function ProductsContent() {
                         ) : (
                           <>
                             <button
-                              onClick={() => router.push(`/merchant/products/add?id=${item.id}`)}
+                              onClick={() => router.push(`/admin/products/add?id=${item.id}`)}
                               className="p-1 text-[#666666] hover:text-[#0D0D0D] transition-colors"
                               title="Edit Product"
                             >

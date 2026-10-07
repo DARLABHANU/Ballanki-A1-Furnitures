@@ -37,7 +37,7 @@ export default function ProductDetailPage() {
     if (!id) return;
     setIsLoading(true);
 
-    productApi.get(Number(id))
+    productApi.get(id)
       .then((res: any) => {
         const p = res.data;
         setProduct(p);
@@ -88,8 +88,7 @@ export default function ProductDetailPage() {
       toast.error("Please sign in to add to cart");
       return;
     }
-    await addItem(product.id, 1);
-    toast.success(product.allow_pre_order ? "Pre-order reserved!" : "Added to Shopping Bag!");
+    try { await addItem(product.id, 1, product); toast.success("Added to Shopping Bag!"); } catch { /* Server error displayed by cart store. */ }
   };
 
   const startBargain = () => {
@@ -171,7 +170,7 @@ export default function ProductDetailPage() {
               </h1>
               <div className="flex items-center justify-between">
                 <p className="text-sm font-semibold text-wood-600 uppercase tracking-widest flex items-center gap-1.5">
-                  By <span className="text-wood-900 underline decoration-wood-300 underline-offset-4">{product.merchant?.business_name || "Ballanki A1 Furnitures"}</span>
+                  Sold by <span className="text-wood-900 underline decoration-wood-300 underline-offset-4">Ballanki A1 Furnitures</span>
                 </p>
                 <div className="flex items-center gap-1 bg-amber-50 px-2 py-1 rounded text-amber-700 font-bold text-[11px]">
                   <Star size={12} className="fill-current" />
@@ -339,7 +338,7 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Similar Items (Mocked) */}
+        {/* Similar Items */}
         {similarProducts.length > 0 && (
           <div className="mt-24 pt-16 border-t border-wood-200">
             <h2 className="font-playfair text-2xl font-bold text-charcoal-900 mb-8 text-center">Complementary Pieces</h2>
@@ -352,101 +351,14 @@ export default function ProductDetailPage() {
         )}
       </div>
 
-      {/* Bargain slideover Panel using the dummy UI */}
       {isBargainMode && (
-        <div className="fixed inset-0 z-[200] flex justify-end">
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsBargainMode(false)}></div>
-          <div className="relative w-full max-w-md bg-wood-50 h-full shadow-2xl flex flex-col pointer-events-auto">
-            {/* Bargain Panel Header */}
-            <div className="p-5 border-b border-wood-200 bg-white flex justify-between items-center shadow-sm z-10">
-              <div>
-                <h3 className="font-playfair font-bold text-xl text-charcoal-900 flex items-center gap-2">
-                  <Sparkles size={16} className="text-wood-500" /> Virtual Concierge
-                </h3>
-                <p className="text-[10px] text-wood-500 font-bold uppercase tracking-wider mt-1">Direct from the Atelier</p>
-              </div>
-              <button onClick={() => setIsBargainMode(false)} className="w-8 h-8 bg-wood-50 rounded-full flex items-center justify-center hover:bg-wood-200 transition-colors"><X size={16} className="text-wood-600" /></button>
-            </div>
-
-            {/* Scrollable Content Area */}
-            <div className="flex-1 overflow-y-auto bg-wood-50 scrollbar-none flex flex-col">
-              {/* Context Header */}
-              <div className="p-4 bg-white border-b border-wood-100 flex items-start gap-4">
-                <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0">
-                  <img src={imagesList[0]} alt="" className="w-full h-full object-cover" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-sm text-charcoal-900 line-clamp-1">{product.name}</h4>
-                  <p className="text-xs text-wood-500 mb-1">Listed Price: <strong className="text-charcoal-900">{formatPrice(product.price)}</strong></p>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-charcoal-900 bg-wood-100 px-2 py-0.5 rounded border border-wood-200">
-                    Negotiation Context
-                  </span>
-                </div>
-              </div>
-
-              {/* Chat Arena */}
-              <div className="p-5 flex-1 flex flex-col space-y-4">
-                {/* System Message */}
-                <div className="flex justify-start">
-                  <div className="max-w-[85%] bg-white border border-wood-200 p-3.5 rounded-2xl rounded-tl-sm shadow-sm text-sm text-wood-700">
-                    <p>Greetings. I am the atelier concierge. How may I assist you with acquiring the <strong className="text-charcoal-900">{product.name}</strong> today?</p>
-                    <span className="text-[9px] text-wood-400 font-bold uppercase tracking-wider block mt-2">Just now</span>
-                  </div>
-                </div>
-
-                {!isAuthenticated ? (
-                  <div className="mt-6">
-                    <div className="bg-white border-2 border-wood-200 rounded-xl p-5 text-center shadow-sm">
-                      <ShieldCheck size={28} className="text-wood-400 mx-auto mb-3" />
-                      <h4 className="font-playfair text-lg font-bold text-charcoal-900 mb-2">Sign in to Negotiate</h4>
-                      <p className="text-xs text-wood-500 mb-5 leading-relaxed">
-                        Authentication is required to send private messages, submit secure price offers, and continue the conversation with the studio.
-                      </p>
-                      <div className="flex flex-col gap-2">
-                        <Link href={`/auth/login?redirect=/customer/products/${product.id}&negotiate=true`} className="w-full bg-charcoal-900 text-white font-bold py-2.5 rounded-lg text-xs uppercase tracking-wider hover:bg-wood-950 transition-colors shadow">
-                          Sign In Securely
-                        </Link>
-                        <Link href={`/auth/signup?redirect=/customer/products/${product.id}&negotiate=true`} className="w-full bg-white border border-wood-300 text-wood-600 font-bold py-2.5 rounded-lg text-xs uppercase tracking-wider hover:bg-wood-50 hover:text-charcoal-900 transition-colors">
-                          Create Account
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    {/* Demo User Message */}
-                    <div className="flex justify-end mt-4">
-                      <div className="max-w-[85%] bg-charcoal-900 text-white p-3.5 rounded-2xl rounded-tr-sm shadow-sm text-sm">
-                        <p>I am interested, but could we negotiate the terms?</p>
-                        <span className="text-[9px] text-wood-400 font-bold uppercase tracking-wider block mt-2 text-right">Draft Message</span>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* Input Area (Only visible/enabled if authenticated) */}
-            <div className="p-4 bg-white border-t border-wood-200">
-              <div className="flex gap-2">
-                <input
-                  disabled={!isAuthenticated}
-                  type="text"
-                  placeholder={isAuthenticated ? "Type your message or offer..." : "Please sign in to reply..."}
-                  className="flex-1 bg-wood-50 border border-wood-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-charcoal-900 text-charcoal-900 disabled:opacity-50"
-                />
-                <button disabled={!isAuthenticated} className="w-12 h-11 bg-charcoal-900 hover:bg-wood-950 rounded-xl flex items-center justify-center transition-colors shadow-sm disabled:opacity-50">
-                  <span className="text-white font-bold text-xs">Send</span>
-                </button>
-              </div>
-              {!isAuthenticated && (
-                <p className="text-[10px] text-center text-wood-400 font-bold uppercase tracking-widest mt-3 flex items-center justify-center gap-1">
-                  Authentication Required
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
+        <BargainPanel
+          productId={product.id}
+          productName={product.name}
+          productImage={imagesList[selectedImage] || ""}
+          listedPrice={product.price}
+          onClose={() => setIsBargainMode(false)}
+        />
       )}
     </div>
   );

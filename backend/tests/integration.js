@@ -1,0 +1,52 @@
+// Uses an isolated temporary MongoDB database; never seeds or drops the application database.
+const assert=require('node:assert/strict');const mongoose=require('mongoose');const crypto=require('crypto');
+require('dotenv').config();process.env.JWT_SECRET=crypto.randomBytes(48).toString('hex');
+const db='ratnamayuri_test_'+crypto.randomBytes(8).toString('hex');let server;let passed=0;
+async function main(){
+ await mongoose.connect(process.env.MONGODB_URI,{dbName:db,serverSelectionTimeoutMS:10000});
+ const User=require('../src/models/User'),Product=require('../src/models/Product'),{Order,CartItem}=require('../src/models/Commerce');const bcrypt=require('bcryptjs');const {tokens}=require('../src/middleware/auth');
+ await Promise.all(Object.values(mongoose.models).map(m=>m.init()));
+ server=require('../src/app').listen(0,'127.0.0.1');await new Promise(r=>server.once('listening',r));const base='http://127.0.0.1:'+server.address().port+'/api/v1';
+ async function call(method,path,body,token,status=200){const res=await fetch(base+path,{method,headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},...(body?{body:JSON.stringify(body)}:{})});const data=await res.json();assert.equal(res.status,status,method+' '+path+' '+JSON.stringify(data));passed++;return data;}
+ const make=async(role)=>User.create({email:role+'@test.example',full_name:role,role,hashed_password:await bcrypt.hash('IntegrationPass123!',4)});
+ const admin=await make('admin'),merchant=await make('merchant'),other=await User.create({email:'other@test.example',full_name:'Other Merchant',role:'merchant',hashed_password:await bcrypt.hash('IntegrationPass123!',4)});const at=tokens(admin).access_token,mt=tokens(merchant).access_token,ot=tokens(other).access_token;
+ await call('GET','/auth/me',null,null,401);await call('POST','/products',{name:'Unauthorized'},null,401);
+ const signup=await call('POST','/auth/signup',{email:'customer@test.example',password:'IntegrationPass123!',full_name:'Test Customer',role:'admin'},null,201);const ct=signup.access_token;assert.equal(signup.role,'customer');
+ const me=await call('GET','/auth/me',null,ct);assert.equal(me.email,'customer@test.example');assert.equal(me.hashed_password,undefined);
+ await call('GET','/admin/users',null,ct,403);
+ const p=await call('POST','/products',{name:'Integration Chair',price:2500,stock_quantity:5,main_category:'Living Room',tags:['oak'],images:[]},mt,201);assert.equal(p.is_approved,false);
+ await call('GET','/products/'+p.id,null,null,404);
+ await call('PUT','/products/'+p.id,{price:1},ot,403);
+ await call('PATCH','/admin/products/'+p.id+'/approve',{is_approved:true},at);
+ const detail=await call('GET','/products/'+p.id);assert.equal(detail.id,p.id);assert.equal(detail.category.name,'Living Room');assert.ok(Array.isArray(detail.tags));
+ const list=await call('GET','/products?search=Chair&min_price=2000&limit=1');assert.equal(list.items.length,1);assert.equal(list.page_size,1);
+ assert.equal((await call('GET','/products?min_price=3000')).items.length,0);
+ await call('GET','/products/NaN',null,null,400);
+ await call('PUT','/products/'+p.id,{price:-2},at,400);
+ await call('POST','/cart/add',{product_id:p.id,quantity:2},ct);
+ const reduced=await call('POST','/cart/add',{product_id:p.id,quantity:-1},ct);assert.equal(reduced.item_count,1);
+ await call('POST','/cart/add',{product_id:p.id,quantity:200},ct,400);
+ await call('POST','/wishlist/toggle',{product_id:p.id},ct);assert.equal((await call('GET','/wishlist',null,ct)).items.length,1);assert.equal((await call('POST','/wishlist/toggle',{product_id:p.id},ct)).wishlisted,false);
+ const a=await call('POST','/addresses',{full_name:'Test Customer',phone:'9876543210',line1:'123 Test Road',city:'Hyderabad',state:'Telangana',pincode:'500001'},ct,201);
+ await call('PUT','/addresses/'+a.id,{city:'Other'},ot,404);
+ await call('POST','/admin/coupons',{code:'TEST100',discount_type:'fixed',discount_value:100},at,201);
+ assert.equal((await call('POST','/orders/validate-coupon',{code:'TEST100'},ct)).discount_amount,100);
+ const payload={address_id:a.id,coupon_code:'TEST100',request_key:crypto.randomUUID(),total_amount:1,payment_status:'paid'};
+ const order=await call('POST','/orders',payload,ct,201);assert.equal(order.total_amount,3900);assert.equal(order.payment_status,'pending');assert.equal(await Order.countDocuments(),1);assert.equal((await Product.findById(p.id)).stock_quantity,4);assert.equal(await CartItem.countDocuments(),0);
+ const retry=await call('POST','/orders',payload,ct);assert.equal(retry.id,order.id);assert.equal(await Order.countDocuments(),1);
+ await call('GET','/orders/'+order.id,null,ot,403);assert.equal((await call('GET','/orders/'+order.id,null,ct)).items.length,1);
+ await call('PATCH','/orders/'+order.id+'/status',{status:'delivered'},mt,409);
+ await call('POST','/orders/'+order.id+'/cancel',{},ct);assert.equal((await Product.findById(p.id)).stock_quantity,5);
+ await call('POST','/orders/'+order.id+'/cancel',{},ct);assert.equal((await Product.findById(p.id)).stock_quantity,5);
+ const t=await call('POST','/support/tickets',{subject:'Test ticket',message:'Please help'},ct,201);await call('GET','/support/tickets/'+t.id,null,ot,403);await call('POST','/support/tickets/'+t.id+'/agent-reply',{message:'We can help',status:'in_progress'},at);assert.equal((await call('GET','/support/tickets/'+t.id,null,ct)).messages.length,2);
+ await call('PUT','/admin/website-settings',{siteName:'Test Name'},at);assert.equal((await call('GET','/website-settings')).siteName,'Test Name');
+ await call('POST','/merchant/products/bulk-upload',{csvData:'name,price,stock_quantity\n"CSV, Chair",1200,3'},mt,201);
+ await call('POST','/merchant/withdraw',{amount:100},mt,409);
+ for(const path of ['/admin/dashboard','/admin/products','/admin/users','/admin/merchants','/admin/orders','/admin/coupons','/admin/commissions','/admin/withdrawals','/admin/settlements','/admin/wallets','/admin/return-requests','/admin/analytics/sales','/admin/settings','/admin/website-settings','/support/tickets/all','/support/audit-logs'])await call('GET',path,null,at);
+ for(const path of ['/merchant/profile','/merchant/analytics','/merchant/wallet','/merchant/withdrawals','/merchant/settlements','/merchant/commissions','/merchant/customers','/merchant/coupons','/merchant/reviews','/products/merchant/my-products','/orders/merchant/incoming'])await call('GET',path,null,mt);
+ for(const path of ['/promoter/coupons','/promoter/analytics','/promoter/commissions','/notifications','/addresses','/orders','/cart','/support/tickets'])await call('GET',path,null,ct);
+ await call('POST','/auth/refresh',{refresh_token:signup.access_token},null,401);await call('POST','/auth/refresh',{refresh_token:signup.refresh_token});
+ await User.findByIdAndUpdate(signup.user_id,{is_active:false});await call('GET','/auth/me',null,ct,401);
+ console.log('PASS: '+passed+' HTTP assertions plus persistence, permissions, stock, idempotency and response-contract assertions.');
+}
+main().catch(e=>{console.error(e);process.exitCode=1;}).finally(async()=>{if(server)await new Promise(r=>server.close(r));if(mongoose.connection.readyState===1){if(mongoose.connection.name!==db||!db.startsWith('ratnamayuri_test_'))throw new Error('Refusing unsafe test cleanup');await mongoose.connection.dropDatabase();}await mongoose.disconnect();});

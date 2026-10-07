@@ -59,7 +59,7 @@ export default function MerchantOrderDetailPage() {
     setIsLoading(true);
     try {
       if (params.id) {
-        const { data } = await orderApi.get(Number(params.id));
+        const { data } = await orderApi.get(String(params.id));
         setOrder(data);
         if (data) {
           setStatus(data.status || "pending");
@@ -285,7 +285,7 @@ export default function MerchantOrderDetailPage() {
                       className="w-14 h-14 rounded-xl object-cover border border-[#E2DAC8] bg-[#F8F5F0]"
                     />
                     <div>
-                      <h4 className="font-bold text-xs text-[#1A1A1A] line-clamp-1">{item.product_name || item.product?.name || "Jewellery Product"}</h4>
+                      <h4 className="font-bold text-xs text-[#1A1A1A] line-clamp-1">{item.product_name || item.product?.name || "Furniture Assembly"}</h4>
                       <p className="text-[11px] text-[#808080] mt-0.5">
                         Qty: <span className="font-bold text-[#1A1A1A]">{item.quantity}</span> × {formatPrice(item.unit_price || item.total_price / item.quantity)}
                       </p>

@@ -36,7 +36,7 @@ export default function SupportDashboardPage() {
   // Impersonation state
   const [impersonateReason, setImpersonateReason] = useState("");
   const [isImpersonating, setIsImpersonating] = useState(false);
-  const [activeSession, setActiveSession] = useState<{ token: string; auditLogId: number; user: User } | null>(null);
+  const [activeSession, setActiveSession] = useState<{ token: string; auditLogId: string | number; user: User } | null>(null);
 
   // Audit logs
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);

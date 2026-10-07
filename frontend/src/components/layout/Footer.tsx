@@ -8,16 +8,16 @@ import {
   ShieldCheck,
   Banknote,
   Headphones,
-  Mail,
-  Phone,
-  MapPin,
   Instagram,
   Facebook,
   Youtube,
   Send,
-  Loader2
+  Loader2,
+  MessageCircle
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { api } from "@/lib/api";
+import { getApiError } from "@/lib/utils";
 
 export default function Footer() {
   const [email, setEmail] = useState("");
@@ -27,10 +27,15 @@ export default function Footer() {
     e.preventDefault();
     if (!email.trim()) return;
     setSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    toast.success("Thank you for subscribing to Ballanki A1 Furnitures!");
-    setEmail("");
-    setSubmitting(false);
+    try {
+      await api.post("/newsletter", { email: email.trim() });
+      toast.success("You are subscribed.");
+      setEmail("");
+    } catch (error) {
+      toast.error(getApiError(error));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -42,27 +47,27 @@ export default function Footer() {
           <div className="flex flex-col items-center">
             <Truck size={24} className="text-wood-400 mb-2" />
             <h4 className="font-playfair text-xs font-bold text-white uppercase">White Glove Delivery</h4>
-            <p className="font-inter text-[11px] text-wood-400/80 mt-0.5">On orders above ₹9999</p>
+            <p className="font-inter text-[11px] text-wood-400/80 mt-0.5">Delivery charges are shown at checkout</p>
           </div>
           <div className="flex flex-col items-center">
             <RotateCcw size={24} className="text-wood-400 mb-2" />
             <h4 className="font-playfair text-xs font-bold text-white uppercase">Easy Returns</h4>
-            <p className="font-inter text-[11px] text-wood-400/80 mt-0.5">Hassle-free 7-day returns</p>
+            <p className="font-inter text-[11px] text-wood-400/80 mt-0.5">See our return policy</p>
           </div>
           <div className="flex flex-col items-center">
             <ShieldCheck size={24} className="text-wood-400 mb-2" />
             <h4 className="font-playfair text-xs font-bold text-white uppercase">Secure Payments</h4>
-            <p className="font-inter text-[11px] text-wood-400/80 mt-0.5">100% Safe &amp; Secure</p>
+            <p className="font-inter text-[11px] text-wood-400/80 mt-0.5">Local orders are saved with payment pending</p>
           </div>
           <div className="flex flex-col items-center">
             <Banknote size={24} className="text-wood-400 mb-2" />
             <h4 className="font-playfair text-xs font-bold text-white uppercase">Advance Deposits</h4>
-            <p className="font-inter text-[11px] text-wood-400/80 mt-0.5">For made-to-order items</p>
+            <p className="font-inter text-[11px] text-wood-400/80 mt-0.5">See item availability and terms</p>
           </div>
           <div className="flex flex-col items-center col-span-2 md:col-span-1">
             <Headphones size={24} className="text-wood-400 mb-2" />
             <h4 className="font-playfair text-xs font-bold text-white uppercase">Design Support</h4>
-            <p className="font-inter text-[11px] text-wood-400/80 mt-0.5">We're here to help</p>
+            <p className="font-inter text-[11px] text-wood-400/80 mt-0.5">Submit a support ticket from your account</p>
           </div>
         </div>
       </div>
@@ -84,15 +89,15 @@ export default function Footer() {
               Crafted with precision. Designed for life. Bringing you authentic, master-crafted furniture built from premium materials to elevate your living spaces.
             </p>
             <div className="flex items-center gap-3 pt-2">
-              <a href="#" className="w-8 h-8 rounded-full bg-wood-800 flex items-center justify-center text-wood-300 hover:bg-wood-700 hover:text-white transition-colors">
+              <span className="w-8 h-8 rounded-full bg-wood-800 flex items-center justify-center text-wood-300" aria-hidden="true">
                 <Instagram size={15} />
-              </a>
-              <a href="#" className="w-8 h-8 rounded-full bg-wood-800 flex items-center justify-center text-wood-300 hover:bg-wood-700 hover:text-white transition-colors">
+              </span>
+              <span className="w-8 h-8 rounded-full bg-wood-800 flex items-center justify-center text-wood-300" aria-hidden="true">
                 <Facebook size={15} />
-              </a>
-              <a href="#" className="w-8 h-8 rounded-full bg-wood-800 flex items-center justify-center text-wood-300 hover:bg-wood-700 hover:text-white transition-colors">
+              </span>
+              <span className="w-8 h-8 rounded-full bg-wood-800 flex items-center justify-center text-wood-300" aria-hidden="true">
                 <Youtube size={15} />
-              </a>
+              </span>
             </div>
           </div>
 
@@ -122,21 +127,11 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact Details */}
+          {/* Store Support */}
           <div className="space-y-3 font-inter text-xs text-wood-300">
-            <h4 className="font-playfair text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-wood-800 pb-2">Contact Us</h4>
-            <div className="flex items-start gap-2.5">
-              <MapPin size={16} className="text-wood-400 flex-shrink-0 mt-0.5" />
-              <span>Bangalore, Karnataka, India — 560001</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <Phone size={16} className="text-wood-400 flex-shrink-0" />
-              <span>+91 98765 43210</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <Mail size={16} className="text-wood-400 flex-shrink-0" />
-              <span>support@ballankia1furnitures.com</span>
-            </div>
+            <h4 className="font-playfair text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-wood-800 pb-2">Store Support</h4>
+            <p>Contact the store team about orders or product questions.</p>
+            <Link href="/customer/support" className="inline-flex items-center gap-2 text-white hover:text-wood-200"><MessageCircle size={15}/> Open support</Link>
           </div>
 
         </div>

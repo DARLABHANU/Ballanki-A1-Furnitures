@@ -56,7 +56,7 @@ export default function PaymentHistoryPage() {
               PAYMENT LEDGER
             </span>
             <h1 className="font-cormorant text-3xl font-bold text-[#1A1A1A]">Payment History</h1>
-            <p className="text-xs text-[#808080] mt-0.5">Immutable transaction ledger for placed prepaid orders</p>
+            <p className="text-xs text-[#808080] mt-0.5">Order payment status. Local orders remain unpaid.</p>
           </div>
           <button
             onClick={loadPayments}

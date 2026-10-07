@@ -1,221 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { ArrowLeft, TrendingUp, Loader2 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
+import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
 import { adminApi } from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
-import { formatPrice } from "@/lib/utils";
+import { getApiError, formatPrice } from "@/lib/utils";
+import type { AdminDashboard } from "@/types";
 
 export default function ReportsAnalyticsPage() {
-  const router = useRouter();
   const { isAuthenticated, role } = useAuthStore();
-  const [timeRange, setTimeRange] = useState("This Month");
-  const [data, setData] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [range, setRange] = useState<AdminDashboard["range"]>("month");
+  const [data, setData] = useState<AdminDashboard | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (!isAuthenticated || !["admin", "support"].includes(role || "")) {
-      router.push("/auth/login");
-      return;
-    }
-    adminApi.dashboard()
-      .then((r) => setData(r.data))
-      .catch(() => {})
-      .finally(() => setIsLoading(false));
-  }, [isAuthenticated, role]);
+  const load = useCallback(async () => {
+    setLoading(true); setError("");
+    try { const response = await adminApi.dashboard(range); setData(response.data); }
+    catch (err) { setError(getApiError(err)); }
+    finally { setLoading(false); }
+  }, [range]);
 
-  const categoriesData = [
-    { name: "Chains", amount: formatPrice(data?.total_revenue ? data.total_revenue * 0.34 : 0), percent: 34.1 },
-    { name: "Bangles", amount: formatPrice(data?.total_revenue ? data.total_revenue * 0.28 : 0), percent: 28.3 },
-    { name: "Sarees", amount: formatPrice(data?.total_revenue ? data.total_revenue * 0.20 : 0), percent: 19.7 },
-    { name: "Earrings", amount: formatPrice(data?.total_revenue ? data.total_revenue * 0.11 : 0), percent: 10.8 },
-    { name: "Rings", amount: formatPrice(data?.total_revenue ? data.total_revenue * 0.07 : 0), percent: 7.1 }
-  ];
+  useEffect(() => { if (isAuthenticated && role === "admin") void load(); }, [isAuthenticated, role, load]);
 
-  if (isLoading) {
-    return (
-      <div className="h-96 flex items-center justify-center">
-        <Loader2 className="animate-spin text-[#0D0D0D]" size={36} />
-      </div>
-    );
-  }
-
-  const totalSalesFormatted = formatPrice(data?.total_revenue || 0);
-  const totalOrdersCount = (data?.total_orders || 0).toLocaleString();
-  const totalEarningsFormatted = formatPrice(data?.total_platform_fee || data?.total_revenue ? (data.total_revenue * 0.15) : 0);
-
-  return (
-    <div className="space-y-6 text-[#1A1A1A] font-garamond">
-      
-      {/* Top Header & Metrics Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        
-        {/* Title */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => router.back()}
-            className="w-8 h-8 rounded-full border border-[#E2DAC8] bg-white flex items-center justify-center text-[#1A1A1A] hover:bg-[#F8F5F0] transition-colors"
-          >
-            <ArrowLeft size={16} />
-          </button>
-          <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Reports &amp; Analytics</h1>
-        </div>
-
-        {/* Top 3 Summary Metrics + Dropdown */}
-        <div className="flex flex-wrap items-center gap-6 bg-white border border-[#E2DAC8] px-6 py-3 rounded-2xl shadow-2xs">
-          
-          <div>
-            <span className="text-[11px] text-[#808080] block">Total Sales</span>
-            <div className="flex items-baseline gap-2">
-              <span className="font-cormorant text-xl font-bold text-[#1A1A1A]">{totalSalesFormatted}</span>
-              <span className="text-[10px] font-bold text-[#2E7D32] flex items-center gap-0.5">
-                <TrendingUp size={10} /> 18.4%
-              </span>
-            </div>
-          </div>
-
-          <div className="h-8 w-px bg-[#EFEBE3]" />
-
-          <div>
-            <span className="text-[11px] text-[#808080] block">Total Orders</span>
-            <div className="flex items-baseline gap-2">
-              <span className="font-cormorant text-xl font-bold text-[#1A1A1A]">{totalOrdersCount}</span>
-              <span className="text-[10px] font-bold text-[#2E7D32] flex items-center gap-0.5">
-                <TrendingUp size={10} /> 15.7%
-              </span>
-            </div>
-          </div>
-
-          <div className="h-8 w-px bg-[#EFEBE3]" />
-
-          <div>
-            <span className="text-[11px] text-[#808080] block">Total Earnings</span>
-            <div className="flex items-baseline gap-2">
-              <span className="font-cormorant text-xl font-bold text-[#1A1A1A]">{totalEarningsFormatted}</span>
-              <span className="text-[10px] font-bold text-[#2E7D32] flex items-center gap-0.5">
-                <TrendingUp size={10} /> 20.2%
-              </span>
-            </div>
-          </div>
-
-          <div className="h-8 w-px bg-[#EFEBE3]" />
-
-          {/* Range selector */}
-          <div className="relative border border-[#E2DAC8] rounded-xl px-3 py-1.5 bg-[#F8F5F0]">
-            <select
-              value={timeRange}
-              onChange={(e) => setTimeRange(e.target.value)}
-              className="text-xs font-semibold text-[#1A1A1A] bg-transparent appearance-none pr-4 focus:outline-none cursor-pointer"
-            >
-              <option value="This Month">This Month</option>
-              <option value="Last Month">Last Month</option>
-              <option value="This Year">This Year</option>
-            </select>
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* Main 2 Columns Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
-        {/* Left: Sales Overview Chart */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between border-b border-[#EFEBE3] pb-3">
-            <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A]">Sales Overview</h3>
-            <span className="text-xs text-[#808080] font-semibold">{timeRange} ˅</span>
-          </div>
-
-          <div className="relative h-64 w-full pt-4">
-            
-            {/* Callout Tooltip at Peak */}
-            <div className="absolute right-8 top-12 bg-[#1A1A1A] text-white p-2 rounded-xl text-center shadow-md z-10">
-              <p className="font-bold text-xs">{totalSalesFormatted}</p>
-              <p className="text-[10px] text-[#A3B899]">31 May</p>
-            </div>
-
-            {/* SVG Curve Line Chart */}
-            <svg viewBox="0 0 500 200" className="w-full h-48 overflow-visible">
-              <defs>
-                <linearGradient id="salesGradReports" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#0D0D0D" stopOpacity="0.15" />
-                  <stop offset="100%" stopColor="#0D0D0D" stopOpacity="0.0" />
-                </linearGradient>
-              </defs>
-              
-              {/* Y Axis Grid Lines */}
-              <line x1="0" y1="20" x2="500" y2="20" stroke="#EFEBE3" strokeDasharray="4 4" />
-              <line x1="0" y1="60" x2="500" y2="60" stroke="#EFEBE3" strokeDasharray="4 4" />
-              <line x1="0" y1="100" x2="500" y2="100" stroke="#EFEBE3" strokeDasharray="4 4" />
-              <line x1="0" y1="140" x2="500" y2="140" stroke="#EFEBE3" strokeDasharray="4 4" />
-              <line x1="0" y1="180" x2="500" y2="180" stroke="#EFEBE3" />
-
-              {/* Area Path */}
-              <path
-                d="M 0 180 Q 40 120, 80 140 T 160 100 T 240 70 T 320 120 T 400 90 T 500 40 L 500 180 L 0 180 Z"
-                fill="url(#salesGradReports)"
-              />
-
-              {/* Curve Line */}
-              <path
-                d="M 0 180 Q 40 120, 80 140 T 160 100 T 240 70 T 320 120 T 400 90 T 500 40"
-                fill="none"
-                stroke="#0D0D0D"
-                strokeWidth="2.5"
-              />
-
-              {/* Peak Point */}
-              <circle cx="500" cy="40" r="5" fill="#0D0D0D" stroke="#FFFFFF" strokeWidth="2" />
-            </svg>
-
-            {/* X Axis Labels */}
-            <div className="flex justify-between text-[10px] text-[#808080] pt-2 px-1 font-semibold">
-              <span>1 May</span>
-              <span>6 May</span>
-              <span>11 May</span>
-              <span>16 May</span>
-              <span>21 May</span>
-              <span>26 May</span>
-              <span>31 May</span>
-            </div>
-
-          </div>
-        </div>
-
-        {/* Right: Sales by Category */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
-          <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-3">
-            Sales by Category
-          </h3>
-
-          <div className="space-y-5 pt-2">
-            {categoriesData.map((cat, idx) => (
-              <div key={idx} className="space-y-1.5">
-                <div className="flex items-center justify-between text-xs font-semibold">
-                  <span className="text-[#1A1A1A] w-20">{cat.name}</span>
-                  
-                  {/* Progress Bar Container */}
-                  <div className="flex-1 mx-4 bg-[#F8F5F0] h-3.5 rounded-full overflow-hidden border border-[#E2DAC8]/50">
-                    <div
-                      className="bg-[#0D0D0D] h-full rounded-full transition-all duration-500"
-                      style={{ width: `${cat.percent * 2.5}%` }}
-                    />
-                  </div>
-
-                  <span className="font-bold text-[#1A1A1A] text-right">
-                    {cat.amount} <span className="text-[#808080] font-medium text-[11px]">({cat.percent}%)</span>
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-  );
+  if (loading && !data) return <div className="flex h-80 items-center justify-center"><Loader2 className="animate-spin"/></div>;
+  return <section className="space-y-6 text-wood-900 font-garamond">
+    <header className="flex flex-wrap items-end justify-between gap-3"><div><h1 className="font-cormorant text-3xl font-bold">Reports &amp; Analytics</h1><p className="text-xs text-[#666]">Sales and order data from recorded store activity.</p></div><div className="flex gap-2"><select aria-label="Report period" value={range} onChange={event => setRange(event.target.value as AdminDashboard["range"])} className="rounded-lg border border-[#E2DAC8] bg-white px-3 py-2 text-xs"><option value="month">This month</option><option value="last_month">Last month</option><option value="year">This year</option></select><button onClick={() => void load()} className="inline-flex items-center gap-2 rounded-lg border border-[#E2DAC8] bg-white px-3 py-2 text-xs"><RefreshCw size={14}/>Refresh</button></div></header>
+    {error && <div role="alert" className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800"><span className="flex items-center gap-2"><AlertCircle size={16}/>{error}</span><button onClick={() => void load()} className="font-bold underline">Retry</button></div>}
+    <div className="grid gap-4 sm:grid-cols-3"><article className="rounded-2xl border bg-white p-5"><p className="text-xs text-[#666]">Paid revenue</p><strong className="mt-2 block font-cormorant text-2xl">{formatPrice(data?.total_revenue || 0)}</strong><span className="text-[11px] text-[#777]">{data?.paid_orders || 0} paid orders, all time</span></article><article className="rounded-2xl border bg-white p-5"><p className="text-xs text-[#666]">Orders</p><strong className="mt-2 block font-cormorant text-2xl">{data?.total_orders || 0}</strong><span className="text-[11px] text-[#777]">All recorded orders</span></article><article className="rounded-2xl border bg-white p-5"><p className="text-xs text-[#666]">Paid sales in selected period</p><strong className="mt-2 block font-cormorant text-2xl">{formatPrice(data?.sales_points.reduce((sum, point) => sum + point.revenue, 0) || 0)}</strong><span className="text-[11px] text-[#777]">{range === "month" ? "This month" : range === "last_month" ? "Last month" : "This year"}</span></article></div>
+    <div className="grid gap-5 lg:grid-cols-2"><section className="rounded-2xl border bg-white p-5"><h2 className="mb-3 border-b pb-3 text-sm font-bold">Paid sales by period</h2>{loading ? <Loader2 className="mx-auto my-10 animate-spin"/> : data?.sales_points.some(point => point.revenue > 0) ? <div className="max-h-96 space-y-2 overflow-y-auto">{data.sales_points.filter(point => point.revenue > 0).map(point => <div key={point.key} className="flex justify-between border-b py-2 text-xs"><span>{point.key}</span><strong>{formatPrice(point.revenue)}</strong></div>)}</div> : <p className="py-10 text-center text-xs text-[#777]">No paid sales recorded in this period.</p>}</section><section className="rounded-2xl border bg-white p-5"><div className="mb-3 flex items-center justify-between border-b pb-3"><h2 className="text-sm font-bold">Top products by orders</h2><Link href="/admin/products" className="text-xs font-semibold text-green-800">Manage products</Link></div>{data?.top_products.length ? <div className="space-y-2">{data.top_products.map((product,index) => <div key={product.product_id || `${product.name}-${index}`} className="flex items-center justify-between gap-3 border-b py-2 text-xs"><span className="min-w-0 truncate">{product.name} · {product.quantity} ordered</span><strong>{formatPrice(product.order_value)}</strong></div>)}</div> : <p className="py-10 text-center text-xs text-[#777]">No product orders recorded in this period.</p>}</section></div>
+  </section>;
 }
