@@ -275,7 +275,7 @@ export default function SupportDashboardPage() {
       )}
 
       {/* Main Content Area */}
-      <main className="flex-grow p-4 md:p-8 overflow-auto space-y-6">
+      <main className="flex-grow min-w-0 p-4 md:p-8 overflow-auto space-y-6">
         
         {/* ── TICKETS TAB ── */}
         {tab === "tickets" && (
@@ -286,7 +286,7 @@ export default function SupportDashboardPage() {
             </div>
 
             {/* Filter Bar */}
-            <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs flex flex-wrap gap-4 items-center">
+            <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs flex flex-wrap gap-4 items-center">
               <div>
                 <label className="block text-xs font-bold text-[#1A1A1A] mb-1">Status</label>
                 <select
@@ -320,7 +320,7 @@ export default function SupportDashboardPage() {
             {/* Tickets Grid / Detail View */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Tickets List (1 col) */}
-              <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
+              <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
                 <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-3">Active Queue</h3>
                 {isLoadingTickets ? (
                   <div className="py-12 text-center">
@@ -357,7 +357,7 @@ export default function SupportDashboardPage() {
               </div>
 
               {/* Ticket Details & Chat (2 cols) */}
-              <div className="lg:col-span-2 bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs min-h-[500px] flex flex-col justify-between">
+              <div className="lg:col-span-2 bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs min-h-[500px] flex flex-col justify-between">
                 {selectedTicket ? (
                   <div className="space-y-6 flex-1 flex flex-col justify-between">
                     <div className="space-y-4">
@@ -445,7 +445,7 @@ export default function SupportDashboardPage() {
             </div>
 
             {/* Search Controls */}
-            <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs">
+            <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs">
               <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 items-end">
                 <div>
                   <label className="block text-xs font-bold text-[#1A1A1A] mb-1">Search By</label>
@@ -487,7 +487,7 @@ export default function SupportDashboardPage() {
             {results.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Results List (1 col) */}
-                <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
+                <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
                   <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-3">Matching Users</h3>
                   <div className="space-y-3">
                     {results.map((u) => (
@@ -509,7 +509,7 @@ export default function SupportDashboardPage() {
                 </div>
 
                 {/* User Details & Impersonation (2 cols) */}
-                <div className="md:col-span-2 bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+                <div className="md:col-span-2 bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
                   {selectedUser ? (
                     <div className="space-y-6">
                       <div className="border-b border-[#EFEBE3] pb-4">
@@ -586,13 +586,13 @@ export default function SupportDashboardPage() {
               <p className="text-xs text-[#808080] mt-0.5">Immutable record of all agent support actions and impersonations</p>
             </div>
 
-            <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs">
+            <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs">
               {isLoadingAudit ? (
                 <div className="py-16 text-center"><Loader2 className="animate-spin text-[#0D0D0D] mx-auto" size={28} /></div>
               ) : auditLogs.length === 0 ? (
                 <div className="py-16 text-center text-xs text-[#808080]">No audit logs recorded yet</div>
               ) : (
-                <div className="overflow-x-auto">
+                <div className="min-w-0 max-w-full overflow-x-auto">
                   <table className="w-full text-left text-xs">
                     <thead>
                       <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">

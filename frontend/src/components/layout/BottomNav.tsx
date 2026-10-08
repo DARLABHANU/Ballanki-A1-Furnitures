@@ -63,7 +63,7 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 md:hidden"
+      className={`store-bottom-nav fixed bottom-0 left-0 right-0 z-40 pb-safe lg:hidden`}
       style={{
         background: "#F8F5F0",
         borderTop: "1.5px solid #E2DAC8",

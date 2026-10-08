@@ -213,7 +213,7 @@ export default function PromoterDashboardPage() {
       )}
 
       {/* Share Links Box */}
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
+      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
         <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-3">Active Promo Codes &amp; Affiliate Links</h2>
 
         {coupons.length === 0 ? (
@@ -255,7 +255,7 @@ export default function PromoterDashboardPage() {
       </div>
 
       {/* Referrals & Commissions Ledger */}
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
+      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
         <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-3">Commissions Referral Ledger</h2>
 
         {commissions.length === 0 ? (
@@ -263,7 +263,7 @@ export default function PromoterDashboardPage() {
             No referral sales or commissions logged yet. Once customers purchase items using your promo links, they will be registered here.
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="min-w-0 max-w-full overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
@@ -297,7 +297,7 @@ export default function PromoterDashboardPage() {
       </div>
 
       {/* Payout Settings Form */}
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
+      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
         <div className="border-b border-[#EFEBE3] pb-3">
           <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">✦ Payout Settings</h3>
           <p className="text-xs text-[#808080] mt-0.5">

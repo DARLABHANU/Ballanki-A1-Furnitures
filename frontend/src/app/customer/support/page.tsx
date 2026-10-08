@@ -162,7 +162,7 @@ export default function CustomerSupportPage() {
           </div>
         ) : showCreateForm ? (
           /* Create Ticket Form */
-          <div className="max-w-2xl mx-auto bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
+          <div className="max-w-2xl mx-auto bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
             <div className="flex items-center justify-between border-b border-[#EFEBE3] pb-3">
               <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A]">
                 Submit Support Ticket

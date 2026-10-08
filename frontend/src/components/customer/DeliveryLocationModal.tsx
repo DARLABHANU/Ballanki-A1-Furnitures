@@ -113,12 +113,12 @@ export default function DeliveryLocationModal() {
 
       {/* ── Modal Sheet (bottom-sheet on mobile, centered on desktop) ── */}
       <div
-        className="fixed z-[9999] w-full left-0 bottom-0 md:inset-0 md:flex md:items-center md:justify-center"
+        className="fixed z-[9999] w-full left-0 bottom-0 md:inset-0 md:p-4 md:flex md:items-center md:justify-center"
         role="dialog"
         aria-modal="true"
         aria-label="Select Delivery Location"
       >
-        <div className="bg-white rounded-t-3xl md:rounded-2xl shadow-2xl w-full md:max-w-md overflow-hidden animate-in slide-in-from-bottom-4 md:slide-in-from-bottom-0 duration-300">
+        <div className="bg-white rounded-t-3xl md:rounded-2xl shadow-2xl w-full md:max-w-md max-h-[90dvh] overflow-y-auto animate-in slide-in-from-bottom-4 md:slide-in-from-bottom-0 duration-300">
 
           {/* ── Header ── */}
           <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[#EFEBE3]">

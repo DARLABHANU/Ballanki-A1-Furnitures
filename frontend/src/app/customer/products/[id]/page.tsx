@@ -149,12 +149,12 @@ export default function ProductDetailPage() {
 
             {/* Thumbnails */}
             {imagesList.length > 1 && (
-              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
+              <div className="flex gap-3 min-w-0 max-w-full overflow-x-auto pb-2 scrollbar-none">
                 {imagesList.map((img, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(idx)}
-                    className={`relative w-24 h-24 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === idx ? "border-wood-900 shadow-md" : "border-transparent opacity-70 hover:opacity-100"
+                    className={`relative w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === idx ? "border-wood-900 shadow-md" : "border-transparent opacity-70 hover:opacity-100"
                       }`}
                   >
                     <img src={img} alt="" className="w-full h-full object-cover" />
@@ -320,20 +320,20 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Service Guaratees */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pt-8 border-t border-wood-200">
-              <div className="flex items-center gap-2 text-wood-700">
+            <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mt-8 pt-8 border-t border-wood-200">
+              <div className="flex min-w-0 items-center gap-2 text-wood-700">
                 <ShieldCheck size={18} className="text-wood-400" />
                 <span className="text-[10px] font-bold uppercase tracking-wider leading-tight">Secure Guarantee</span>
               </div>
-              <div className="flex items-center gap-2 text-wood-700">
+              <div className="flex min-w-0 items-center gap-2 text-wood-700">
                 <Truck size={18} className="text-wood-400" />
                 <span className="text-[10px] font-bold uppercase tracking-wider leading-tight">White Glove</span>
               </div>
-              <div className="flex items-center gap-2 text-wood-700">
+              <div className="flex min-w-0 items-center gap-2 text-wood-700">
                 <RefreshCw size={18} className="text-wood-400" />
                 <span className="text-[10px] font-bold uppercase tracking-wider leading-tight">7-Day Returns</span>
               </div>
-              <div className="flex items-center gap-2 text-wood-700">
+              <div className="flex min-w-0 items-center gap-2 text-wood-700">
                 <CheckCircle2 size={18} className="text-wood-400" />
                 <span className="text-[10px] font-bold uppercase tracking-wider leading-tight">Verified Woods</span>
               </div>

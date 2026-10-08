@@ -28,7 +28,7 @@ export default function AdminSettingsPage() {
       <form onSubmit={handleSave} className="space-y-6">
         
         {/* Card 1: Default Pricing & Commission Rules */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
           <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">
             <DollarSign className="text-[#0D0D0D]" size={20} />
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">Commission &amp; Pricing Formula Rules</h3>
@@ -82,7 +82,7 @@ export default function AdminSettingsPage() {
         </div>
 
         {/* Card 2: Contact & Support Settings */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
           <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">
             <Building className="text-[#0D0D0D]" size={20} />
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">Contact &amp; Store Information</h3>

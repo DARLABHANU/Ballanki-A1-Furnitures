@@ -111,7 +111,7 @@ export default function CartPage() {
 
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Left Block: Items */}
-          <div className="flex-1 space-y-6">
+          <div className="flex-1 min-w-0 space-y-6">
 
             {/* Headers */}
             <div className="hidden md:grid grid-cols-12 gap-4 pb-3 border-b border-wood-200 text-xs font-bold text-wood-400 uppercase tracking-wider">
@@ -143,11 +143,11 @@ export default function CartPage() {
                     </button>
 
                     {/* Img + Details */}
-                    <div className="col-span-12 md:col-span-6 flex items-start gap-5">
-                      <div className="w-24 h-24 bg-wood-50 rounded-xl overflow-hidden shrink-0 border border-wood-100">
+                    <div className="col-span-1 md:col-span-6 min-w-0 flex items-start gap-3 sm:gap-5">
+                      <div className="w-20 h-20 sm:w-24 sm:h-24 bg-wood-50 rounded-xl overflow-hidden shrink-0 border border-wood-100">
                         <img src={getProductImage(item.product.images)} alt={item.product.name} className="w-full h-full object-cover" />
                       </div>
-                      <div className="pr-6">
+                      <div className="min-w-0 flex-1 pr-6">
                         <span className="text-[10px] font-bold tracking-widest uppercase text-wood-500 mb-1 block">
                           {item.product.category?.name || "Furniture"}
                         </span>
@@ -170,7 +170,7 @@ export default function CartPage() {
                     </div>
 
                     {/* Qty */}
-                    <div className="col-span-12 md:col-span-2 flex items-center md:justify-center mt-4 md:mt-0 gap-3">
+                    <div className="col-span-1 md:col-span-2 flex items-center md:justify-center mt-4 md:mt-0 gap-3">
                       <span className="text-xs text-wood-500 font-bold uppercase md:hidden tracking-wider">QTY</span>
                       <div className="flex items-center gap-3 bg-wood-50 border border-wood-200 rounded-lg p-1.5 shadow-xs">
                         <button
@@ -198,7 +198,7 @@ export default function CartPage() {
                     </div>
 
                     {/* Total (Mobile & Desktop) */}
-                    <div className="col-span-12 md:col-span-2 md:text-right mt-2 md:mt-0 flex md:flex-col justify-between items-center md:items-end">
+                    <div className="col-span-1 md:col-span-2 md:text-right mt-2 md:mt-0 flex md:flex-col justify-between items-center md:items-end">
                       <span className="text-xs text-wood-500 font-bold uppercase md:hidden tracking-wider">Subtotal</span>
                       <div className="flex flex-col items-end">
                         <span className="font-bold text-wood-900">{formatPrice(item.product.price * item.quantity)}</span>
@@ -216,7 +216,7 @@ export default function CartPage() {
           </div>
 
           {/* Right Block: Summary */}
-          <div className="w-full lg:w-96 space-y-6">
+          <div className="w-full lg:w-80 xl:w-96 shrink-0 space-y-6">
 
             <div className="bg-white border border-wood-200 rounded-2xl p-6 shadow-sm overflow-hidden relative">
               <h3 className="font-playfair text-xl font-bold text-wood-900 mb-6">Order Summary</h3>

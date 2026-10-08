@@ -136,7 +136,7 @@ export default function AdminAddProductPage() {
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column (Main Info) */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
+          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-2">Basic Information</h3>
             
             <div>
@@ -167,7 +167,7 @@ export default function AdminAddProductPage() {
             </div>
           </div>
 
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
+          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-2">Furniture Specifications</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -188,7 +188,7 @@ export default function AdminAddProductPage() {
 
         {/* Right Column (Pricing & Images) */}
         <div className="space-y-6">
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
+          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-2">Pricing & Logistics</h3>
             <div>
               <label className="font-bold text-[#1A1A1A] block mb-1 text-xs">Base Price (₹) *</label>
@@ -213,18 +213,18 @@ export default function AdminAddProductPage() {
             </div>
           </div>
 
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
+          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-2">Product Images ({images.length}/5)</h3>
             <fieldset disabled={isUploading || isSubmitting} className="space-y-4 disabled:opacity-60">
             <div>
               <label htmlFor="product-pictures" className="block text-xs font-bold mb-2">Upload from your device</label>
-              <input id="product-pictures" type="file" accept="image/jpeg,image/png,image/webp" multiple disabled={images.length >= 5 || isUploading || isSubmitting} onChange={handleUploadImages} className="block w-full text-xs" />
+              <input id="product-pictures" type="file" accept="image/jpeg,image/png,image/webp" multiple disabled={images.length >= 5 || isUploading || isSubmitting} onChange={handleUploadImages} className="block min-w-0 w-full max-w-full text-xs" />
               <p className="text-xs text-gray-500 mt-2">Up to 5 pictures. JPEG, PNG or WebP, maximum 3 MB each. The first picture is the cover.</p>
             </div>
             <div>
               <label className="font-bold text-[#1A1A1A] block mb-1 text-xs">Add Image URL</label>
               <div className="flex gap-2">
-                <input value={imageUrlInput} onChange={(e) => setImageUrlInput(e.target.value)} className="flex-1 bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#0D0D0D]" placeholder="https://..." />
+                <input value={imageUrlInput} onChange={(e) => setImageUrlInput(e.target.value)} className="min-w-0 flex-1 bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#0D0D0D]" placeholder="https://..." />
                 <button type="button" disabled={images.length >= 5} onClick={handleAddImage} className="bg-[#0D0D0D] text-white px-3 py-2 rounded-xl text-xs font-bold hover:bg-[#333333] transition-colors"><ImageIcon size={14} /></button>
               </div>
             </div>
@@ -247,8 +247,8 @@ export default function AdminAddProductPage() {
         </div>
 
         {/* Action Bar */}
-        <div className="col-span-1 lg:col-span-3 bg-white border border-[#E2DAC8] rounded-3xl p-4 shadow-sm flex items-center justify-between">
-          <div className="flex items-center gap-4 text-xs font-bold text-[#1A1A1A]">
+        <div className="col-span-1 lg:col-span-3 bg-white border border-[#E2DAC8] rounded-3xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-[#1A1A1A]">
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" name="is_active" checked={formData.is_active} onChange={handleChange} className="accent-[#0D0D0D] w-4 h-4" />
               Publicly Visible
@@ -261,7 +261,7 @@ export default function AdminAddProductPage() {
           <button 
             type="submit" 
             disabled={isSubmitting || isUploading}
-            className="flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-8 py-3 rounded-xl text-xs font-bold transition-all disabled:opacity-50"
+            className="flex w-full sm:w-auto justify-center items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-8 py-3 rounded-xl text-xs font-bold transition-all disabled:opacity-50"
           >
             {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             <span>{isSubmitting ? "Publishing..." : "Publish Furniture"}</span>

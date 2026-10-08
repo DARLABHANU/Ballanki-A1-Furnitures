@@ -105,7 +105,7 @@ export default function PromoterLayout({ children }: { children: React.ReactNode
       )}
 
       {/* Main Content Area */}
-      <main className="flex-1 bg-[#F8F5F0] overflow-auto min-h-0">
+      <main className="flex-1 bg-[#F8F5F0] overflow-auto min-h-0 min-w-0">
         <div className="p-4 md:p-8">{children}</div>
       </main>
     </div>

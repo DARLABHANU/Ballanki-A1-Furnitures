@@ -99,7 +99,7 @@ function CouponsContent() {
       {/* Title */}
       <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Coupons &amp; Offers</h1>
 
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
         
         {/* ── 1. Metrics ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-6 border-b border-[#EFEBE3]">
@@ -122,8 +122,8 @@ function CouponsContent() {
         </div>
 
         {/* ── 2. Controls ── */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="relative w-full sm:w-80">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="relative min-w-0 w-full sm:max-w-xs sm:flex-1">
             <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#808080]" />
             <input
               type="text"
@@ -144,7 +144,7 @@ function CouponsContent() {
         </div>
 
         {/* ── 3. Table ── */}
-        <div className="overflow-x-auto">
+        <div className="min-w-0 max-w-full overflow-x-auto">
           {isLoading ? (
             <div className="h-48 flex items-center justify-center">
               <Loader2 className="animate-spin text-[#0D0D0D]" size={32} />

@@ -79,7 +79,7 @@ export default function Navbar() {
   return (
     <>
       {/* ─── Desktop Announcement Bar ─── */}
-      <div className="hidden md:block bg-wood-900 text-wood-100 py-1.5 px-4 text-xs font-inter">
+      <div className="hidden lg:block bg-wood-900 text-wood-100 py-1.5 px-4 text-xs font-inter">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2 font-medium tracking-wide">
             <span>Premium Materials</span><span>•</span>
@@ -103,7 +103,7 @@ export default function Navbar() {
 
       {/* ─── Main Header ─── */}
       <header
-        className={`bg-wood-50 border-b border-wood-100 sticky top-0 z-50 transition-all duration-200 ${isMobileHeaderHidden ? "hidden md:block" : ""
+        className={`bg-wood-50 border-b border-wood-100 sticky top-0 z-50 transition-all duration-200 ${isMobileHeaderHidden ? "hidden lg:block" : ""
           } ${scrolled ? "shadow-sm bg-wood-50/95 backdrop-blur-md" : ""}`}
       >
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
@@ -111,8 +111,8 @@ export default function Navbar() {
           {/* ════════════════════════════════════════════════ */}
           {/* MOBILE HEADER — ☰ | Logo Center | 🔔           */}
           {/* ════════════════════════════════════════════════ */}
-          <div className="md:hidden">
-            <div className="flex items-center justify-between py-3">
+          <div className="lg:hidden">
+            <div className="relative flex items-center justify-between py-3">
               {/* Hamburger */}
               <button
                 onClick={() => setMobileMenuOpen(true)}
@@ -123,7 +123,7 @@ export default function Navbar() {
               </button>
 
               {/* Center Brand */}
-              <Link href="/" className="flex flex-col items-center justify-center">
+              <Link href="/" className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center justify-center">
                 <img
                   src="/logo.png"
                   alt="Ballanki A1 Furnitures Logo"
@@ -155,7 +155,7 @@ export default function Navbar() {
           {/* ════════════════════════════════════════════════ */}
           {/* DESKTOP HEADER ROW                              */}
           {/* ════════════════════════════════════════════════ */}
-          <div className="hidden md:flex items-center justify-between gap-4 py-3.5">
+          <div className="hidden lg:flex items-center justify-between gap-4 py-3.5">
             {/* Logo */}
             <Link href="/" className="flex items-center group flex-shrink-0">
               <img
@@ -202,7 +202,7 @@ export default function Navbar() {
                 <Package size={19} className="group-hover:scale-105 transition-transform" />
                 <span className="text-[10px] font-inter font-medium mt-1">Track Order</span>
               </Link>
-              <Link href="/customer/wishlist" className="hidden md:flex flex-col items-center text-wood-600 hover:text-wood-900 transition-colors relative group">
+              <Link href="/customer/wishlist" className="hidden lg:flex flex-col items-center text-wood-600 hover:text-wood-900 transition-colors relative group">
                 <div className="relative">
                   <Heart size={19} className="group-hover:scale-105 transition-transform" />
                   <span className="absolute -top-1.5 -right-2 w-4 h-4 bg-wood-900 text-white font-inter text-[10px] font-bold rounded-full flex items-center justify-center">
@@ -211,7 +211,7 @@ export default function Navbar() {
                 </div>
                 <span className="text-[10px] font-inter font-medium mt-1 hidden sm:inline">Wishlist</span>
               </Link>
-              <Link href="/customer/cart" className="hidden md:flex flex-col items-center text-wood-600 hover:text-wood-900 transition-colors relative group">
+              <Link href="/customer/cart" className="hidden lg:flex flex-col items-center text-wood-600 hover:text-wood-900 transition-colors relative group">
                 <div className="relative">
                   <ShoppingBag size={19} className="group-hover:scale-105 transition-transform" />
                   <span className="absolute -top-1.5 -right-2 w-4 h-4 bg-wood-900 text-white font-inter text-[10px] font-bold rounded-full flex items-center justify-center">
@@ -251,7 +251,7 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Navigation Bar */}
-        <div className="hidden md:block bg-wood-50 border-t border-wood-100">
+        <div className="hidden lg:block bg-wood-50 border-t border-wood-100">
           <div className="max-w-7xl mx-auto px-4 lg:px-8">
             <div className="flex items-center gap-6 text-xs font-inter font-semibold">
               <div className="relative py-2">
@@ -321,7 +321,7 @@ export default function Navbar() {
       {/* ════════════════════════════════════════════════ */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-[10000] md:hidden"
+          className="fixed inset-0 z-[10000] lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
         >
           {/* Backdrop */}

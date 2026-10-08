@@ -26,7 +26,7 @@ export default function WebsiteSettingsPage() {
       <form onSubmit={handleSave} className="space-y-6">
 
         {/* Card 1: General Branding */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
           <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">
             <Globe className="text-[#0D0D0D]" size={20} />
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">Brand &amp; General Information</h3>
@@ -58,7 +58,7 @@ export default function WebsiteSettingsPage() {
         </div>
 
         {/* Card 2: SEO & Meta */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
           <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">
             <ShieldCheck className="text-[#0D0D0D]" size={20} />
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">SEO &amp; Search Engine Metadata</h3>

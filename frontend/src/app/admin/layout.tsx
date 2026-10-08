@@ -153,7 +153,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   );
 
   return (
-    <div className="min-h-screen bg-[#F4F6F4] text-wood-900 font-garamond flex flex-col lg:flex-row">
+    <div className="dashboard-shell min-h-dvh bg-[#F4F6F4] text-wood-900 font-garamond flex flex-col lg:flex-row">
 
       {/* Desktop Sidebar */}
       <aside className="hidden lg:block w-60 flex-shrink-0 min-h-screen border-r border-wood-950 bg-wood-900">
@@ -163,7 +163,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Mobile Drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs lg:hidden" onClick={() => setMobileOpen(false)}>
-          <div className="w-64 bg-wood-900 h-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="w-64 max-w-[85vw] overflow-y-auto bg-wood-900 h-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
             {sidebarContent}
           </div>
         </div>
@@ -173,15 +173,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="flex-1 flex flex-col min-w-0">
 
         {/* Header Bar */}
-        <header className="bg-white border-b border-[#E2DAC8] px-6 py-3 flex items-center justify-between gap-4 sticky top-0 z-30 shadow-2xs">
+        <header className="bg-white border-b border-[#E2DAC8] px-3 sm:px-6 py-3 flex items-center justify-between gap-2 sm:gap-4 sticky top-0 z-30 shadow-2xs">
 
           {/* Left: Mobile Menu Toggle + Search */}
-          <div className="flex items-center gap-3 flex-1 max-w-md">
+          <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0 max-w-md">
             <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden text-wood-900 p-1">
               <Menu size={22} />
             </button>
 
-            <div className="relative w-full">
+            <div className="relative w-full min-w-0">
               <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#808080]" />
               <input
                 type="text"
@@ -192,7 +192,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
 
           {/* Right Controls: Notifications + Admin Avatar + View Store */}
-          <div className="flex items-center gap-4">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-4">
 
             <NotificationBell />
 
@@ -225,7 +225,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto max-w-7xl mx-auto w-full pb-20 lg:pb-8">
+        <main className="dashboard-content flex-1 min-w-0 p-3 sm:p-4 md:p-6 lg:p-8 max-w-7xl mx-auto w-full pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-8">
           {children}
         </main>
 

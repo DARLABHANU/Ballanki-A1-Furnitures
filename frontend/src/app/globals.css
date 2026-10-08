@@ -105,10 +105,22 @@
 .dashboard-bg {
   background-color: #FAF6EE !important;
 }
-/* ── Mobile Bottom Nav Global Clearance ── */
-/* Ensures content on EVERY page is never hidden behind the fixed bottom nav */
-@media (max-width: 767px) {
-  body {
-    padding-bottom: 80px;
+/* Keep responsive grid children and form controls within their available column. */
+@layer base {
+  .grid > * { min-width: 0; }
+  input, select, textarea { min-width: 0; max-width: 100%; }
+  fieldset { min-width: 0; }
+  h1, h2, h3, h4, p, li { overflow-wrap: anywhere; }
+}
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+@media (max-width: 1023px) {
+  body:has(.store-bottom-nav):not(:has(.dashboard-shell)) {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+  .dashboard-content { overflow-wrap: anywhere; }
+}
+@media (max-width: 639px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), select, textarea {
+    font-size: 16px;
   }
 }

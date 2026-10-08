@@ -118,7 +118,7 @@ function ProductsContent() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 text-wood-900 font-inter px-4 md:px-6 py-6">
+    <div className="max-w-7xl mx-auto space-y-6 text-wood-900 font-inter px-0 sm:px-2 md:px-0 py-3 sm:py-6">
 
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-wood-200 pb-4">
@@ -136,7 +136,7 @@ function ProductsContent() {
       </div>
 
       {/* Horizontal Story Category Pills */}
-      <div className="flex gap-2 overflow-x-auto pb-3 pt-1 scrollbar-none">
+      <div className="flex gap-2 min-w-0 max-w-full overflow-x-auto pb-3 pt-1 scrollbar-none">
         {CATEGORY_STORY_PILLS.map((pill) => {
           let isActive = false;
           if (pill.id === "all") {
@@ -268,7 +268,7 @@ function ProductsContent() {
 
           {/* Grid */}
           {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {Array(6).fill(0).map((_, i) => (
                 <div key={i} className="animate-pulse bg-white border border-wood-100 rounded-xl p-4">
                   <div className="aspect-[4/3] bg-wood-50 rounded-lg mb-4" />
@@ -284,7 +284,7 @@ function ProductsContent() {
               <button onClick={clearAllFilters} className="border-2 border-wood-900 text-wood-900 hover:bg-wood-900 hover:text-white px-8 py-3 rounded-lg text-sm font-bold transition-all shadow-sm">Clear All Filters</button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-7">
               {data?.items?.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

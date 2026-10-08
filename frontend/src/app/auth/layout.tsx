@@ -1,8 +1,8 @@
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen grid lg:grid-cols-2 bg-[#F8F5F0] font-garamond text-[#1A1A1A]">
+    <div className="min-h-dvh grid lg:grid-cols-2 bg-[#F8F5F0] font-garamond text-[#1A1A1A]">
       {/* Left: Decorative Dark Forest Green Panel matching Admin Panel Theme */}
-      <div className="hidden lg:flex flex-col justify-between bg-[#0D0D0D] p-16 relative overflow-hidden text-wood-100">
+      <div className="hidden lg:flex flex-col justify-between bg-[#0D0D0D] p-8 xl:p-16 relative overflow-hidden text-wood-100">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -52,14 +52,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       {/* Right: Form area with Admin Panel Card Styling — perfectly centered for mobile */}
-      <div className="flex items-center justify-center p-4 sm:p-8 md:p-12 bg-[#F8F5F0] min-h-screen">
+      <div className="flex items-center justify-center p-4 sm:p-8 md:p-12 bg-[#F8F5F0] min-h-dvh">
         <div className="w-full max-w-md bg-white border border-[#E2DAC8] rounded-3xl p-5 sm:p-8 shadow-xs">
           {/* Mobile Logo Header */}
           <div className="lg:hidden text-center mb-6">
             <div className="w-12 h-12 rounded-2xl bg-[#0D0D0D] text-white flex items-center justify-center font-cormorant font-bold text-2xl mx-auto mb-2 shadow-sm">
               R
             </div>
-            <h1 className="font-cormorant text-2xl font-bold text-[#1A1A1A] tracking-widest">BALLANKI A1 FURNITURES</h1>
+            <h1 className="font-cormorant text-xl sm:text-2xl font-bold text-[#1A1A1A] tracking-wide sm:tracking-widest">BALLANKI A1 FURNITURES</h1>
             <p className="text-[10px] font-bold text-[#808080] tracking-widest mt-0.5 uppercase">
               AUTHENTICATION PORTAL
             </p>

@@ -127,7 +127,7 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
   );
 
   return (
-    <div className="min-h-screen bg-[#F4F6F4] text-[#1A1A1A] font-garamond flex flex-col lg:flex-row">
+    <div className="dashboard-shell min-h-dvh bg-[#F4F6F4] text-[#1A1A1A] font-garamond flex flex-col lg:flex-row">
       
       {/* Desktop Sidebar */}
       <aside className="hidden lg:block w-60 flex-shrink-0 min-h-screen border-r border-wood-950 bg-[#0D0D0D]">
@@ -137,7 +137,7 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
       {/* Mobile Drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs lg:hidden" onClick={() => setMobileOpen(false)}>
-          <div className="w-64 bg-[#0D0D0D] h-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="w-64 max-w-[85vw] overflow-y-auto bg-[#0D0D0D] h-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
             {sidebarContent}
           </div>
         </div>
@@ -147,15 +147,15 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
       <div className="flex-1 flex flex-col min-w-0">
         
         {/* Header Bar */}
-        <header className="bg-white border-b border-[#E2DAC8] px-6 py-3 flex items-center justify-between gap-4 sticky top-0 z-30 shadow-2xs">
+        <header className="bg-white border-b border-[#E2DAC8] px-3 sm:px-6 py-3 flex items-center justify-between gap-2 sm:gap-4 sticky top-0 z-30 shadow-2xs">
           
           {/* Left: Mobile Menu Toggle + Search */}
-          <div className="flex items-center gap-3 flex-1 max-w-md">
+          <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0 max-w-md">
             <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden text-[#1A1A1A] p-1">
               <Menu size={22} />
             </button>
 
-            <div className="relative w-full">
+            <div className="relative w-full min-w-0">
               <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#808080]" />
               <input
                 type="text"
@@ -166,7 +166,7 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
           </div>
 
           {/* Right Controls: Notifications + Customer Avatar + Browse Shop */}
-          <div className="flex items-center gap-4">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-4">
             
             <NotificationBell />
 
@@ -199,41 +199,10 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto max-w-7xl mx-auto w-full pb-20 lg:pb-8">
+        <main className="dashboard-content flex-1 min-w-0 p-3 sm:p-4 md:p-6 lg:p-8 max-w-7xl mx-auto w-full pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-8">
           {children}
         </main>
 
-        {/* Mobile Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#E2DAC8] lg:hidden z-40 pb-safe">
-          <div className="flex items-center justify-around px-2 py-2">
-            {[
-              { href: "/customer/dashboard", label: "Dashboard", icon: LayoutDashboard },
-              { href: "/customer/orders", label: "Orders", icon: ShoppingBag },
-              { href: "/customer/cart", label: "Cart", icon: ShoppingCart },
-              { href: "/customer/wishlist", label: "Wishlist", icon: Heart },
-            ].map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href || (item.href !== "/customer/dashboard" && pathname.startsWith(item.href));
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex flex-col items-center justify-center p-2 relative ${
-                    isActive ? "text-[#0D0D0D]" : "text-[#808080] hover:text-[#666666]"
-                  }`}
-                >
-                  <div className="relative">
-                    <Icon size={20} className={isActive ? "fill-[#0D0D0D]/10" : ""} />
-                  </div>
-                  <span className={`text-[10px] mt-1 font-medium ${isActive ? "font-bold" : ""}`}>
-                    {item.label}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
 
       </div>
 

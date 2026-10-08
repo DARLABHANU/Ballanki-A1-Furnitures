@@ -81,7 +81,7 @@ export default function CustomerDashboard() {
       </div>
 
       {/* Recent Orders Section */}
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
+      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
         <div className="flex items-center justify-between border-b border-[#EFEBE3] pb-3">
           <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A]">Recent Orders</h2>
           <Link href="/customer/orders" className="text-xs text-[#0D0D0D] font-bold hover:underline">
@@ -94,7 +94,7 @@ export default function CustomerDashboard() {
             No recent orders placed yet. Start exploring our handloom catalog!
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="min-w-0 max-w-full overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">

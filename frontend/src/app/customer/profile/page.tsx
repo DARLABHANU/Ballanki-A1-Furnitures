@@ -216,14 +216,14 @@ export default function CustomerProfilePage() {
 
       {/* User Card */}
       {user && (
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full bg-[#0D0D0D] text-white font-cormorant font-bold text-2xl flex items-center justify-center border-2 border-gold-400/40">
+        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+            <div className="w-14 h-14 shrink-0 rounded-full bg-[#0D0D0D] text-white font-cormorant font-bold text-2xl flex items-center justify-center border-2 border-gold-400/40">
               {user.full_name?.charAt(0).toUpperCase() || "C"}
             </div>
-            <div>
+            <div className="min-w-0 break-words">
               <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A]">{user.full_name}</h2>
-              <p className="text-xs text-[#808080]">{user.email}</p>
+              <p className="text-xs break-all text-[#808080]">{user.email}</p>
               <p className="text-[11px] text-[#0D0D0D] font-semibold mt-0.5">
                 Account #{user.account_number} · Joined {formatDate(user.created_at)}
               </p>
@@ -241,7 +241,7 @@ export default function CustomerProfilePage() {
       )}
 
       {/* Navigation Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-1">
+      <div className="flex gap-2 min-w-0 max-w-full overflow-x-auto pb-1">
         {[
           { id: "profile", label: "Profile Info", icon: User },
           { id: "payout", label: "Payout Bank & UPI", icon: CreditCard },
@@ -264,7 +264,7 @@ export default function CustomerProfilePage() {
       </div>
 
       {/* Tab Panels */}
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs">
+      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs">
         {tab === "profile" && (
           <div className="space-y-4">
             <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-2">Personal Information</h3>

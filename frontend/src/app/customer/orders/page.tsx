@@ -83,7 +83,7 @@ function OrdersContent() {
 
       {/* ── Content Area ── */}
       <div className="max-w-4xl mx-auto px-4 md:px-6 py-4 md:py-6">
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-none">
+        <div className="flex gap-2 min-w-0 max-w-full overflow-x-auto pb-2 mb-6 scrollbar-none">
           {STATUS_FILTERS.map((f) => (
             <button
               key={f.value}

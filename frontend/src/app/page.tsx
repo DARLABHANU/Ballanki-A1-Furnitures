@@ -123,14 +123,14 @@ export default function HomePage() {
                 alt={`Premium Furniture ${index}`}
                 className="w-full h-full object-cover object-bottom"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-wood-50/90 md:from-wood-50/70 via-wood-50/30 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-wood-50/95 md:from-wood-50/90 via-wood-50/60 to-transparent" />
             </div>
           ))}
 
           {/* Controls - Arrows */}
           <button
             onClick={prevSlide}
-            className="absolute left-4 md:left-8 z-20 w-10 h-10 rounded-full bg-white/70 hover:bg-white backdrop-blur-md flex items-center justify-center text-wood-900 shadow-md transition-all hidden md:flex"
+            className="absolute left-3 lg:left-5 z-20 w-10 h-10 rounded-full bg-white/70 hover:bg-white backdrop-blur-md flex items-center justify-center text-wood-900 shadow-md transition-all hidden lg:flex"
             aria-label="Previous slide"
           >
             <ChevronLeft size={20} className="mr-0.5" />
@@ -138,17 +138,17 @@ export default function HomePage() {
 
           <button
             onClick={nextSlide}
-            className="absolute right-4 md:right-8 z-20 w-10 h-10 rounded-full bg-white/70 hover:bg-white backdrop-blur-md flex items-center justify-center text-wood-900 shadow-md transition-all hidden md:flex"
+            className="absolute right-3 lg:right-5 z-20 w-10 h-10 rounded-full bg-white/70 hover:bg-white backdrop-blur-md flex items-center justify-center text-wood-900 shadow-md transition-all hidden lg:flex"
             aria-label="Next slide"
           >
             <ChevronRight size={20} className="ml-0.5" />
           </button>
 
           {/* Content container */}
-          <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex flex-col md:flex-row items-center justify-between gap-12">
+          <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-20 w-full flex flex-col md:flex-row items-center justify-between gap-12">
 
             {/* Dynamic Text Content */}
-            <div className="w-full md:w-[55%] space-y-6 text-center md:text-left mt-16 md:mt-0 min-h-[220px]">
+            <div className="w-full md:w-[75%] lg:w-[60%] space-y-6 text-center md:text-left mt-0 min-h-[220px]">
 
               {/* Force React to re-trigger animations by keying the wrapper to currentSlide */}
               <div key={currentSlide} className="animate-fade-in space-y-6">
@@ -159,7 +159,7 @@ export default function HomePage() {
                   </span>
                 </div>
 
-                <h1 className="font-playfair text-5xl md:text-6xl lg:text-7xl font-bold tracking-wide text-wood-900 leading-[1.15]">
+                <h1 className="font-playfair text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-wide text-wood-900 leading-[1.15]">
                   {heroSlides[currentSlide].titleTop} <br className="hidden md:block" />
                   <span className="italic font-normal text-wood-700">{heroSlides[currentSlide].titleItalic}</span>
                 </h1>
@@ -170,7 +170,7 @@ export default function HomePage() {
               </div>
 
               {/* Static Buttons below */}
-              <div className="flex items-center justify-center md:justify-start gap-4 pt-4">
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-4">
                 <Link
                   href="/customer/products"
                   className="bg-wood-900 hover:bg-wood-800 text-white px-8 py-3.5 rounded-full font-outfit font-bold tracking-wide transition-all shadow-md text-sm flex items-center gap-2 group"
@@ -208,7 +208,7 @@ export default function HomePage() {
         {/* ==============================================================================
             DELIVERY LOCATION STRIP (Mobile Only)
         ============================================================================== */}
-        <div className="md:hidden bg-wood-50 border-b border-wood-200 px-4 py-3 sticky top-14 z-30 shadow-xs">
+        <div className="lg:hidden bg-wood-50 border-b border-wood-200 px-4 py-3 z-30 shadow-xs">
           <button
             onClick={openModal}
             className="flex items-center gap-2 text-xs font-outfit w-full text-left"
@@ -348,7 +348,7 @@ export default function HomePage() {
               AESTHETIC BANNER / BRAND STORY (Warm Wood Theme)
           ============================================================================== */}
           <section className="bg-wood-800 text-wood-50 rounded-[2rem] p-8 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-12 shadow-md">
-            <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none">
+            <div className="absolute top-0 right-0 w-1/2 h-full overflow-hidden opacity-10 pointer-events-none">
               <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transform scale-150 -translate-y-12">
                 <path fill="#C4B299" d="M47.7,-67.2C59.9,-59.4,67,-44,72.4,-28.4C77.7,-12.8,81.4,3,76.5,16.4C71.6,29.8,58.2,40.8,44.9,50C31.5,59.3,18.3,66.8,3.2,62.3C-11.9,57.7,-25.1,41.1,-38.7,30.3C-52.2,19.5,-66,14.6,-71.2,5C-76.3,-4.5,-72.8,-18.8,-63.9,-29.4C-55,-40,-40.7,-46.9,-27.6,-54.3C-14.6,-61.7,-2.8,-69.5,10.2,-73.6C23.2,-77.7,35.5,-75,47.7,-67.2Z" transform="translate(100 100)" />
               </svg>

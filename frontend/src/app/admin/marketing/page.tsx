@@ -22,7 +22,7 @@ export default function MarketingToolsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Left: Email Broadcast Card (2 cols) */}
-        <div className="lg:col-span-2 bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+        <div className="lg:col-span-2 bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
           <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">
             <Mail className="text-[#0D0D0D]" size={20} />
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">Customer Email Broadcast</h3>
@@ -64,7 +64,7 @@ export default function MarketingToolsPage() {
         </div>
 
         {/* Right: Quick Campaigns Card (1 col) */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
           <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">
             <Share2 className="text-[#0D0D0D]" size={20} />
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">Social Campaigns</h3>
