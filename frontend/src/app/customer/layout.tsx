@@ -21,7 +21,7 @@ import {
   LogOut
 } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
-import { notificationApi } from "@/lib/api";
+import NotificationBell from "@/components/NotificationBell";
 
 interface NavItem {
   href: string;
@@ -45,37 +45,6 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
   const router = useRouter();
   const { logout, user, isAuthenticated } = useAuthStore();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [notifications, setNotifications] = useState<any[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [showNotifications, setShowNotifications] = useState(false);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchNotifications();
-      const interval = setInterval(fetchNotifications, 60000);
-      return () => clearInterval(interval);
-    }
-  }, [isAuthenticated]);
-
-  const fetchNotifications = async () => {
-    try {
-      const res = await notificationApi.getNotifications();
-      setNotifications(res.data.notifications || []);
-      setUnreadCount(res.data.unreadCount || 0);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleMarkAsRead = async (id: string) => {
-    try {
-      await notificationApi.markAsRead(id);
-      fetchNotifications();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const sidebarContent = (
     <div className="flex flex-col h-full bg-[#0D0D0D] text-wood-100 p-4 font-garamond justify-between">
       
@@ -199,58 +168,7 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
           {/* Right Controls: Notifications + Customer Avatar + Browse Shop */}
           <div className="flex items-center gap-4">
             
-            {/* Bell notification */}
-            <div className="relative">
-              <div 
-                className="cursor-pointer text-[#1A1A1A] hover:text-[#0D0D0D]" 
-                onClick={() => setShowNotifications(!showNotifications)}
-              >
-                <Bell size={18} />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-red-600 text-white text-[9px] font-extrabold flex items-center justify-center">
-                    {unreadCount > 99 ? '99+' : unreadCount}
-                  </span>
-                )}
-              </div>
-              
-              {/* Notification Dropdown */}
-              {showNotifications && (
-                <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-lg border border-[#E2DAC8] overflow-hidden z-50">
-                  <div className="p-3 border-b border-[#EFEBE3] flex justify-between items-center">
-                    <h4 className="font-bold text-sm text-[#1A1A1A]">Notifications</h4>
-                    {unreadCount > 0 && (
-                      <button 
-                        onClick={() => handleMarkAsRead('all')} 
-                        className="text-[10px] text-[#2E7D32] hover:underline"
-                      >
-                        Mark all as read
-                      </button>
-                    )}
-                  </div>
-                  <div className="max-h-80 overflow-y-auto">
-                    {notifications.length === 0 ? (
-                      <div className="p-4 text-center text-xs text-[#808080]">No notifications yet</div>
-                    ) : (
-                      notifications.map(notif => (
-                        <div 
-                          key={notif._id || notif.id} 
-                          className={`p-3 border-b border-[#EFEBE3] last:border-0 hover:bg-[#F8F5F0] transition-colors cursor-pointer ${!notif.is_read ? 'bg-[#F4F9F5]' : ''}`}
-                          onClick={() => {
-                            if (!notif.is_read) handleMarkAsRead(notif._id || notif.id);
-                          }}
-                        >
-                          <p className="text-xs font-bold text-[#1A1A1A]">{notif.title}</p>
-                          <p className="text-[11px] text-[#666666] mt-0.5 line-clamp-2">{notif.message}</p>
-                          <p className="text-[9px] text-[#808080] mt-1">
-                            {new Date(notif.created_at).toLocaleDateString()}
-                          </p>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
+            <NotificationBell />
 
             {/* Customer profile pill */}
             <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-[#EFEBE3]">

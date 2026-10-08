@@ -17,6 +17,8 @@ import { useDeliveryLocationStore } from "@/store/deliveryLocationStore";
 import { authApi } from "@/lib/api";
 import DeliveryLocationModal from "@/components/customer/DeliveryLocationModal";
 
+import NotificationBell from "@/components/NotificationBell";
+
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
@@ -129,13 +131,7 @@ export default function Navbar() {
                 />
               </Link>
 
-              {/* Bell */}
-              <button
-                className="w-9 h-9 flex items-center justify-center text-wood-900 rounded-lg hover:bg-wood-100 transition-colors"
-                aria-label="Notifications"
-              >
-                <Bell size={22} />
-              </button>
+              <NotificationBell />
             </div>
 
             {/* Mobile Search Bar */}
@@ -201,6 +197,7 @@ export default function Navbar() {
 
             {/* Right Actions */}
             <div className="flex items-center gap-4 lg:gap-6 flex-shrink-0">
+              <NotificationBell />
               <Link href="/customer/orders" className="hidden lg:flex flex-col items-center text-wood-600 hover:text-wood-900 transition-colors group">
                 <Package size={19} className="group-hover:scale-105 transition-transform" />
                 <span className="text-[10px] font-inter font-medium mt-1">Track Order</span>

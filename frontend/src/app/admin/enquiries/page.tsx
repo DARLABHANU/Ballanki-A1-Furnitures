@@ -1,5 +1,5 @@
 "use client";
-import {FormEvent,useCallback,useEffect,useState} from "react";
+import {Suspense,FormEvent,useCallback,useEffect,useState} from "react";
 import {RefreshCw,Send,Loader2,CheckCircle2,Inbox} from "lucide-react";
 import toast from "react-hot-toast";
 import {api} from "@/lib/api";
@@ -8,9 +8,13 @@ import {formatDate,formatPrice} from "@/lib/utils";
 type Offer={_id:string;proposed_price:number;status:string;offered_by:'customer'|'merchant';expires_at:string};
 type Message={_id:string;sender_type:string;content:string;is_offer:boolean;offer_id?:Offer|null;created_at:string};
 type Enquiry={_id:string;status:string;product:{id:string;name:string;price:number}|null;customer:{id:string;full_name:string;email:string}|null;messages:Message[];accepted_offer_id?:string|null};
-export default function AdminEnquiriesPage(){
+import {useSearchParams} from "next/navigation";
+export default function AdminEnquiriesPage(){return <Suspense fallback={<p>Loading enquiries...</p>}><Enquiries /></Suspense>;}
+function Enquiries(){
+ const searchParams=useSearchParams();const requested=searchParams.get("conversation")||"";
+ useEffect(()=>{if(requested)setSelected(requested);},[requested]);
  const [items,setItems]=useState<Enquiry[]>([]),[selected,setSelected]=useState(''),[loading,setLoading]=useState(true),[message,setMessage]=useState(''),[counter,setCounter]=useState(''),[busy,setBusy]=useState('');
- const load=useCallback(async(silent=false)=>{try{const {data}=await api.get('/admin/conversations');setItems(data);setSelected(current=>current&&data.some((x:Enquiry)=>x._id===current)?current:data[0]?._id||'');}catch(e){if(!silent)toast.error(getApiError(e));}finally{setLoading(false);}},[]);
+ const load=useCallback(async(silent=false)=>{try{const {data}=await api.get('/admin/conversations');setItems(data);setSelected(current=>current&&data.some((x:Enquiry)=>x._id===current)?current:data.find((x:Enquiry)=>x._id===requested)?._id||data[0]?._id||'');}catch(e){if(!silent)toast.error(getApiError(e));}finally{setLoading(false);}},[requested]);
  useEffect(()=>{void load();const timer=window.setInterval(()=>void load(true),5000);return()=>window.clearInterval(timer);},[load]);
  const active=items.find(x=>x._id===selected);const replace=(u:Enquiry)=>setItems(prev=>[u,...prev.filter(x=>x._id!==u._id)]);
  const send=async(e:FormEvent)=>{e.preventDefault();if(!active||!message.trim())return;setBusy('message');try{const {data}=await api.post(`/conversations/${active._id}/messages`,{content:message.trim()});replace(data);setMessage('');}catch(err){toast.error(getApiError(err));}finally{setBusy('');}};

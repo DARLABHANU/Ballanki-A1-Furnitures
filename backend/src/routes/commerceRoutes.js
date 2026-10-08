@@ -91,6 +91,7 @@ router.patch('/orders/:id/status',roles('merchant','admin'),wrap(async(req,res)=
 }));
 router.post('/orders/:id/refund',wrap(async(req,res)=>{const o=await accessible(req);if(String(o.customer._id)!==String(req.user._id)&&req.user.role!=='admin')fail(403,'Only the customer can request a return');if(o.status!=='delivered')fail(409,'Returns can be requested after delivery');const r=await ReturnRequest.create({user:o.customer._id,order_id:o._id,reason:String(req.body.reason||'Return requested')});res.status(201).json(plain(r));}));
 for(const url of ['/create-order','/orders/verify-payment'])router.post(url,(req,res)=>res.status(409).json({error:'Local checkout saves orders with payment pending. Online payment collection is disabled.'}));
-router.get('/notifications',wrap(async(req,res)=>{const rows=await Notification.find({user:req.user._id}).sort({createdAt:-1}).limit(100);res.json({notifications:rows.map(plain),unreadCount:rows.filter(r=>!r.is_read).length});}));
+router.get('/notifications',wrap(async(req,res)=>{const [rows,unreadCount]=await Promise.all([Notification.find({user:req.user._id}).sort({createdAt:-1}).limit(100),Notification.countDocuments({user:req.user._id,is_read:false})]);res.json({notifications:rows.map(plain),unreadCount});}));
+router.put('/notifications/all/read',wrap(async(req,res)=>{await Notification.updateMany({user:req.user._id,is_read:false},{$set:{is_read:true}});res.json({success:true});}));
 router.put('/notifications/:id/read',wrap(async(req,res)=>{const n=await Notification.findOneAndUpdate({_id:id(req.params.id),user:req.user._id},{is_read:true},{new:true});if(!n)fail(404,'Notification not found');res.json(plain(n));}));
 module.exports=router;module.exports.orderView=orderView;

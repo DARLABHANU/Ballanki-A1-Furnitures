@@ -14,6 +14,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useDeliveryLocationStore } from "@/store/deliveryLocationStore";
+import {useSearchParams} from "next/navigation";
 import BargainPanel from "@/components/customer/BargainPanel";
 import { productApi } from "@/lib/api";
 import ProductCard from "@/components/customer/ProductCard";
@@ -31,6 +32,9 @@ export default function ProductDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isBargainMode, setIsBargainMode] = useState(false);
+  const searchParams = useSearchParams();
+  const openNegotiation = searchParams.get("negotiate");
+  useEffect(() => { setIsBargainMode(isAuthenticated && openNegotiation === "1"); }, [id, isAuthenticated, openNegotiation]);
   const [reviewsList, setReviewsList] = useState<any[]>([]);
 
   useEffect(() => {
@@ -357,7 +361,14 @@ export default function ProductDetailPage() {
           productName={product.name}
           productImage={imagesList[selectedImage] || ""}
           listedPrice={product.price}
-          onClose={() => setIsBargainMode(false)}
+          onClose={() => {
+            setIsBargainMode(false);
+            if (openNegotiation === "1") {
+              const remaining = new URLSearchParams(searchParams.toString());
+              remaining.delete("negotiate");
+              router.replace(`/customer/products/${id}${remaining.size ? `?${remaining}` : ""}`, { scroll: false });
+            }
+          }}
         />
       )}
     </div>
