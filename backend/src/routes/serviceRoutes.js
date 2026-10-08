@@ -1,5 +1,5 @@
 const router=require('express').Router();const User=require('../models/User');const Product=require('../models/Product');
-const {Ticket,Order,Audit,Conversation,Offer,Coupon,Setting,Newsletter,Notification}=require('../models/Commerce');const {authenticate,roles}=require('../middleware/auth');const {asyncRoute:wrap,fail,pick,id,plain,page}=require('../lib/http');const crypto=require('crypto');const fs=require('fs/promises');const path=require('path');
+const {Ticket,Order,Audit,Conversation,Offer,Coupon,Setting,Newsletter,Notification}=require('../models/Commerce');const {authenticate,roles}=require('../middleware/auth');const {asyncRoute:wrap,fail,pick,id,plain,page}=require('../lib/http');const crypto=require('crypto');
 router.get('/website-settings',wrap(async(req,res)=>res.json((await Setting.findOne({key:'website-settings'}))?.value||{})));
 router.post('/newsletter',wrap(async(req,res)=>{const email=String(req.body.email||'').trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))fail(400,'Enter a valid email');await Newsletter.findOneAndUpdate({email},{$set:{email}},{upsert:true});res.json({success:true});}));
 router.use(authenticate);
@@ -20,10 +20,9 @@ router.post('/support/impersonate/end/:id',roles('admin','support'),wrap(async(r
 router.get('/promoter/coupons',wrap(async(req,res)=>res.json((await Coupon.find({promoter_id:req.user._id})).map(plain))));
 router.get('/promoter/commissions',wrap(async(req,res)=>res.json((await Setting.find({key:{$regex:'^ledger:commissions:'},'value.promoter_id':String(req.user._id)})).map(r=>r.value))));
 router.get('/promoter/analytics',wrap(async(req,res)=>{const coupons=await Coupon.find({promoter_id:req.user._id});const orders=await Order.find({coupon_code:{$in:coupons.map(c=>c.code)},status:{$ne:'cancelled'}});res.json({total_referred_sales:orders.filter(o=>o.payment_status==='paid').reduce((n,o)=>n+o.total_amount,0),total_referred_orders:orders.length,total_commissions:0,pending_commissions:0,coupon_count:coupons.length});}));
-router.post('/upload',roles('merchant','admin'),wrap(async(req,res)=>{
- const value=String(req.body.base64||'');const match=value.match(/^data:image\/(png|jpeg|webp);base64,([A-Za-z0-9+/=\r\n]+)$/);if(!match)fail(400,'Upload a PNG, JPEG or WebP image');const buffer=Buffer.from(match[2],'base64');if(buffer.length>5*1024*1024)fail(413,'Maximum image size is 5 MB');
- const png=buffer.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]));const jpg=buffer[0]===255&&buffer[1]===216&&buffer[2]===255;const webp=buffer.toString('ascii',0,4)==='RIFF'&&buffer.toString('ascii',8,12)==='WEBP';if(!(match[1]==='png'&&png||match[1]==='jpeg'&&jpg||match[1]==='webp'&&webp))fail(400,'Invalid image contents');
- const filename=crypto.randomUUID()+'.'+match[1];const dir=path.resolve(__dirname,'../../uploads');await fs.mkdir(dir,{recursive:true});await fs.writeFile(path.join(dir,filename),buffer);res.status(201).json({url:'/uploads/'+filename});
+router.post('/upload',roles('admin'),wrap(async(req,res)=>{
+ const image=await require('../lib/cloudinary').uploadProductImage(req.body.base64);
+ res.status(201).json(image);
 }));
 const conversation=async req=>{const c=await Conversation.findById(id(req.params.id));if(!c)fail(404,'Conversation not found');if(![String(c.customer),String(c.merchant)].includes(String(req.user._id))&&req.user.role!=='admin')fail(403,'You cannot access this conversation');if(req.user.role==='merchant'&&String(c.merchant)!==String(req.user._id))fail(403,'This enquiry belongs to another merchant');return c;};
 const offerView=offer=>({_id:String(offer._id),proposed_price:offer.price,status:offer.status.toUpperCase(),offered_by:offer.offered_by,customer_id:String(offer.customer),merchant_id:String(offer.merchant),expires_at:offer.expires_at});

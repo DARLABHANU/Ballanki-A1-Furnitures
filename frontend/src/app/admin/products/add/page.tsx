@@ -1,6 +1,6 @@
-﻿"use client";
+"use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, ArrowLeft, Image as ImageIcon, Save, CheckCircle2 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -9,6 +9,8 @@ import { api } from "@/lib/api";
 export default function AdminAddProductPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const uploadLock = useRef(false);
   const [images, setImages] = useState<string[]>([]);
   const [imageUrlInput, setImageUrlInput] = useState("");
 
@@ -43,9 +45,41 @@ export default function AdminAddProductPage() {
 
   const handleAddImage = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!imageUrlInput.trim()) return;
+    if (!imageUrlInput.trim() || isUploading || isSubmitting) return;
+    if (images.length >= 5) { toast.error("Maximum 5 pictures per product."); return; }
+    try { const url = new URL(imageUrlInput.trim()); if (url.protocol !== "https:") throw new Error(); }
+    catch { toast.error("Enter a valid HTTPS image URL."); return; }
     setImages(prev => [...prev, imageUrlInput.trim()]);
     setImageUrlInput("");
+  };
+
+  const handleUploadImages = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    event.target.value = "";
+    if (!files.length || uploadLock.current || isSubmitting) return;
+    if (files.length + images.length > 5) { toast.error(`You can add ${5 - images.length} more picture(s).`); return; }
+    if (files.some(file => !["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 3 * 1024 * 1024)) {
+      toast.error("Choose JPEG, PNG or WebP pictures, up to 3 MB each."); return;
+    }
+    uploadLock.current = true;
+    setIsUploading(true);
+    let uploaded = 0;
+    try {
+      for (const file of files) {
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result));
+          reader.onerror = () => reject(new Error("Could not read the selected picture."));
+          reader.readAsDataURL(file);
+        });
+        const response = await api.post("/upload", { filename: file.name, base64 });
+        setImages(previous => [...previous, response.data.url]);
+        uploaded++;
+      }
+      toast.success(`${uploaded} picture(s) uploaded.`);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.error || error.message || "Picture upload failed. Please retry.");
+    } finally { uploadLock.current = false; setIsUploading(false); }
   };
 
   const handleRemoveImage = (index: number) => {
@@ -54,8 +88,9 @@ export default function AdminAddProductPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (images.length === 0) {
-      toast.error("Please add at least one image URL.");
+    if (uploadLock.current || isSubmitting) return;
+    if (images.length === 0 || images.length > 5) {
+      toast.error("Please add between 1 and 5 product pictures.");
       return;
     }
     
@@ -179,12 +214,18 @@ export default function AdminAddProductPage() {
           </div>
 
           <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
-            <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-2">Product Images</h3>
+            <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-2">Product Images ({images.length}/5)</h3>
+            <fieldset disabled={isUploading || isSubmitting} className="space-y-4 disabled:opacity-60">
+            <div>
+              <label htmlFor="product-pictures" className="block text-xs font-bold mb-2">Upload from your device</label>
+              <input id="product-pictures" type="file" accept="image/jpeg,image/png,image/webp" multiple disabled={images.length >= 5 || isUploading || isSubmitting} onChange={handleUploadImages} className="block w-full text-xs" />
+              <p className="text-xs text-gray-500 mt-2">Up to 5 pictures. JPEG, PNG or WebP, maximum 3 MB each. The first picture is the cover.</p>
+            </div>
             <div>
               <label className="font-bold text-[#1A1A1A] block mb-1 text-xs">Add Image URL</label>
               <div className="flex gap-2">
-                <input value={imageUrlInput} onChange={(e) => setImageUrlInput(e.target.value)} className="flex-1 bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#0D0D0D]" placeholder="https://unsplash.com..." />
-                <button onClick={handleAddImage} className="bg-[#0D0D0D] text-white px-3 py-2 rounded-xl text-xs font-bold hover:bg-[#333333] transition-colors"><ImageIcon size={14} /></button>
+                <input value={imageUrlInput} onChange={(e) => setImageUrlInput(e.target.value)} className="flex-1 bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#0D0D0D]" placeholder="https://..." />
+                <button type="button" disabled={images.length >= 5} onClick={handleAddImage} className="bg-[#0D0D0D] text-white px-3 py-2 rounded-xl text-xs font-bold hover:bg-[#333333] transition-colors"><ImageIcon size={14} /></button>
               </div>
             </div>
             
@@ -200,6 +241,8 @@ export default function AdminAddProductPage() {
                 ))}
               </div>
             )}
+            </fieldset>
+            {isUploading && <p role="status" className="text-xs flex items-center gap-2"><Loader2 size={14} className="animate-spin" />Uploading pictures...</p>}
           </div>
         </div>
 
@@ -217,7 +260,7 @@ export default function AdminAddProductPage() {
           </div>
           <button 
             type="submit" 
-            disabled={isSubmitting}
+            disabled={isSubmitting || isUploading}
             className="flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-8 py-3 rounded-xl text-xs font-bold transition-all disabled:opacity-50"
           >
             {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}

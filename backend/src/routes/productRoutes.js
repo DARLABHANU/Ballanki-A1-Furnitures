@@ -5,7 +5,7 @@ const {authenticate,roles}=require('../middleware/auth');
 const {asyncRoute:wrap,fail,pick,id,plain}=require('../lib/http');
 const fields=['name','description','short_description','sku','price','base_price','compare_price','stock_quantity','low_stock_threshold','main_category','subcategory','subcategory_slug','brand','tags','material','wood_type','fabric','dimensions','weight_grams','fulfillment_type','allow_pre_order','manufacturing_duration_days','shipping_duration_days','images','is_active','is_featured'];
 const escape=s=>String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-const normalize=body=>{const p=pick(body,fields);if(typeof p.tags==='string')p.tags=p.tags.split(',').map(x=>x.trim()).filter(Boolean);if(p.compare_price==='')delete p.compare_price;return p;};
+const normalize=body=>{const p=pick(body,fields);if(p.images!==undefined&&(!Array.isArray(p.images)||p.images.length>5||p.images.some(image=>typeof image!=='string'||!image.trim())))fail(400,'Provide at most 5 valid product image URLs');if(typeof p.tags==='string')p.tags=p.tags.split(',').map(x=>x.trim()).filter(Boolean);if(p.compare_price==='')delete p.compare_price;return p;};
 const list=async(req,res,scope={is_active:true,is_approved:true})=>{
  const filter={...scope};const q=req.query;
  if(q.search)filter.$or=['name','description','sku'].map(k=>({[k]:{$regex:escape(q.search),$options:'i'}}));
