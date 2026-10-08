@@ -1,7 +1,7 @@
 // Uses an isolated temporary MongoDB database; never seeds or drops the application database.
 const assert=require('node:assert/strict');const mongoose=require('mongoose');const crypto=require('crypto');
 require('dotenv').config();process.env.JWT_SECRET=crypto.randomBytes(48).toString('hex');
-const db='ratnamayuri_test_'+crypto.randomBytes(8).toString('hex');let server;let passed=0;
+const db='ballanki_test_'+crypto.randomBytes(8).toString('hex');let server;let passed=0;
 async function main(){
  await mongoose.connect(process.env.MONGODB_URI,{dbName:db,serverSelectionTimeoutMS:10000});
  const User=require('../src/models/User'),Product=require('../src/models/Product'),{Order,CartItem}=require('../src/models/Commerce');const bcrypt=require('bcryptjs');const {tokens}=require('../src/middleware/auth');
@@ -49,4 +49,4 @@ async function main(){
  await User.findByIdAndUpdate(signup.user_id,{is_active:false});await call('GET','/auth/me',null,ct,401);
  console.log('PASS: '+passed+' HTTP assertions plus persistence, permissions, stock, idempotency and response-contract assertions.');
 }
-main().catch(e=>{console.error(e);process.exitCode=1;}).finally(async()=>{if(server)await new Promise(r=>server.close(r));if(mongoose.connection.readyState===1){if(mongoose.connection.name!==db||!db.startsWith('ratnamayuri_test_'))throw new Error('Refusing unsafe test cleanup');await mongoose.connection.dropDatabase();}await mongoose.disconnect();});
+main().catch(e=>{console.error(e);process.exitCode=1;}).finally(async()=>{if(server)await new Promise(r=>server.close(r));if(mongoose.connection.readyState===1){if(mongoose.connection.name!==db||!db.startsWith('ballanki_test_'))throw new Error('Refusing unsafe test cleanup');await mongoose.connection.dropDatabase();}await mongoose.disconnect();});

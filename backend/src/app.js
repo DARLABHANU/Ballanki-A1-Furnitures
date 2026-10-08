@@ -2,8 +2,8 @@ const express=require('express');const cors=require('cors');const mongoose=requi
 const app=express();app.disable('x-powered-by');app.use(express.json({limit:'8mb'}));
 app.use(cors({origin:(origin,cb)=>{const allowed=(process.env.FRONTEND_URL||'http://localhost:3000').split(',').map(s=>s.trim());if(!origin||allowed.includes(origin)||origin==='http://127.0.0.1:3000')cb(null,true);else cb(Object.assign(new Error('Origin is not allowed'),{status:403}));}}));
 app.use((req,res,next)=>{res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Cache-Control','no-store');next();});
-app.get('/api/health',(req,res)=>res.status(mongoose.connection.readyState===1?200:503).json({status:mongoose.connection.readyState===1?'ok':'unavailable',database:mongoose.connection.readyState===1?'connected':'disconnected',payment_mode:'local_pending'}));
-app.get('/api/v1',(req,res)=>res.json({version:'1.1',payment_mode:'local_pending'}));
+app.get('/api/health',(req,res)=>res.status(mongoose.connection.readyState===1?200:503).json({status:mongoose.connection.readyState===1?'ok':'unavailable',database:mongoose.connection.readyState===1?'connected':'disconnected',database_name:mongoose.connection.name||null,payment_mode:'local_pending'}));
+app.get('/api/v1',(req,res)=>res.json({version:'1.1',database_name:mongoose.connection.name||null,payment_mode:'local_pending'}));
 app.use('/uploads',express.static(path.resolve(__dirname,'../uploads'),{dotfiles:'deny',setHeaders:res=>res.setHeader('Content-Security-Policy',"default-src 'none'")}));
 app.use('/api/v1/auth',require('./routes/authRoutes'));
 app.use('/api/v1/products',require('./routes/productRoutes'));

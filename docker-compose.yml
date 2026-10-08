@@ -23,7 +23,7 @@ services:
       - ./backend/.env
     environment:
       HOST: 0.0.0.0
-      MONGODB_URI: mongodb://mongodb:27017/ratnamayuri
+      MONGODB_URI: mongodb://mongodb:27017/ballanki
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
     volumes:
       - ./backend/uploads:/app/uploads

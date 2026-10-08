@@ -1,7 +1,7 @@
 // Negotiation lifecycle verification against a disposable MongoDB database.
 // Never modifies the configured application database.
 const assert=require('node:assert/strict');const crypto=require('node:crypto');const mongoose=require('mongoose');
-require('dotenv').config();process.env.JWT_SECRET=crypto.randomBytes(48).toString('hex');const database='ratnamayuri_neg_test_'+crypto.randomBytes(8).toString('hex');let server;let checks=0;
+require('dotenv').config();process.env.JWT_SECRET=crypto.randomBytes(48).toString('hex');const database='ballanki_neg_test_'+crypto.randomBytes(8).toString('hex');let server;let checks=0;
 async function run(){
  await mongoose.connect(process.env.MONGODB_URI,{dbName:database,serverSelectionTimeoutMS:10000});
  const User=require('../src/models/User'),Product=require('../src/models/Product'),{Address,CartItem,Order,Offer,Conversation,Notification}=require('../src/models/Commerce');const bcrypt=require('bcryptjs');const {tokens}=require('../src/middleware/auth');await Promise.all(Object.values(mongoose.models).map(x=>x.init()));
@@ -39,4 +39,4 @@ async function run(){
  await make('merchant');await call('POST','/auth/login',{email:'merchant@negotiation.example',password:'NegotiationPass123!'},null,403);await call('GET','/merchant/profile',null,at,410);const fullConversation=await call('GET','/conversations/'+p._id,null,ct);assert.ok(Array.isArray(fullConversation.messages));assert.equal(fullConversation._id,p._id);await call('POST','/admin/users',{email:'disabled@negotiation.example',full_name:'Disabled role',password:'Testing123!',role:'merchant'},at,409);
  console.log('PASS: '+checks+' HTTP assertions; verified customer and owner negotiation inboxes, participant permissions, counteroffers, acceptance, 7-day negotiated cart price, single-use order pricing, payment-pending orders and live admin dashboard metrics.');
 }
-run().catch(e=>{console.error(e);process.exitCode=1;}).finally(async()=>{if(server)await new Promise(ok=>server.close(ok));if(mongoose.connection.readyState===1){if(!database.startsWith('ratnamayuri_neg_test_'))throw Error('Refusing unexpected database cleanup');await mongoose.connection.dropDatabase();}await mongoose.disconnect();});
+run().catch(e=>{console.error(e);process.exitCode=1;}).finally(async()=>{if(server)await new Promise(ok=>server.close(ok));if(mongoose.connection.readyState===1){if(!database.startsWith('ballanki_neg_test_'))throw Error('Refusing unexpected database cleanup');await mongoose.connection.dropDatabase();}await mongoose.disconnect();});

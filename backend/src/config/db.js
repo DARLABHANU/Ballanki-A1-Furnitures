@@ -1,18 +1,15 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-const connectDB = async () => {
-  try {
-    const uri = process.env.MONGODB_URI;
-    if (!uri) throw new Error("MONGODB_URI is undefined");
-
-    console.log("Attempting to connect to MongoDB...");
-    // The family: 4 option forces IPv4 to instantly prevent the dreaded 30-sec Mongoose timeout error on Windows.
-    const conn = await mongoose.connect(uri, { family: 4 });
-    console.log(`✅ MongoDB Successfully Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`❌ MongoDB Connection Error: ${error.message}`);
-    process.exit(1);
+async function connectDB() {
+  if (!process.env.MONGODB_URI) throw new Error('MONGODB_URI is required');
+  if (process.env.MONGODB_DNS_SERVERS) {
+    require('dns').setServers(process.env.MONGODB_DNS_SERVERS.split(',').map(value => value.trim()).filter(Boolean));
   }
-};
+  // Select the application database explicitly instead of inheriting an old URI database name.
+  const dbName = (process.env.MONGODB_DB_NAME || 'ballanki').trim();
+  if (!dbName) throw new Error('MONGODB_DB_NAME must not be empty');
+  await mongoose.connect(process.env.MONGODB_URI, { dbName, serverSelectionTimeoutMS: 10000 });
+  return mongoose.connection;
+}
 
 module.exports = connectDB;
