@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { Loader2, ShieldCheck, Sparkles, Mail, Lock } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { authApi } from "@/lib/api";
+import GoogleSignIn from "@/components/GoogleSignIn";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -125,6 +126,8 @@ export default function LoginPage() {
         <span className="flex-shrink mx-4 text-[10px] font-bold text-wood-400 tracking-wider uppercase">Or</span>
         <div className="flex-grow border-t border-wood-200"></div>
       </div>
+
+      <GoogleSignIn />
 
       <p className="text-center text-xs text-wood-500 font-medium font-inter">
         Don&apos;t have an account?{" "}

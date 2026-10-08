@@ -7,7 +7,7 @@ let refreshPromise: Promise<string> | null = null;
 api.interceptors.response.use(response => response, async (error: AxiosError) => {
  const original = error.config as typeof error.config & { _retry?: boolean };
  const refresh = Cookies.get("refresh_token");
- if(error.response?.status !== 401 || !original || original._retry || original.url?.startsWith("/auth/login") || original.url?.startsWith("/auth/signup") || !refresh) return Promise.reject(error);
+ if(error.response?.status !== 401 || !original || original._retry || original.url?.startsWith("/auth/login") || original.url?.startsWith("/auth/google") || original.url?.startsWith("/auth/signup") || !refresh) return Promise.reject(error);
  original._retry = true;
  try {
   if(!refreshPromise) refreshPromise = axios.post(API_BASE_URL + "/auth/refresh", {refresh_token: refresh}).then(({data}) => { setAuthCookies(data.access_token,data.refresh_token); return data.access_token as string; }).finally(() => { refreshPromise=null; });
@@ -33,7 +33,7 @@ export const authApi = {
   updatePayoutSettings: (data: object) => api.put("/auth/payout-settings", data),
   magicLinkRequest: (data: { email: string; role: string }) => api.post("/auth/magic-link-request", data),
   verifyMagicToken: (data: { token: string }) => api.post("/auth/verify-magic-token", data),
-  googleLogin: (data: { idToken: string; role?: string }) => api.post("/auth/google", data),
+  googleLogin: (data: { idToken: string; password?: string }) => api.post("/auth/google", data),
   verifyEmailOtp: (data: { email: string; otp: string }) => api.post("/auth/verify-email-otp", data),
   updateProfile: (data: { full_name: string; phone?: string }) => api.put("/auth/profile", data),
 };
