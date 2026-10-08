@@ -20,7 +20,20 @@ router.use((req, res, next) => {
 });
 router.post('/signup', wrap(async (req, res) => {
   const name = String(req.body.full_name || '').trim(); if (name.length < 2) fail(400, 'Full name is required');
-  const user = await User.create({ email: email(req.body.email), full_name: name, hashed_password: await bcrypt.hash(password(req.body.password), 12), role: 'customer' });
+  const accountEmail = email(req.body.email);
+  const accountPassword = password(req.body.password);
+  if (await User.exists({ email: accountEmail })) fail(409, 'An account with this email already exists. Please sign in.');
+  let user;
+  try {
+    user = await User.create({ email: accountEmail, full_name: name, hashed_password: await bcrypt.hash(accountPassword, 12), role: 'customer' });
+  } catch (error) {
+    if (error.code !== 11000) throw error;
+    // Confirm an email conflict instead of treating every unique index as an existing account.
+    if (await User.exists({ email: accountEmail })) fail(409, 'An account with this email already exists. Please sign in.');
+    const fields = Object.keys(error.keyPattern || error.keyValue || {});
+    console.error('Signup blocked by a conflicting users index:', fields.length ? fields.join(', ') : 'unknown index');
+    fail(500, 'Registration is blocked by a database index configuration problem.');
+  }
   res.status(201).json(tokens(user));
 }));
 router.post('/login', wrap(async (req, res) => {
