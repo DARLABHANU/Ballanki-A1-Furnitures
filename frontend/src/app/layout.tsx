@@ -34,10 +34,10 @@ export const metadata: Metadata = {
   keywords: ["furniture", "sofas", "dining tables", "wood", "premium"],
   icons: {
     icon: [
-      { url: "/favicon.png", type: "image/png" },
+      { url: "/favicon.png?v=9e17bdd7", type: "image/png" },
     ],
     apple: [
-      { url: "/favicon.png", type: "image/png" },
+      { url: "/favicon.png?v=9e17bdd7", type: "image/png" },
     ],
   },
 };
