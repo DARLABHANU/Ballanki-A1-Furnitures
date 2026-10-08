@@ -55,7 +55,7 @@ export default function ForgotPasswordPage() {
           </span>
           <h2 className="font-cormorant text-2xl sm:text-3xl font-bold text-[#1A1A1A]">Forgot Password</h2>
           <p className="text-xs text-[#808080] leading-relaxed">
-            For local testing, recovery codes are saved in backend/local-outbox on this computer.
+            Enter your account email to receive a password reset code.
           </p>
         </div>
       </div>

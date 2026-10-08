@@ -2,8 +2,9 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const fs = require('fs/promises');
-const path = require('path');
+const otp = require('../lib/emailOtp');
+const mail = require('../lib/email');
+const { EmailChallenge } = require('../models/Email');
 const User = require('../models/User');
 const { verifyGoogleToken } = require('../lib/googleAuth');
 const { asyncRoute: wrap, fail, pick } = require('../lib/http');
@@ -12,7 +13,7 @@ const email = value => { if (typeof value !== 'string' || !/^[^\s@]+@[^\s@]+\.[^
 const password = value => { if (typeof value !== 'string' || value.length < 8 || value.length > 72) fail(400, 'Password must contain 8–72 characters'); return value; };
 const attempts = new Map();
 router.use((req, res, next) => {
-  if (!['/login', '/google', '/signup', '/forgot-password', '/reset-password', '/verify-otp'].includes(req.path)) return next();
+  if (!['/login', '/google', '/signup', '/forgot-password', '/reset-password', '/verify-otp', '/send-otp', '/resend-otp', '/verify-email-otp'].includes(req.path)) return next();
   const key = req.ip; const now = Date.now(); const item = attempts.get(key);
   if (!item || item.until < now) attempts.set(key, { count: 1, until: now + 60000 });
   else if (++item.count > 30) return res.status(429).json({ error: 'Too many attempts. Try again in a minute.' });
@@ -24,18 +25,8 @@ router.post('/signup', wrap(async (req, res) => {
   const accountEmail = email(req.body.email);
   const accountPassword = password(req.body.password);
   if (await User.exists({ email: accountEmail })) fail(409, 'An account with this email already exists. Please sign in.');
-  let user;
-  try {
-    user = await User.create({ email: accountEmail, full_name: name, hashed_password: await bcrypt.hash(accountPassword, 12), role: 'customer' });
-  } catch (error) {
-    if (error.code !== 11000) throw error;
-    // Confirm an email conflict instead of treating every unique index as an existing account.
-    if (await User.exists({ email: accountEmail })) fail(409, 'An account with this email already exists. Please sign in.');
-    const fields = Object.keys(error.keyPattern || error.keyValue || {});
-    console.error('Signup blocked by a conflicting users index:', fields.length ? fields.join(', ') : 'unknown index');
-    fail(500, 'Registration is blocked by a database index configuration problem.');
-  }
-  res.status(201).json(tokens(user));
+  await otp.issue(accountEmail, 'registration', { full_name: name, password_hash: await bcrypt.hash(accountPassword, 12) });
+  res.status(201).json({ requires_verification: true, email: accountEmail, message: mail.localMode() ? 'Verification code saved in the local email outbox.' : 'Check your email for the verification code.' });
 }));
 router.post('/google', wrap(async (req, res) => {
   const profile = await verifyGoogleToken(req.body.idToken);
@@ -69,6 +60,10 @@ router.post('/google', wrap(async (req, res) => {
 router.post('/login', wrap(async (req, res) => {
   const user = await User.findOne({ email: email(req.body.email) }).select('+hashed_password');
   if (!user || !user.is_active || !user.hashed_password || typeof req.body.password !== 'string' || !await bcrypt.compare(req.body.password, user.hashed_password)) fail(401, 'Invalid email or password. If you registered with Google, use Continue with Google.');
+  if (!user.is_verified && user.role === 'customer') {
+    await otp.issue(user.email, 'registration', { full_name: user.full_name, password_hash: user.hashed_password });
+    return res.status(403).json({ code: 'EMAIL_VERIFICATION_REQUIRED', email: user.email, error: 'Please verify your email. A verification code has been sent.' });
+  }
   res.json(tokens(user));
 }));
 router.post('/refresh', wrap(async (req, res) => {
@@ -93,26 +88,55 @@ router.post('/change-password', authenticate, wrap(async (req, res) => {
   if (!await bcrypt.compare(String(req.body.current_password || ''), user.hashed_password)) fail(400, 'Current password is incorrect');
   user.hashed_password = await bcrypt.hash(password(req.body.new_password), 12); user.token_version += 1; await user.save(); res.json(tokens(user));
 }));
-router.post('/forgot-password', wrap(async (req, res) => {
-  if (process.env.LOCAL_EMAIL_OUTBOX !== 'true' || process.env.NODE_ENV === 'production') fail(503, 'Email delivery is not configured. Contact your administrator.');
-  const user = await User.findOne({ email: email(req.body.email) });
-  if (user) {
-    const code = String(crypto.randomInt(100000, 1000000));
-    user.reset_hash = crypto.createHash('sha256').update(code).digest('hex'); user.reset_expires = new Date(Date.now() + 10 * 60000); user.reset_attempts = 0; await user.save();
-    const folder = path.resolve(__dirname, '../../local-outbox'); await fs.mkdir(folder, { recursive: true });
-    await fs.writeFile(path.join(folder, `${user._id}.json`), JSON.stringify({ to: user.email, subject: 'Local password recovery', code, expires: user.reset_expires }, null, 2));
-  }
-  res.json({ message: 'If the account exists, a recovery code was saved in backend/local-outbox on this computer. No email was sent.' });
-}));
-const checkReset = async body => {
-  const user = await User.findOne({ email: email(body.email || body.identifier) }).select('+reset_hash +reset_expires +reset_attempts');
-  if (!user || !user.reset_hash || user.reset_expires < new Date() || user.reset_attempts >= 5) fail(400, 'Recovery code is invalid or expired');
-  if (user.reset_hash !== crypto.createHash('sha256').update(String(body.otp || body.otpCode || '')).digest('hex')) { user.reset_attempts += 1; await user.save(); fail(400, 'Recovery code is invalid or expired'); }
-  return user;
+const recoveryMessage = () => ({ message: mail.localMode() ? 'If this account exists, a code was saved in the local email outbox.' : 'If this account exists, a verification code has been sent to its email address.' });
+const sendRecovery = async accountEmail => {
+  mail.requireEmail();
+  const user = await User.findOne({ email: accountEmail, is_active: true });
+  if (user) await otp.issue(accountEmail, 'password_reset');
 };
-router.post('/verify-otp', wrap(async (req, res) => { await checkReset(req.body); res.json({ success: true, message: 'Recovery code verified' }); }));
-router.post('/reset-password', wrap(async (req, res) => {
-  const user = await checkReset(req.body); user.hashed_password = await bcrypt.hash(password(req.body.new_password), 12); user.reset_hash = undefined; user.reset_expires = undefined; user.token_version += 1; await user.save(); res.json({ success: true });
+router.post('/forgot-password', wrap(async (req, res) => {
+  await sendRecovery(email(req.body.email)); res.json(recoveryMessage());
 }));
-for (const route of ['resend-otp', 'send-otp', 'magic-link-request', 'verify-magic-token', 'verify-email-otp']) router.post(`/${route}`, (req, res) => res.status(503).json({ error: 'This sign-in provider is not configured. Use email and password, or password recovery.' }));
+const resend = wrap(async (req, res) => {
+  const accountEmail = email(req.body.email || req.body.identifier);
+  if (req.body.channel && req.body.channel !== 'email') fail(400, 'Only email verification is supported.');
+  if (req.body.purpose === 'password_reset') {
+    await sendRecovery(accountEmail); return res.json(recoveryMessage());
+  }
+  mail.requireEmail();
+  const pending = await EmailChallenge.findOne({ email: accountEmail, purpose: 'registration' }).select('+password_hash');
+  if (pending?.password_hash) await otp.issue(accountEmail, 'registration', { full_name: pending.full_name, password_hash: pending.password_hash });
+  res.json({ message: 'If registration is pending, a new verification code has been sent.' });
+});
+router.post('/send-otp', resend); router.post('/resend-otp', resend);
+const verifyEmail = wrap(async (req, res) => {
+  const accountEmail = email(req.body.email || req.body.identifier);
+  const purpose = req.body.purpose === 'password_reset' ? 'password_reset' : 'registration';
+  const challenge = await otp.verify(accountEmail, purpose, req.body.otp || req.body.otpCode);
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  const claimed = await EmailChallenge.findOneAndUpdate({ _id: challenge._id, code_hash: challenge.code_hash, expires_at: { $gt: new Date() } }, { $set: { expires_at: new Date(0), ...(purpose === 'password_reset' ? { reset_token_hash: otp.hash(resetToken), reset_token_expires: new Date(Date.now() + 600000) } : {}) } }, { new: true }).select('+password_hash');
+  if (!claimed) fail(400, 'This code has already been used.');
+  if (purpose === 'password_reset') return res.json({ success: true, reset_token: resetToken });
+  let user = await User.findOne({ email: accountEmail }).select('+hashed_password');
+  if (user) {
+    if (!user.is_active || user.role !== 'customer' || user.is_verified || user.hashed_password !== claimed.password_hash) fail(409, 'Account changed. Please sign in again.');
+    user.is_verified = true; await user.save();
+  } else {
+    user = await User.create({ email: accountEmail, full_name: claimed.full_name, hashed_password: claimed.password_hash, is_verified: true, role: 'customer' });
+  }
+  await EmailChallenge.deleteOne({ _id: challenge._id });
+  res.json(tokens(user));
+});
+router.post('/verify-otp', verifyEmail); router.post('/verify-email-otp', verifyEmail);
+router.post('/reset-password', wrap(async (req, res) => {
+  const accountEmail = email(req.body.email);
+  const newPassword = password(req.body.new_password);
+  if (typeof req.body.reset_token !== 'string' || !/^[a-f0-9]{64}$/.test(req.body.reset_token)) fail(400, 'Password reset session is invalid. Request a new code.');
+  const challenge = await EmailChallenge.findOneAndDelete({ email: accountEmail, purpose: 'password_reset', reset_token_hash: otp.hash(req.body.reset_token), reset_token_expires: { $gt: new Date() } });
+  if (!challenge) fail(400, 'Password reset session expired or has already been used.');
+  const user = await User.findOneAndUpdate({ email: accountEmail, is_active: true }, { $set: { hashed_password: await bcrypt.hash(newPassword, 12), is_verified: true }, $inc: { token_version: 1 }, $unset: { reset_hash: 1, reset_expires: 1 } }, { new: true });
+  if (!user) fail(400, 'Password reset session is invalid.');
+  res.json({ success: true });
+}));
+for (const route of ['magic-link-request', 'verify-magic-token']) router.post(`/${route}`, (req, res) => res.status(503).json({ error: 'Use email and password or Continue with Google.' }));
 module.exports = router;

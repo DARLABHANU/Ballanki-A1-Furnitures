@@ -24,7 +24,7 @@ function ResetPasswordForm() {
   const router = useRouter();
   const params = useSearchParams();
   const email = params.get("email") || "";
-  const otp = params.get("otp") || "";
+
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -35,7 +35,9 @@ function ResetPasswordForm() {
   });
 
   const onSubmit = async (data: FormData) => {
-    if (!email || !otp) {
+    let resetSession: { email?: string; token?: string } = {};
+    try { resetSession = JSON.parse(sessionStorage.getItem("ballanki-password-reset") || "{}"); } catch { /* Missing recovery session. */ }
+    if (!email || resetSession.email !== email || !resetSession.token) {
       toast.error("Invalid reset request. Please initiate recovery again.");
       router.push("/auth/forgot-password");
       return;
@@ -45,10 +47,11 @@ function ResetPasswordForm() {
     try {
       await authApi.resetPassword({
         email: email.trim().toLowerCase(),
-        otp: otp.trim(),
+        reset_token: resetSession.token,
         new_password: data.password,
       });
 
+      sessionStorage.removeItem("ballanki-password-reset");
       toast.success("Password reset successfully! Please sign in with your new credentials.");
       router.push("/auth/login");
     } catch (err) {
@@ -86,7 +89,7 @@ function ResetPasswordForm() {
             <input
               {...register("password")}
               type={showPassword ? "text" : "password"}
-              placeholder="Min. 6 characters"
+              placeholder="Min. 8 characters"
               className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl pr-10 pl-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               autoComplete="new-password"
               required

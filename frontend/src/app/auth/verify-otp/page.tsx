@@ -16,7 +16,7 @@ function VerifyOtpContent() {
   const phone = params.get("phone") || "";
   const purpose = params.get("purpose") || "email_verify"; // "email_verify" | "password_reset"
 
-  const { setAuth } = useAuthStore();
+  const { setAuth, setUser } = useAuthStore();
 
   const [otpCode, setOtpCode] = useState<string[]>(Array(6).fill(""));
   const [isLoading, setIsLoading] = useState(false);
@@ -71,15 +71,17 @@ function VerifyOtpContent() {
     setIsLoading(true);
     try {
       if (purpose === "password_reset") {
-        await authApi.verifyOtp({ identifier: email, channel: "email", otpCode: code });
+        const response = await authApi.verifyOtp({ identifier: email, channel: "email", otpCode: code, purpose: "password_reset" });
+        sessionStorage.setItem("ballanki-password-reset", JSON.stringify({ email, token: response.data.reset_token }));
         toast.success("OTP verified successfully!");
-        router.push(`/auth/reset-password?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(code)}`);
+        router.push(`/auth/reset-password?email=${encodeURIComponent(email)}`);
       } else {
         // Normal account / email OTP verification
         const res = await authApi.verifyOtp({
           identifier: email || phone,
           channel: "email",
-          otpCode: code
+          otpCode: code,
+          purpose: "registration"
         });
 
         if (res.data?.role === "merchant") {
@@ -96,6 +98,7 @@ function VerifyOtpContent() {
           });
         }
         
+        if (res.data?.user) setUser(res.data.user);
         toast.success("Verification successful!");
         router.push(res.data?.role === "admin" ? "/admin/dashboard" : "/");
       }
@@ -112,7 +115,8 @@ function VerifyOtpContent() {
     try {
       await authApi.sendOtp({
         identifier: email || phone,
-        channel: "email"
+        channel: "email",
+        purpose: purpose === "password_reset" ? "password_reset" : "registration"
       });
       toast.success("A new 6-digit verification code has been sent!");
       setTimer(60);
@@ -156,7 +160,10 @@ function VerifyOtpContent() {
                 value={digit}
                 onChange={(e) => handleChange(idx, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(idx, e)}
-                className="w-11 h-12 text-center text-lg font-bold bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] focus:bg-white transition-all shadow-xs"
+                inputMode="numeric"
+                aria-label={`Code digit ${idx + 1}`}
+                autoComplete={idx === 0 ? "one-time-code" : "off"}
+                className="w-full min-w-0 h-12 text-center text-lg font-bold bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] focus:bg-white transition-all shadow-xs"
               />
             ))}
           </div>

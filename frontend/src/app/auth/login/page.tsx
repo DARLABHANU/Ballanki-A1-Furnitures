@@ -52,6 +52,11 @@ export default function LoginPage() {
         router.push("/");
       }
     } catch (err: any) {
+      if (err?.response?.data?.code === "EMAIL_VERIFICATION_REQUIRED") {
+        toast.success("Check your email for your verification code.");
+        router.push(`/auth/verify-otp?email=${encodeURIComponent(err.response.data.email)}&purpose=registration`);
+        return;
+      }
       const message = err?.response?.data?.message || err?.response?.data?.error || "Invalid email or password.";
       toast.error(message);
     } finally {

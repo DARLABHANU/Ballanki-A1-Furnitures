@@ -29,6 +29,11 @@ export default function SignupPage() {
         password,
         role: "customer"
       });
+      if (res.data.requires_verification) {
+        toast.success(res.data.message);
+        router.push(`/auth/verify-otp?email=${encodeURIComponent(res.data.email)}&purpose=registration`);
+        return;
+      }
       const { access_token, refresh_token, role, user_id, user } = res.data;
 
       setAuth({ access_token, refresh_token, role, user_id });

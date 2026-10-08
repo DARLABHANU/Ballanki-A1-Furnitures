@@ -1,3 +1,4 @@
+const { orderEmail } = require('../lib/emailQueue');
 const router=require('express').Router();
 const mongoose=require('mongoose');
 const crypto=require('crypto');
@@ -70,6 +71,7 @@ router.post('/orders',wrap(async(req,res)=>{
   if(error.code===11000){const duplicate=await Order.findOne({customer:req.user._id,request_key:key});if(duplicate)return res.json(orderView(duplicate));}
   throw error;
  }
+ await orderEmail(created,'placed');
  res.status(201).json(orderView(created));
 }));
 const accessible=async req=>{const order=await Order.findById(id(req.params.id)).populate('customer');if(!order)fail(404,'Order not found');const owner=String(order.customer._id)===String(req.user._id);const merchant=req.user.role==='merchant'&&order.items.some(i=>i.merchant_id===String(req.user._id));if(!owner&&!merchant&&!['admin','support'].includes(req.user.role))fail(403,'You cannot access this order');return order;};
@@ -79,14 +81,16 @@ const cancelOrder=async order=>{
  if(!updated){const fresh=await Order.findById(order._id);if(fresh?.status==='cancelled')return fresh;fail(409,'Only unpaid orders awaiting processing can be cancelled');}
  for(const item of updated.items){if(item.stock_reserved)await Product.updateOne({_id:item.product_id},{$inc:{stock_quantity:item.quantity}});if(item.accepted_offer_id)await Offer.updateOne({_id:item.accepted_offer_id,order_id:updated._id},{$unset:{used_at:1,order_id:1}});}
  if(updated.coupon_code)await Coupon.updateOne({code:updated.coupon_code,used_count:{$gt:0}},{$inc:{used_count:-1}});
+ await orderEmail(updated,'cancelled');
  return updated;
 };
 router.post('/orders/:id/cancel',wrap(async(req,res)=>{const o=await accessible(req);if(req.user.role==='merchant')fail(403,'Ask an administrator to cancel the order');await cancelOrder(o);res.json(orderView(await Order.findById(o._id)));}));
 router.patch('/orders/:id/status',roles('merchant','admin'),wrap(async(req,res)=>{
  const o=await accessible(req);if(req.user.role==='merchant'&&o.items.some(i=>i.merchant_id!==String(req.user._id)))fail(409,'An administrator must update a multi-merchant order');
  const transitions={pending:['confirmed','cancelled'],confirmed:['processing','cancelled'],processing:['shipped'],shipped:['out_for_delivery','delivered'],out_for_delivery:['delivered'],delivered:[],cancelled:[],refunded:[]};
- const status=req.body.status||o.status;if(status!==o.status&&!transitions[o.status].includes(status))fail(409,'Invalid order status transition');
+ const previousStatus=o.status;const status=req.body.status||o.status;if(status!==o.status&&!transitions[o.status].includes(status))fail(409,'Invalid order status transition');
  if(status==='cancelled')await cancelOrder(o);else{Object.assign(o,pick(req.body,['tracking_number','current_location','notes']));if(status!==o.status){o.status=status;o.status_history.push({status,timestamp:new Date(),note:req.body.note||'Fulfillment status updated'});if(status==='delivered')o.delivered_at=new Date();}await o.save();}
+ if(status!==previousStatus&&status!=='cancelled')await orderEmail(o,status);
  res.json(orderView(await Order.findById(o._id)));
 }));
 router.post('/orders/:id/refund',wrap(async(req,res)=>{const o=await accessible(req);if(String(o.customer._id)!==String(req.user._id)&&req.user.role!=='admin')fail(403,'Only the customer can request a return');if(o.status!=='delivered')fail(409,'Returns can be requested after delivery');const r=await ReturnRequest.create({user:o.customer._id,order_id:o._id,reason:String(req.body.reason||'Return requested')});res.status(201).json(plain(r));}));

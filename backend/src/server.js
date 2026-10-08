@@ -8,8 +8,9 @@ async function start(){
   const exists=await User.findOne({email:process.env.ADMIN_EMAIL.toLowerCase()});
   if(!exists)await User.create({email:process.env.ADMIN_EMAIL,hashed_password:await bcrypt.hash(process.env.ADMIN_PASSWORD,12),full_name:'Local Administrator',role:'admin',is_verified:true});
  }
+ require('./lib/emailQueue').startWorker();
  const server=app.listen(Number(process.env.PORT)||8000,process.env.HOST||'127.0.0.1',()=>console.log('Backend ready at http://localhost:'+(process.env.PORT||8000)+' — database '+mongoose.connection.name+' connected; payments pending'));
  server.on('error',error=>{console.error('Cannot start server:',error.message);mongoose.disconnect().finally(()=>process.exit(1));});
- const stop=()=>server.close(()=>mongoose.disconnect().finally(()=>process.exit(0)));process.on('SIGINT',stop);process.on('SIGTERM',stop);
+ const stop=()=>{require('./lib/emailQueue').stopWorker();server.close(()=>mongoose.disconnect().finally(()=>process.exit(0)));};process.on('SIGINT',stop);process.on('SIGTERM',stop);
 }
 start().catch(error=>{console.error('Startup failed:',error.message);process.exit(1);});

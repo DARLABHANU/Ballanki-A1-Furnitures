@@ -3,10 +3,11 @@
 const assert=require('node:assert/strict');const crypto=require('node:crypto');const mongoose=require('mongoose');
 require('dotenv').config();process.env.JWT_SECRET=crypto.randomBytes(48).toString('hex');const database='ballanki_neg_test_'+crypto.randomBytes(8).toString('hex');let server;let checks=0;
 async function run(){
+ delete process.env.ADMIN_NOTIFICATION_EMAIL;
  if(process.env.MONGODB_DNS_SERVERS)require('dns').setServers(process.env.MONGODB_DNS_SERVERS.split(',').map(value=>value.trim()).filter(Boolean));
  await mongoose.connect(process.env.MONGODB_URI,{dbName:database,serverSelectionTimeoutMS:10000});
  const User=require('../src/models/User'),Product=require('../src/models/Product'),{Address,CartItem,Order,Offer,Conversation,Notification}=require('../src/models/Commerce');const bcrypt=require('bcryptjs');const {tokens}=require('../src/middleware/auth');await Promise.all(Object.values(mongoose.models).map(x=>x.init()));
- const make=async(role)=>User.create({email:role+'@negotiation.example',full_name:role==='customer'?'Test Customer':'Test Merchant',role,hashed_password:await bcrypt.hash('NegotiationPass123!',4)});
+ const make=async(role)=>User.create({email:role+'@negotiation.example',full_name:role==='customer'?'Test Customer':'Test Merchant',role,is_verified:true,hashed_password:await bcrypt.hash('NegotiationPass123!',4)});
  const customer=await make('customer'),admin=await make('admin'),merchant=admin,intruder=await User.create({email:'intruder@negotiation.example',full_name:'Intruder',role:'customer',hashed_password:await bcrypt.hash('NegotiationPass123!',4)});
  const ct=tokens(customer).access_token,mt=tokens(merchant).access_token,it=tokens(intruder).access_token,at=tokens(admin).access_token;
  server=require('../src/app').listen(0,'127.0.0.1');await new Promise(ok=>server.once('listening',ok));const base='http://127.0.0.1:'+server.address().port+'/api/v1';
@@ -46,6 +47,7 @@ async function run(){
  const adminNotices=await call('GET','/notifications',null,at);const customerReply=adminNotices.notifications.find(n=>n.message==='Thanks, I have returned to continue negotiating.');assert.equal(customerReply.link,'/admin/enquiries?conversation='+ownerConversation._id);
  const declinedNotice=(await call('GET','/notifications',null,ct)).notifications.find(n=>n.title==='Price offer declined');assert.ok(declinedNotice);assert.ok(declinedNotice.link.endsWith('?negotiate=1'));
  await call('PUT','/notifications/all/read',{},ct);assert.equal((await call('GET','/notifications',null,ct)).unreadCount,0);assert.ok((await call('GET','/notifications',null,at)).unreadCount>0);assert.equal((await call('GET','/notifications',null,it)).notifications.length,0);
+ const {EmailJob}=require('../src/models/Email');assert.ok(await EmailJob.exists({key:'notification-'+replyNotice.id,to:customer.email}));assert.ok(await EmailJob.exists({key:'notification-'+customerReply.id,to:admin.email}));assert.ok(await EmailJob.exists({key:'order-'+order.id+'-placed-customer'}));
  console.log('PASS: '+checks+' HTTP assertions; verified customer and owner negotiation inboxes, participant permissions, counteroffers, acceptance, 7-day negotiated cart price, single-use order pricing, payment-pending orders and live admin dashboard metrics.');
 }
 run().catch(e=>{console.error(e);process.exitCode=1;}).finally(async()=>{if(server)await new Promise(ok=>server.close(ok));if(mongoose.connection.readyState===1){if(!database.startsWith('ballanki_neg_test_'))throw Error('Refusing unexpected database cleanup');await mongoose.connection.dropDatabase();}await mongoose.disconnect();});
