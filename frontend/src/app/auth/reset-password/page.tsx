@@ -90,7 +90,7 @@ function ResetPasswordForm() {
               {...register("password")}
               type={showPassword ? "text" : "password"}
               placeholder="Min. 8 characters"
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl pr-10 pl-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#E2DAC8] rounded-xl pr-10 pl-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               autoComplete="new-password"
               required
             />
@@ -117,7 +117,7 @@ function ResetPasswordForm() {
               {...register("confirmPassword")}
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Repeat password"
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl pr-10 pl-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#E2DAC8] rounded-xl pr-10 pl-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               autoComplete="new-password"
               required
             />

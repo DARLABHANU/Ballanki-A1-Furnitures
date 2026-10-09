@@ -77,7 +77,7 @@ export default function FilterSidebar({
         <div className="space-y-1.5 text-sm font-medium">
           <button
             onClick={() => onCategorySelect?.("")}
-            className={`w-full text-left px-3 py-2 rounded-lg transition-colors flex items-center justify-between ${!selectedCategory ? "bg-wood-900 text-white" : "hover:bg-wood-50 text-wood-600"
+            className={`w-full text-left px-3 py-2 rounded-lg transition-colors flex items-center justify-between ${!selectedCategory ? "bg-wood-900 text-white" : "hover:bg-white text-wood-600"
               }`}
           >
             <span>All Masterpieces</span>
@@ -89,7 +89,7 @@ export default function FilterSidebar({
               <button
                 key={cat.slug}
                 onClick={() => onCategorySelect?.(cat.slug)}
-                className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors flex items-center justify-between ${isCatActive ? "bg-wood-900 text-white shadow-sm" : "hover:bg-wood-50 text-wood-600"
+                className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors flex items-center justify-between ${isCatActive ? "bg-wood-900 text-white shadow-sm" : "hover:bg-white text-wood-600"
                   }`}
               >
                 <span>{cat.name}</span>
@@ -155,7 +155,7 @@ export default function FilterSidebar({
               <button
                 key={pr.label}
                 onClick={() => onPriceRangeSelect?.(pr.min, pr.max)}
-                className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors flex items-center justify-between ${isPrActive ? "bg-wood-900 text-white shadow-sm" : "hover:bg-wood-50 text-wood-600"
+                className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors flex items-center justify-between ${isPrActive ? "bg-wood-900 text-white shadow-sm" : "hover:bg-white text-wood-600"
                   }`}
               >
                 <span>{pr.label}</span>

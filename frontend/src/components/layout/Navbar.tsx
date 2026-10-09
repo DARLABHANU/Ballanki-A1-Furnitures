@@ -19,7 +19,7 @@ import DeliveryLocationModal from "@/components/customer/DeliveryLocationModal";
 
 import NotificationBell from "@/components/NotificationBell";
 
-export default function Navbar() {
+export default function Navbar({ discovery = false }: { discovery?: boolean }) {
   const router = useRouter();
   const pathname = usePathname();
   const { user, isAuthenticated, logout, role } = useAuthStore();
@@ -79,7 +79,7 @@ export default function Navbar() {
   return (
     <>
       {/* ─── Desktop Announcement Bar ─── */}
-      <div className="hidden lg:block bg-wood-900 text-wood-100 py-1.5 px-4 text-xs font-inter">
+      <div className={`${discovery ? "hidden" : "hidden lg:block"} bg-wood-900 text-wood-100 py-1.5 px-4 text-xs font-inter`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2 font-medium tracking-wide">
             <span>Premium Materials</span><span>•</span>
@@ -103,8 +103,8 @@ export default function Navbar() {
 
       {/* ─── Main Header ─── */}
       <header
-        className={`bg-wood-50 border-b border-wood-100 sticky top-0 z-50 transition-all duration-200 ${isMobileHeaderHidden ? "hidden lg:block" : ""
-          } ${scrolled ? "shadow-sm bg-wood-50/95 backdrop-blur-md" : ""}`}
+        className={`bg-white border-b border-wood-100 sticky top-0 z-50 transition-all duration-200 ${isMobileHeaderHidden ? "hidden lg:block" : ""
+          } ${scrolled ? "shadow-sm bg-white/95 backdrop-blur-md" : ""}`}
       >
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
 
@@ -133,6 +133,10 @@ export default function Navbar() {
 
               <NotificationBell />
             </div>
+
+            {discovery && <button type="button" onClick={openModal} className="mb-3 flex w-full min-w-0 items-center gap-2 text-left text-xs text-wood-900">
+              <MapPin size={17} className="shrink-0" /><span className="font-bold">Deliver to</span><span className="min-w-0 flex-1 truncate">{deliveryLocation ? `${deliveryLocation.city}, ${deliveryLocation.pincode}` : "Select your delivery location"}</span><ChevronDown size={14} className="shrink-0" />
+            </button>}
 
             {/* Mobile Search Bar */}
             <form onSubmit={handleSearchSubmit} className="pb-3">
@@ -175,7 +179,7 @@ export default function Navbar() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="flex-1 px-4 py-2.5 text-xs font-inter text-wood-900 placeholder-wood-400 bg-transparent focus:outline-none"
                 />
-                <div className="relative border-l border-wood-100 px-3 py-2.5 bg-wood-50">
+                <div className="relative border-l border-wood-100 px-3 py-2.5 bg-white">
                   <select
                     value={searchCategory}
                     onChange={(e) => setSearchCategory(e.target.value)}
@@ -232,10 +236,10 @@ export default function Navbar() {
                   </button>
                   {userMenuOpen && (
                     <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-wood-200 shadow-lg z-50 rounded-lg overflow-hidden py-1">
-                      <Link href={dashboardLink} onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-xs font-inter text-wood-900 hover:bg-wood-50"><User size={14} /> Dashboard</Link>
-                      <Link href="/customer/support" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-xs font-inter text-wood-900 hover:bg-wood-50"><Settings size={14} /> Support Help</Link>
+                      <Link href={dashboardLink} onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-xs font-inter text-wood-900 hover:bg-white"><User size={14} /> Dashboard</Link>
+                      <Link href="/customer/support" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-xs font-inter text-wood-900 hover:bg-white"><Settings size={14} /> Support Help</Link>
                       {user?.is_promoter && (
-                        <Link href="/promoter/dashboard" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-xs font-inter text-wood-900 font-semibold hover:bg-wood-50"><Award size={14} /> Affiliate Portal</Link>
+                        <Link href="/promoter/dashboard" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-xs font-inter text-wood-900 font-semibold hover:bg-white"><Award size={14} /> Affiliate Portal</Link>
                       )}
                       <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-2.5 text-xs font-inter text-red-600 hover:bg-red-50 text-left"><LogOut size={14} /> Sign Out</button>
                     </div>
@@ -251,7 +255,7 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Navigation Bar */}
-        <div className="hidden lg:block bg-wood-50 border-t border-wood-100">
+        <div className={`${discovery ? "hidden" : "hidden lg:block"} bg-white border-t border-wood-100`}>
           <div className="max-w-7xl mx-auto px-4 lg:px-8">
             <div className="flex items-center gap-6 text-xs font-inter font-semibold">
               <div className="relative py-2">
@@ -264,13 +268,13 @@ export default function Navbar() {
                 </button>
                 {categoryDropdownOpen && (
                   <div className="absolute left-0 top-full mt-1 w-56 bg-white border border-wood-200 shadow-xl z-50 rounded-lg overflow-hidden py-2">
-                    <Link href="/customer/products?category=sofas" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-wood-50 font-medium">🛋️ Sofas & Lounges</Link>
-                    <Link href="/customer/products?category=chairs" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-wood-50 font-medium">🪑 Chairs</Link>
-                    <Link href="/customer/products?category=tables" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-wood-50 font-medium">🪚 Tables & Desks</Link>
-                    <Link href="/customer/products?category=beds" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-wood-50 font-medium">🛏️ Beds</Link>
+                    <Link href="/customer/products?category=sofas" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-white font-medium">🛋️ Sofas & Lounges</Link>
+                    <Link href="/customer/products?category=chairs" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-white font-medium">🪑 Chairs</Link>
+                    <Link href="/customer/products?category=tables" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-white font-medium">🪚 Tables & Desks</Link>
+                    <Link href="/customer/products?category=beds" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-white font-medium">🛏️ Beds</Link>
                     <div className="border-t border-wood-100 my-1" />
-                    <Link href="/customer/products?is_featured=true" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-wood-50">New Arrivals</Link>
-                    <Link href="/customer/products?sort_by=total_sold" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-wood-50">Bestsellers</Link>
+                    <Link href="/customer/products?is_featured=true" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-white">New Arrivals</Link>
+                    <Link href="/customer/products?sort_by=total_sold" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-white">Bestsellers</Link>
                   </div>
                 )}
               </div>
@@ -281,9 +285,9 @@ export default function Navbar() {
                   <Link href="/customer/products?category=living" className="text-wood-600 hover:text-wood-900 flex items-center gap-1 transition-colors">Living <ChevronDown size={11} className="opacity-70 group-hover:rotate-180 transition-transform" /></Link>
                   <div className="absolute left-0 top-full hidden group-hover:block w-48 bg-white border border-wood-200 shadow-lg rounded-lg overflow-hidden z-50 pt-1 border-t-2 border-t-wood-900">
                     <div className="py-2 normal-case tracking-normal">
-                      <Link href="/customer/products?category=living&subcategory=sofas" className="block px-4 py-2 text-xs text-wood-900 hover:bg-wood-50 font-medium">Sofas</Link>
-                      <Link href="/customer/products?category=living&subcategory=tv_units" className="block px-4 py-2 text-xs text-wood-900 hover:bg-wood-50 font-medium">TV Units</Link>
-                      <Link href="/customer/products?category=living&subcategory=coffee_tables" className="block px-4 py-2 text-xs text-wood-900 hover:bg-wood-50 font-medium">Coffee Tables</Link>
+                      <Link href="/customer/products?category=living&subcategory=sofas" className="block px-4 py-2 text-xs text-wood-900 hover:bg-white font-medium">Sofas</Link>
+                      <Link href="/customer/products?category=living&subcategory=tv_units" className="block px-4 py-2 text-xs text-wood-900 hover:bg-white font-medium">TV Units</Link>
+                      <Link href="/customer/products?category=living&subcategory=coffee_tables" className="block px-4 py-2 text-xs text-wood-900 hover:bg-white font-medium">Coffee Tables</Link>
                     </div>
                   </div>
                 </div>
@@ -292,8 +296,8 @@ export default function Navbar() {
                   <Link href="/customer/products?category=dining" className="text-wood-600 hover:text-wood-900 flex items-center gap-1 transition-colors">Dining <ChevronDown size={11} className="opacity-70 group-hover:rotate-180 transition-transform" /></Link>
                   <div className="absolute left-0 top-full hidden group-hover:block w-48 bg-white border border-wood-200 shadow-lg rounded-lg overflow-hidden z-50 pt-1 border-t-2 border-t-wood-900">
                     <div className="py-2 normal-case tracking-normal">
-                      <Link href="/customer/products?category=dining&subcategory=dining_tables" className="block px-4 py-2 text-xs text-wood-900 hover:bg-wood-50 font-medium">Dining Tables</Link>
-                      <Link href="/customer/products?category=dining&subcategory=dining_chairs" className="block px-4 py-2 text-xs text-wood-900 hover:bg-wood-50 font-medium">Dining Chairs</Link>
+                      <Link href="/customer/products?category=dining&subcategory=dining_tables" className="block px-4 py-2 text-xs text-wood-900 hover:bg-white font-medium">Dining Tables</Link>
+                      <Link href="/customer/products?category=dining&subcategory=dining_chairs" className="block px-4 py-2 text-xs text-wood-900 hover:bg-white font-medium">Dining Chairs</Link>
                     </div>
                   </div>
                 </div>

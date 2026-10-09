@@ -21,6 +21,8 @@ import {
   LogOut
 } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import NotificationBell from "@/components/NotificationBell";
 
 interface NavItem {
@@ -45,6 +47,7 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
   const router = useRouter();
   const { logout, user, isAuthenticated } = useAuthStore();
   const [mobileOpen, setMobileOpen] = useState(false);
+  if (pathname.startsWith("/customer/products")) return <><Navbar discovery />{children}<Footer /></>;
   const sidebarContent = (
     <div className="flex flex-col h-full bg-[#0D0D0D] text-wood-100 p-4 font-garamond justify-between">
       
@@ -127,7 +130,7 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
   );
 
   return (
-    <div className="dashboard-shell min-h-dvh bg-[#F4F6F4] text-[#1A1A1A] font-garamond flex flex-col lg:flex-row">
+    <div className="dashboard-shell min-h-dvh bg-white text-[#1A1A1A] font-garamond flex flex-col lg:flex-row">
       
       {/* Desktop Sidebar */}
       <aside className="hidden lg:block w-60 flex-shrink-0 min-h-screen border-r border-wood-950 bg-[#0D0D0D]">
@@ -160,7 +163,7 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
               <input
                 type="text"
                 placeholder="Search anything..."
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-full pl-9 pr-4 py-1.5 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-1.5 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
               />
             </div>
           </div>

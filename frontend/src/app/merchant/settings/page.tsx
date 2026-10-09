@@ -27,7 +27,7 @@ export default function MerchantSettingsPage() {
       {/* Change Password */}
       <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-5">
         <div className="flex items-center gap-3 border-b border-[#EFEBE3] pb-4">
-          <div className="w-10 h-10 rounded-2xl bg-[#F8F5F0] border border-[#E2DAC8] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-white border border-[#E2DAC8] flex items-center justify-center">
             <Lock size={18} className="text-[#0D0D0D]" />
           </div>
           <div>
@@ -40,19 +40,19 @@ export default function MerchantSettingsPage() {
           <div>
             <label className="font-bold text-[#1A1A1A] block mb-1">Current Password</label>
             <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               placeholder="Enter current password" />
           </div>
           <div>
             <label className="font-bold text-[#1A1A1A] block mb-1">New Password</label>
             <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               placeholder="Enter new password" />
           </div>
           <div>
             <label className="font-bold text-[#1A1A1A] block mb-1">Confirm New Password</label>
             <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               placeholder="Repeat new password" />
           </div>
           <button onClick={handlePasswordChange}
@@ -66,7 +66,7 @@ export default function MerchantSettingsPage() {
       {/* Notification Preferences */}
       <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-5">
         <div className="flex items-center gap-3 border-b border-[#EFEBE3] pb-4">
-          <div className="w-10 h-10 rounded-2xl bg-[#F8F5F0] border border-[#E2DAC8] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-white border border-[#E2DAC8] flex items-center justify-center">
             <Bell size={18} className="text-[#0D0D0D]" />
           </div>
           <div>
@@ -82,7 +82,7 @@ export default function MerchantSettingsPage() {
             { label: "Withdrawal Updates", desc: "Status changes on payout requests", val: withdrawalAlerts, set: setWithdrawalAlerts },
             { label: "Review Alerts", desc: "When customers leave a product review", val: reviewAlerts, set: setReviewAlerts },
           ].map((item) => (
-            <label key={item.label} className="flex items-center justify-between p-3 bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl cursor-pointer">
+            <label key={item.label} className="flex items-center justify-between p-3 bg-white border border-[#E2DAC8] rounded-xl cursor-pointer">
               <div>
                 <span className="font-bold text-[#1A1A1A]">{item.label}</span>
                 <p className="text-[11px] text-[#808080] mt-0.5">{item.desc}</p>

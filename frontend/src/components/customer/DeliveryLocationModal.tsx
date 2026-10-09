@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from "react";
 import { MapPin, X, Loader2, CheckCircle, Search, Navigation } from "lucide-react";
 import { useDeliveryLocationStore, DeliveryLocation } from "@/store/deliveryLocationStore";
-import { getEstimatedDelivery } from "@/lib/utils";
 import toast from "react-hot-toast";
 
 interface PostOffice {
@@ -98,7 +97,7 @@ export default function DeliveryLocationModal() {
     setPincode(val);
   };
 
-  const estimatedDelivery = lookupResult ? getEstimatedDelivery(lookupResult.pincode) : "";
+
 
   if (!isModalOpen) return null;
 
@@ -131,7 +130,7 @@ export default function DeliveryLocationModal() {
                   Select Delivery Location
                 </h2>
                 <p className="text-[10px] text-[#808080] leading-none mt-0.5">
-                  Enter PIN code to check delivery availability
+                  Enter PIN code to select your delivery location
                 </p>
               </div>
             </div>
@@ -181,7 +180,7 @@ export default function DeliveryLocationModal() {
                   value={pincode}
                   onChange={handlePincodeChange}
                   maxLength={6}
-                  className="w-full pl-10 pr-12 py-3.5 bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl text-sm font-bold text-[#1A1A1A] font-garamond tracking-widest focus:outline-none focus:border-[#0D0D0D] focus:ring-2 focus:ring-[#0D0D0D]/10 transition-all placeholder:font-normal placeholder:tracking-normal placeholder:text-[#BDB5A6]"
+                  className="w-full pl-10 pr-12 py-3.5 bg-white border border-[#E2DAC8] rounded-xl text-sm font-bold text-[#1A1A1A] font-garamond tracking-widest focus:outline-none focus:border-[#0D0D0D] focus:ring-2 focus:ring-[#0D0D0D]/10 transition-all placeholder:font-normal placeholder:tracking-normal placeholder:text-[#BDB5A6]"
                   style={{ fontSize: "16px" }} /* Prevent iOS zoom */
                 />
                 {/* Loading / clear button */}
@@ -247,16 +246,6 @@ export default function DeliveryLocationModal() {
                     <p className="font-bold text-[#1A1A1A] mt-0.5">{lookupResult.state}</p>
                   </div>
 
-                  {/* Estimated Delivery */}
-                  {estimatedDelivery && (
-                    <div className="flex items-center gap-2 pt-1 border-t border-[#E2DAC8]">
-                      <span className="text-lg">📦</span>
-                      <div>
-                        <p className="text-[9px] text-[#666666] font-bold uppercase tracking-wide">Estimated Delivery</p>
-                        <p className="text-xs font-bold text-[#0D0D0D]">By {estimatedDelivery}</p>
-                      </div>
-                    </div>
-                  )}
                 </div>
 
                 {/* Confirm Button */}
@@ -286,7 +275,7 @@ export default function DeliveryLocationModal() {
                     <button
                       key={s.pincode}
                       onClick={() => setPincode(s.pincode)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#F8F5F0] hover:bg-[#EFEBE3] border border-[#E2DAC8] rounded-full text-[11px] font-bold text-[#1A1A1A] transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#EFEBE3] border border-[#E2DAC8] rounded-full text-[11px] font-bold text-[#1A1A1A] transition-colors"
                     >
                       <MapPin size={11} className="text-[#0D0D0D]" />
                       {s.label}
@@ -301,7 +290,7 @@ export default function DeliveryLocationModal() {
           {/* ── Footer Info ── */}
           <div className="px-5 pb-6 pt-1">
             <p className="text-[10px] text-center text-[#808080] leading-relaxed">
-              🇮🇳 We deliver across India via trusted courier partners. Free delivery on orders above ₹999.
+              Delivery availability and charges are confirmed at checkout. Shipping estimates depend on the product and your address.
             </p>
           </div>
 

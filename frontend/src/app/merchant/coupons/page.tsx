@@ -76,7 +76,7 @@ function MerchantCouponsContent() {
             <input type="text" placeholder="Search coupons..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]" />
+              className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]" />
           </div>
           <button onClick={() => toast.success("Create coupon feature coming soon!")}
             className="inline-flex items-center gap-1.5 bg-[#0D0D0D] hover:bg-[#333333] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs">
@@ -105,7 +105,7 @@ function MerchantCouponsContent() {
                 <tr><td colSpan={6} className="py-8 text-center text-[#808080]">No coupons found</td></tr>
               ) : (
                 filteredCoupons.map((c) => (
-                  <tr key={c.id} className="hover:bg-[#F8F5F0]/60 transition-colors">
+                  <tr key={c.id} className="hover:bg-white/60 transition-colors">
                     <td className="py-3.5 px-3">
                       <span className="bg-red-50 text-red-700 font-extrabold px-2.5 py-1 rounded-md text-xs border border-red-200">{c.code}</span>
                     </td>

@@ -130,7 +130,7 @@ function CouponsContent() {
               placeholder="Search coupons..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
             />
           </div>
 
@@ -165,7 +165,7 @@ function CouponsContent() {
               </thead>
               <tbody className="divide-y divide-[#EFEBE3]">
                 {displayList.map((item) => (
-                  <tr key={item.id} className="hover:bg-[#F8F5F0]/60 transition-colors">
+                  <tr key={item.id} className="hover:bg-white/60 transition-colors">
                     <td className="py-3.5 px-3">
                       <span className="bg-red-50 text-red-700 font-extrabold px-2.5 py-1 rounded-md text-xs border border-red-200">
                         {item.code}
@@ -204,10 +204,10 @@ function CouponsContent() {
           <button onClick={() => setPage(1)} className="w-7 h-7 rounded-lg bg-[#0D0D0D] text-white font-bold text-xs flex items-center justify-center shadow-xs">
             1
           </button>
-          <button onClick={() => setPage(2)} className="w-7 h-7 rounded-lg text-[#666666] hover:bg-[#F8F5F0] text-xs font-semibold">
+          <button onClick={() => setPage(2)} className="w-7 h-7 rounded-lg text-[#666666] hover:bg-white text-xs font-semibold">
             2
           </button>
-          <button onClick={() => setPage(3)} className="w-7 h-7 rounded-lg text-[#666666] hover:bg-[#F8F5F0] text-xs font-semibold">
+          <button onClick={() => setPage(3)} className="w-7 h-7 rounded-lg text-[#666666] hover:bg-white text-xs font-semibold">
             3
           </button>
         </div>

@@ -98,7 +98,7 @@ function MerchantWalletContent() {
                   placeholder="e.g. 5000"
                   value={withdrawAmount}
                   onChange={(e) => setWithdrawAmount(e.target.value)}
-                  className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-sm text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-sm text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   required
                 />
                 <p className="text-[11px] text-[#808080] mt-1">Minimum withdrawal amount is ₹500</p>
@@ -129,7 +129,7 @@ function MerchantWalletContent() {
               <div className="text-center py-4 text-[#808080] text-xs">No recent payouts</div>
             ) : (
               withdrawals.map((w) => (
-                <div key={w.id} className="p-3 bg-[#F8F5F0] border border-[#E2DAC8] rounded-2xl flex items-center justify-between">
+                <div key={w.id} className="p-3 bg-white border border-[#E2DAC8] rounded-2xl flex items-center justify-between">
                   <div>
                     <span className="font-extrabold text-xs text-[#1A1A1A] block">{formatPrice(w.amount)}</span>
                     <span className="text-[10px] text-[#808080]">{formatDate(w.created_at)}</span>

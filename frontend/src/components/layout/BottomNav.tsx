@@ -56,7 +56,7 @@ export default function BottomNav() {
   const { wishlistIds } = useWishlistStore();
 
   // Hide ONLY on internal staff portals
-  if (HIDDEN_PREFIXES.some((p) => pathname.startsWith(p))) return null;
+  if (/^\/customer\/products\/[^/]+\/?$/.test(pathname) || HIDDEN_PREFIXES.some((p) => pathname.startsWith(p))) return null;
 
   const cartCount = cart?.item_count || 0;
   const wishlistCount = wishlistIds.length || 0;
@@ -65,8 +65,8 @@ export default function BottomNav() {
     <nav
       className={`store-bottom-nav fixed bottom-0 left-0 right-0 z-40 pb-safe lg:hidden`}
       style={{
-        background: "#F8F5F0",
-        borderTop: "1.5px solid #E2DAC8",
+        background: "#fffdf8",
+        borderTop: "1.5px solid #e4e5da",
         boxShadow: "0 -2px 24px rgba(42, 28, 16, 0.10)", // wood-900 shadow
       }}
     >
@@ -94,7 +94,7 @@ export default function BottomNav() {
               {isActive && (
                 <span
                   className="absolute top-0 left-1/2 -translate-x-1/2 rounded-b-full transition-all duration-300"
-                  style={{ width: 28, height: 3, background: "#bd740f" }}
+                  style={{ width: 28, height: 3, background: "#203f34" }}
                 />
               )}
 
@@ -103,7 +103,7 @@ export default function BottomNav() {
                 <Icon
                   size={22}
                   strokeWidth={isActive ? 2.2 : 1.8}
-                  style={{ color: isActive ? "#bd740f" : "#D99443" }}
+                  style={{ color: isActive ? "#203f34" : "#7c8674" }}
                   className="transition-colors duration-200"
                 />
                 {badge > 0 && (
@@ -115,7 +115,7 @@ export default function BottomNav() {
                       minWidth: 17,
                       height: 17,
                       fontSize: 9.5,
-                      background: "#bd740f",
+                      background: "#203f34",
                       paddingInline: 3,
                     }}
                   >
@@ -130,7 +130,7 @@ export default function BottomNav() {
                   marginTop: 4,
                   fontSize: 10,
                   fontWeight: isActive ? 700 : 500,
-                  color: isActive ? "#bd740f" : "#bd740f",
+                  color: isActive ? "#203f34" : "#203f34",
                   lineHeight: 1,
                   fontFamily: "var(--font-outfit, sans-serif)",
                 }}

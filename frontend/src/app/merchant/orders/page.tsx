@@ -209,12 +209,12 @@ function MerchantOrdersContent() {
               placeholder="Search by Order #, Customer, AWB tracking..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
             />
           </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-            <div className="relative border border-[#E2DAC8] rounded-xl px-3 py-2 bg-[#F8F5F0]">
+            <div className="relative border border-[#E2DAC8] rounded-xl px-3 py-2 bg-white">
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
@@ -265,7 +265,7 @@ function MerchantOrdersContent() {
                   </tr>
                 ) : (
                   displayList.map((item) => (
-                    <tr key={item.id} className="hover:bg-[#F8F5F0]/60 transition-colors">
+                    <tr key={item.id} className="hover:bg-white/60 transition-colors">
                       <td className="py-3.5 px-3 font-bold text-[#1A1A1A]">
                         <Link href={`/merchant/orders/${item.id}`} className="hover:underline text-[#0D0D0D]">
                           {item.order_number}
@@ -301,7 +301,7 @@ function MerchantOrdersContent() {
 
                           <Link
                             href={`/merchant/orders/${item.id}`}
-                            className="p-1.5 text-[#666666] hover:text-[#0D0D0D] hover:bg-[#F8F5F0] rounded-lg transition-colors inline-block"
+                            className="p-1.5 text-[#666666] hover:text-[#0D0D0D] hover:bg-white rounded-lg transition-colors inline-block"
                             title="View Full Details"
                           >
                             <Eye size={15} />
@@ -323,14 +323,14 @@ function MerchantOrdersContent() {
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-[#F8F5F0] disabled:opacity-50 transition-colors"
+              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={page >= totalPages}
-              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-[#F8F5F0] disabled:opacity-50 transition-colors"
+              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
             >
               <ChevronRight size={16} />
             </button>
@@ -365,7 +365,7 @@ function MerchantOrdersContent() {
                 <select
                   value={modalStatus}
                   onChange={(e) => setModalStatus(e.target.value)}
-                  className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   required
                 >
                   {ORDER_STATUS_OPTIONS.map((opt) => (
@@ -383,7 +383,7 @@ function MerchantOrdersContent() {
                   value={modalTrackingNumber}
                   onChange={(e) => setModalTrackingNumber(e.target.value)}
                   placeholder="e.g. BLUEDART-98765432"
-                  className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 />
               </div>
 
@@ -394,7 +394,7 @@ function MerchantOrdersContent() {
                   value={modalCurrentLocation}
                   onChange={(e) => setModalCurrentLocation(e.target.value)}
                   placeholder="e.g. BlueDart Express - Dispatched from Guntur Sorting Hub"
-                  className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 />
               </div>
 
@@ -405,7 +405,7 @@ function MerchantOrdersContent() {
                   value={modalNotes}
                   onChange={(e) => setModalNotes(e.target.value)}
                   placeholder="e.g. Handed over package to logistics agent."
-                  className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl p-3 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#E2DAC8] rounded-xl p-3 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 />
               </div>
 
@@ -413,7 +413,7 @@ function MerchantOrdersContent() {
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold border border-[#E2DAC8] text-[#666666] hover:bg-[#F8F5F0]"
+                  className="px-4 py-2 rounded-xl text-xs font-bold border border-[#E2DAC8] text-[#666666] hover:bg-white"
                 >
                   Cancel
                 </button>

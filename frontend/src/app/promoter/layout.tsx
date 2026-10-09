@@ -72,7 +72,7 @@ export default function PromoterLayout({ children }: { children: React.ReactNode
   );
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-[#F8F5F0] font-garamond text-[#1A1A1A]">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-white font-garamond text-[#1A1A1A]">
       {/* Mobile Top Bar */}
       <header className="lg:hidden flex items-center justify-between p-4 bg-[#0D0D0D] border-b border-wood-800/40">
         <div className="flex flex-col">
@@ -105,7 +105,7 @@ export default function PromoterLayout({ children }: { children: React.ReactNode
       )}
 
       {/* Main Content Area */}
-      <main className="flex-1 bg-[#F8F5F0] overflow-auto min-h-0 min-w-0">
+      <main className="flex-1 bg-white overflow-auto min-h-0 min-w-0">
         <div className="p-4 md:p-8">{children}</div>
       </main>
     </div>

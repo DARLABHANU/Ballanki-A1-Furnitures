@@ -7,10 +7,11 @@ const User=require('../models/User');
 const {Address,CartItem,Wishlist,Order,Coupon,Notification,ReturnRequest,Offer}=require('../models/Commerce');
 const {authenticate,roles}=require('../middleware/auth');
 const {asyncRoute:wrap,fail,pick,id,plain,page}=require('../lib/http');
+const {split,totals}=require('../lib/preorder');
 router.use(authenticate);
 const cart=async user=>{
  const rows=await CartItem.find({user}).populate('product');
- const items=[];for(const row of rows){const p=row.product;if(!p?.is_active||!p?.is_approved)continue;const product=p.toJSON();const offer=await Offer.findOne({customer:user,product:p._id,status:'accepted',used_at:null,expires_at:{$gt:new Date()},listed_price:p.price}).sort({accepted_at:-1});if(offer){product.listed_price=p.price;product.price=offer.price;product.accepted_offer_id=String(offer._id);product.offer_expires_at=offer.expires_at;}items.push({id:String(row._id),product_id:String(p._id),quantity:row.quantity,product});}
+ const items=[];for(const row of rows){const p=row.product;if(!p?.is_active||!p?.is_approved)continue;const product=p.toJSON();const offer=await Offer.findOne({customer:user,product:p._id,status:'accepted',used_at:null,expires_at:{$gt:new Date()},listed_price:p.price}).sort({accepted_at:-1});if(offer){product.listed_price=p.price;product.price=offer.price;product.accepted_offer_id=String(offer._id);product.offer_expires_at=offer.expires_at;}items.push({id:String(row._id),product_id:String(p._id),quantity:row.quantity,...split(row.quantity,p.stock_quantity,product.price),product});}
  return {items,subtotal:items.reduce((n,r)=>n+r.product.price*r.quantity,0),item_count:items.reduce((n,r)=>n+r.quantity,0)};
 };
 router.get('/cart',wrap(async(req,res)=>res.json(await cart(req.user._id))));
@@ -18,7 +19,7 @@ router.post('/cart/add',wrap(async(req,res)=>{
  const p=await Product.findOne({_id:id(req.body.product_id),is_active:true,is_approved:true});if(!p)fail(404,'Product is unavailable');
  const qty=Number(req.body.quantity);if(!Number.isInteger(qty)||qty===0||qty < -100||qty>100)fail(400,'Quantity adjustment must be a nonzero integer between -100 and 100');
  const old=await CartItem.findOne({user:req.user._id,product:p._id});const total=(old?.quantity||0)+qty;
- if(total<1||total>100||(!p.allow_pre_order&&total>p.stock_quantity))fail(409,'Requested quantity exceeds available stock');
+ if(total<1||total>100)fail(409,'Requested quantity exceeds available stock');
  if(old){const result=await CartItem.updateOne({_id:old._id,quantity:old.quantity},{$set:{quantity:total}},{runValidators:true});if(!result.modifiedCount)fail(409,'Cart changed. Please retry.');}else{await CartItem.create({user:req.user._id,product:p._id,quantity:qty});}res.json(await cart(req.user._id));
 }));
 router.delete('/cart/:id',wrap(async(req,res)=>{await CartItem.deleteOne({_id:id(req.params.id),user:req.user._id});res.json(await cart(req.user._id));}));
@@ -38,6 +39,7 @@ const discountFor=async(code,subtotal,session)=>{
  if(coupon.max_discount_amount)discount=Math.min(discount,coupon.max_discount_amount);
  return {coupon,discount:Math.round(Math.min(subtotal,discount)*100)/100};
 };
+router.post('/orders/quote',wrap(async(req,res)=>{const current=await cart(req.user._id);const {discount}=await discountFor(req.body.coupon_code,current.subtotal);const items=current.items.map(i=>({...i,unit_price:i.product.price,expected_delivery_date:i.product.expected_delivery_date}));res.json({items,...totals(items,discount)});}));
 router.get('/orders/active-coupons',wrap(async(req,res)=>res.json((await Coupon.find({is_active:true})).map(plain))));
 router.post('/orders/validate-coupon',wrap(async(req,res)=>{const current=await cart(req.user._id);const result=await discountFor(req.body.code||req.body.coupon_code,current.subtotal);res.json({valid:true,discount_amount:result.discount,coupon:plain(result.coupon)});}));
 const orderView=order=>({...plain(order),customer_id:String(order.customer?._id||order.customer),customer:order.customer?.full_name?order.customer.toJSON():undefined});
@@ -54,12 +56,21 @@ router.post('/orders',wrap(async(req,res)=>{
   for(const row of rows){
    const p=await Product.findOne({_id:row.product,is_active:true,is_approved:true});if(!p)fail(409,'A product in your cart is no longer available');
    const offer=await Offer.findOne({customer:req.user._id,product:p._id,status:'accepted',used_at:null,expires_at:{$gt:new Date()},listed_price:p.price}).sort({accepted_at:-1});
-   if(!p.allow_pre_order){const reserved=await Product.updateOne({_id:p._id,stock_quantity:{$gte:row.quantity}},{$inc:{stock_quantity:-row.quantity}});if(reserved.modifiedCount!==1)fail(409,'Insufficient stock for '+p.name);reservedStock.push({product:p._id,quantity:row.quantity});}
-   const price=offer?offer.price:p.price;items.push({id:String(row._id),product_id:String(p._id),merchant_id:String(p.merchant||''),product_name:p.name,product_image:p.images?.[0]||'',quantity:row.quantity,unit_price:price,total_price:price*row.quantity,stock_reserved:!p.allow_pre_order,...(offer?{accepted_offer_id:String(offer._id)}:{})});subtotal+=price*row.quantity;
+   let ready=0;
+   for(let attempt=0;attempt<20;attempt++){
+    const fresh=await Product.findOne({_id:p._id,is_active:true,is_approved:true}).select('stock_quantity');if(!fresh)fail(409,'Product is unavailable');
+    ready=Math.min(row.quantity,fresh.stock_quantity);if(!ready)break;
+    const reserved=await Product.updateOne({_id:p._id,stock_quantity:fresh.stock_quantity,is_active:true,is_approved:true},{$inc:{stock_quantity:-ready}});
+    if(reserved.modifiedCount===1){reservedStock.push({product:p._id,quantity:ready});break;}
+    if(attempt===19)fail(409,'Stock changed. Please retry checkout.');
+   }
+   const price=offer?offer.price:p.price;const allocation=split(row.quantity,ready,price);
+   items.push({id:String(row._id),product_id:String(p._id),merchant_id:String(p.merchant||''),product_name:p.name,product_image:p.images?.[0]||'',quantity:row.quantity,unit_price:price,total_price:price*row.quantity,...allocation,stock_reserved_quantity:ready,expected_delivery_date:p.expected_delivery_date||null,manufacturing_duration_days:p.manufacturing_duration_days,deposit_rate:20,...(offer?{accepted_offer_id:String(offer._id)}:{})});subtotal+=price*row.quantity;
   }
+  if(req.body.expected_allocation){if(!Array.isArray(req.body.expected_allocation)||req.body.expected_allocation.length!==items.length||items.some(i=>!req.body.expected_allocation.some(e=>String(e.product_id)===i.product_id&&e.ready_stock_quantity===i.ready_stock_quantity&&e.preorder_quantity===i.preorder_quantity&&e.unit_price===i.unit_price)))fail(409,'Stock or price changed. Review the updated pre-booking amounts before placing your order.');}
   const {coupon,discount}=await discountFor(req.body.coupon_code,subtotal);const shipping=subtotal>=100000?0:1500;
   if(coupon){const filter={_id:coupon._id,is_active:true};if(coupon.max_uses)filter.used_count={$lt:coupon.max_uses};const used=await Coupon.updateOne(filter,{$inc:{used_count:1}});if(used.modifiedCount!==1)fail(409,'Coupon has reached its use limit');couponId=coupon._id;}
-  created=await Order.create({customer:req.user._id,request_key:key,order_number:'BA-'+Date.now()+'-'+crypto.randomBytes(3).toString('hex').toUpperCase(),items,shipping_address:plain(address),subtotal,discount_amount:discount,shipping_amount:shipping,total_amount:Math.round((subtotal-discount+shipping)*100)/100,coupon_code:coupon?.code,payment_status:'pending',payment_method:'local_pending',status_history:[{status:'pending',timestamp:new Date(),note:'Order saved; payment has not been collected.'}]});
+  created=await Order.create({customer:req.user._id,request_key:key,order_number:'BA-'+Date.now()+'-'+crypto.randomBytes(3).toString('hex').toUpperCase(),items,shipping_address:plain(address),subtotal,discount_amount:discount,shipping_amount:shipping,...totals(items,discount),coupon_code:coupon?.code,payment_status:'pending',payment_method:'local_pending',status_history:[{status:'pending',timestamp:new Date(),note:'Order saved; payment has not been collected.'}]});
   for(const item of items)if(item.accepted_offer_id){const claim=await Offer.updateOne({_id:item.accepted_offer_id,status:'accepted',used_at:null,expires_at:{$gt:new Date()}},{$set:{used_at:new Date(),order_id:created._id}});if(claim.modifiedCount!==1)fail(409,'An accepted offer was already used. Refresh your cart and try again.');claimedOffers.push(item.accepted_offer_id);}
   await CartItem.deleteMany({_id:{$in:rows.map(r=>r._id)},user:req.user._id});
   await Notification.create({user:req.user._id,title:'Order saved',message:created.order_number+' — payment pending',link:'/customer/orders/'+created._id});
@@ -79,7 +90,7 @@ router.get('/orders/:id',wrap(async(req,res)=>{const o=await accessible(req);con
 const cancelOrder=async order=>{
  const updated=await Order.findOneAndUpdate({_id:order._id,status:{$in:['pending','confirmed']},payment_status:'pending'},{$set:{status:'cancelled'},$push:{status_history:{status:'cancelled',timestamp:new Date(),note:'Unpaid order cancelled'}}},{new:true});
  if(!updated){const fresh=await Order.findById(order._id);if(fresh?.status==='cancelled')return fresh;fail(409,'Only unpaid orders awaiting processing can be cancelled');}
- for(const item of updated.items){if(item.stock_reserved)await Product.updateOne({_id:item.product_id},{$inc:{stock_quantity:item.quantity}});if(item.accepted_offer_id)await Offer.updateOne({_id:item.accepted_offer_id,order_id:updated._id},{$unset:{used_at:1,order_id:1}});}
+ for(const item of updated.items){const reserved=item.stock_reserved_quantity??(item.stock_reserved?item.quantity:0);if(reserved)await Product.updateOne({_id:item.product_id},{$inc:{stock_quantity:reserved}});if(item.accepted_offer_id)await Offer.updateOne({_id:item.accepted_offer_id,order_id:updated._id},{$unset:{used_at:1,order_id:1}});}
  if(updated.coupon_code)await Coupon.updateOne({code:updated.coupon_code,used_count:{$gt:0}},{$inc:{used_count:-1}});
  await orderEmail(updated,'cancelled');
  return updated;

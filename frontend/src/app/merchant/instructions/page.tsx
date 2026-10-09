@@ -21,7 +21,7 @@ function ScreenshotBox({ src, alt, placeholderText }: { src: string; alt: string
 
   if (hasError) {
     return (
-      <div className="border border-dashed border-[#E2DAC8] bg-[#F8F5F0] p-8 text-center rounded-2xl">
+      <div className="border border-dashed border-[#E2DAC8] bg-white p-8 text-center rounded-2xl">
         <p className="font-bold text-xs text-[#0D0D0D] uppercase">{placeholderText}</p>
         <p className="text-xs text-[#808080] mt-1.5 italic">
           (Save image as <span className="font-mono bg-white px-1.5 py-0.5 border border-[#E2DAC8] text-[#0D0D0D] text-[10px] rounded">public{src}</span>)
@@ -48,7 +48,7 @@ function ScreenshotBox({ src, alt, placeholderText }: { src: string; alt: string
         </div>
       )}
       {loaded && (
-        <div className="p-3 bg-[#F8F5F0]">
+        <div className="p-3 bg-white">
           <p className="text-xs text-[#666666] italic text-center">{alt}</p>
         </div>
       )}
@@ -81,7 +81,7 @@ export default function MerchantInstructionsPage() {
                 className={`w-full flex items-center gap-2.5 px-4 py-3 text-left text-xs font-bold transition-all rounded-2xl ${
                   activeTab === tab.id 
                     ? "bg-[#0D0D0D] text-white shadow-2xs" 
-                    : "text-[#666666] hover:bg-[#F8F5F0] hover:text-[#1A1A1A]"
+                    : "text-[#666666] hover:bg-white hover:text-[#1A1A1A]"
                 }`}
               >
                 <Icon size={15} className={activeTab === tab.id ? "text-white" : "text-[#0D0D0D]"} />
@@ -104,7 +104,7 @@ export default function MerchantInstructionsPage() {
 
               <div className="space-y-3 text-xs leading-relaxed text-[#666666]">
                 <p>To access the merchant dashboard, log in with your assigned seller account credentials:</p>
-                <div className="bg-[#F8F5F0] p-4 border border-[#E2DAC8] rounded-2xl font-mono text-xs text-[#0D0D0D] space-y-1">
+                <div className="bg-white p-4 border border-[#E2DAC8] rounded-2xl font-mono text-xs text-[#0D0D0D] space-y-1">
                   <div><strong>Email:</strong> mitesir345@copawoke.com</div>
                   <div><strong>Password:</strong> Bhanuusr@786</div>
                 </div>
@@ -134,7 +134,7 @@ export default function MerchantInstructionsPage() {
                   { label: "Total Earnings", desc: "Net revenue after platform margin deduction" },
                   { label: "Available Balance", desc: "Funds ready for withdrawal request" }
                 ].map((item, idx) => (
-                  <div key={idx} className="bg-[#F8F5F0] p-4 border border-[#E2DAC8] rounded-2xl">
+                  <div key={idx} className="bg-white p-4 border border-[#E2DAC8] rounded-2xl">
                     <span className="font-bold text-[#1A1A1A] block">{item.label}</span>
                     <span className="text-[#808080] text-[11px] mt-0.5 block">{item.desc}</span>
                   </div>

@@ -5,7 +5,7 @@
 :root {
   --wood-dark: #3D2A18;
   --wood-light: #C4B299;
-  --linen: #F8F5F0;
+  --linen: #FFFFFF;
   --charcoal: #1A1A1A;
   
   /* Fallbacks for older components */
@@ -13,7 +13,7 @@
   --gold-light: #EFEBE3;
   --gold-dark: #8B6B46;
   --cream: var(--linen);
-  --ivory: #F2F2F2;
+  --ivory: #FFFFFF;
   --deep: var(--charcoal);
   --brown: var(--wood-dark);
   --muted: #808080;
@@ -100,10 +100,10 @@
 
 /* Explicit Visual Themes (Burgundy & Biscuit combination) */
 .sidebar-bg {
-  background-color: #4A0F0F !important;
+  background-color: #FFFFFF !important;
 }
 .dashboard-bg {
-  background-color: #FAF6EE !important;
+  background-color: #FFFFFF !important;
 }
 /* Keep responsive grid children and form controls within their available column. */
 @layer base {
@@ -124,3 +124,25 @@
     font-size: 16px;
   }
 }
+
+/* White dashboard navigation with readable links. */
+.sidebar-bg { color: #1e293b; border-right: 1px solid #e2e8f0; }
+.sidebar-bg a, .sidebar-bg button, .sidebar-bg h1, .sidebar-bg h2, .sidebar-bg h3, .sidebar-bg p, .sidebar-bg span { color: #334155; }
+.sidebar-bg a:hover, .sidebar-bg button:hover { background-color: #f1f5f9; }
+
+/* The home storefront uses a calm forest and linen palette. */
+.storefront-home > header { background: #fffdf8; border-color: #e4e5da; }
+.storefront-home > header [class*="text-wood-"] { color: #304b3c; }
+.storefront-home > header input::placeholder { color: #7b8276; }
+.storefront-home > header [class*="border-wood-"] { border-color: #dedfd3; }
+.storefront-home > header button[type="submit"] { background: #203f34; color: #fff; }
+.storefront-home > header select { color: #304b3c; }
+.storefront-home > footer { background: #203b31; color: #e6ebdf; border-color: #3b5446; }
+.storefront-home > footer > div:first-child { background: #203b31; border-color: #3b5446; }
+.storefront-home > footer [class*="text-slate-900"] { color: #f4f3e8; }
+.storefront-home > footer [class*="text-slate-600"], .storefront-home > footer [class*="text-wood-"] { color: #c3cfba; }
+.storefront-home > footer [class*="border-slate-200"] { border-color: #3b5446; }
+.storefront-home > footer [class*="bg-slate-100"] { background: #365244; }
+.storefront-home a:focus-visible, .storefront-home button:focus-visible { outline: 2px solid #647c4f; outline-offset: 4px; }
+
+.storefront-home > header button[type="submit"] { align-self: stretch; padding: 0.625rem 0.9rem; }

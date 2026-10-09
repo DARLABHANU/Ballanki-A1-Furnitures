@@ -104,6 +104,7 @@ export interface Product {
     unit?: string;
   };
   fulfillment_type?: 'READY_STOCK' | 'MADE_TO_ORDER' | 'CUSTOM_ORDER';
+  expected_delivery_date?: string;
   allow_pre_order?: boolean;
   manufacturing_duration_days?: number;
   shipping_duration_days?: number;
@@ -130,6 +131,9 @@ export interface ProductListResponse {
 
 // ─── Cart ─────────────────────────────────────────────────────────────────────
 export interface CartItem {
+  ready_stock_quantity?: number;
+  preorder_quantity?: number;
+  advance_amount?: number;
   id: string | number;
   product_id: string | number;
   quantity: number;
@@ -144,6 +148,10 @@ export interface Cart {
 
 // ─── Order ────────────────────────────────────────────────────────────────────
 export interface OrderItem {
+  expected_delivery_date?: string;
+  ready_stock_quantity?: number;
+  preorder_quantity?: number;
+  advance_amount?: number;
   id: string | number;
   product_id: string | number;
   product_name: string;
@@ -161,6 +169,10 @@ export interface Order {
   shipping_amount: number;
   tax_amount: number;
   total_amount: number;
+  advance_amount?: number;
+  amount_due_now?: number;
+  balance_amount?: number;
+  has_preorder?: boolean;
   status: OrderStatus;
   payment_status: PaymentStatus;
   payment_method?: string;

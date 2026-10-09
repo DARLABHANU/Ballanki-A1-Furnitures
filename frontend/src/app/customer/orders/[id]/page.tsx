@@ -144,7 +144,7 @@ export default function OrderDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="h-96 flex items-center justify-center bg-[#F8F5F0]">
+      <div className="h-96 flex items-center justify-center bg-white">
         <Loader2 className="animate-spin text-[#0D0D0D]" size={32} />
       </div>
     );
@@ -153,9 +153,9 @@ export default function OrderDetailPage() {
   if (!order) return null;
 
   return (
-    <div className="min-h-screen bg-[#F8F5F0] text-[#1A1A1A] font-garamond">
+    <div className="min-h-screen bg-white text-[#1A1A1A] font-garamond">
       {/* ── Mobile Header ── */}
-      <div className="md:hidden sticky top-0 z-40 bg-[#F8F5F0] border-b border-[#E2DAC8] shadow-xs">
+      <div className="md:hidden sticky top-0 z-40 bg-white border-b border-[#E2DAC8] shadow-xs">
         <div className="flex items-center justify-between px-4 py-3.5">
           <button
             onClick={() => router.back()}
@@ -215,9 +215,10 @@ export default function OrderDetailPage() {
               Items Ordered ({order.items.length})
             </h2>
             <div className="space-y-3 divide-y divide-[#F2EFE9]">
+              {order.amount_due_now!==undefined&&<div className="mb-4 rounded-xl bg-amber-50 p-4 text-sm space-y-2"><p>Initial payment required: {formatPrice(order.amount_due_now)} · Payment status: {order.payment_status}</p>{order.has_preorder&&<><p>20% pre-book advance: {formatPrice(order.advance_amount||0)}</p><p>Balance after initial payment: {formatPrice(order.balance_amount||0)}</p></>}<p>No payment is collected while online payments are disabled.</p>{order.items.map(i=><p key={i.id}>{i.product_name}: {i.ready_stock_quantity??i.quantity} ready · {i.preorder_quantity||0} pre-booked{i.expected_delivery_date?` · Admin expected delivery: ${new Date(i.expected_delivery_date).toLocaleDateString('en-IN',{timeZone:'UTC'})}`:' · Delivery date awaiting admin confirmation'}</p>)}</div>}
               {order.items.map((item) => (
                 <div key={item.id} className="pt-3 first:pt-0 flex items-center gap-3">
-                  <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#F8F5F0] border border-[#E2DAC8] flex-shrink-0">
+                  <div className="w-16 h-16 rounded-xl overflow-hidden bg-white border border-[#E2DAC8] flex-shrink-0">
                     {item.product_image ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={item.product_image} alt={item.product_name} className="w-full h-full object-cover" />

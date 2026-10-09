@@ -43,48 +43,24 @@ export default function CartPage() {
   const totalItemsCount = itemsList.reduce((acc, i) => acc + i.quantity, 0);
   const rawSubtotal = itemsList.reduce((acc, i) => acc + (i.product?.price || 0) * i.quantity, 0);
 
-  // Split calculations for Made to Order Pre-Orders vs standard fulfillment
-  let totalAdvanceDepositRequired = 0;
-  itemsList.forEach((item) => {
-    const p = item.product;
-    if (p.allow_pre_order && p.deposit_policy?.is_required) {
-      if (p.deposit_policy.deposit_type === 'PERCENTAGE') {
-        const depositPerItem = (p.price * p.deposit_policy.deposit_value) / 100;
-        totalAdvanceDepositRequired += depositPerItem * item.quantity;
-      } else if (p.deposit_policy.deposit_type === 'FIXED') {
-        totalAdvanceDepositRequired += p.deposit_policy.deposit_value * item.quantity;
-      }
-    }
-  });
-
+  const totalAdvanceDepositRequired = itemsList.reduce((n,i)=>n+(i.advance_amount ?? Math.max(0,i.quantity-i.product.stock_quantity)*i.product.price*0.2),0);
+  const readySubtotal = itemsList.reduce((n,i)=>n+(i.ready_stock_quantity ?? Math.min(i.quantity,i.product.stock_quantity))*i.product.price,0);
   const deliveryCharges = rawSubtotal >= 100000 ? 0 : (rawSubtotal > 0 ? 1500 : 0);
-
-  // Total Liability
-  const finalTotalAmount = Math.max(0, rawSubtotal - couponDiscount + deliveryCharges);
-
-  // Amount due today
-  let dueToday = 0;
-  if (totalAdvanceDepositRequired > 0) {
-    // If there is any pre-order, the customer pays the deposit of pre-order items + full price of any ready-stock items + delivery - discount.
-    const readyStockSubtotal = rawSubtotal - itemsList.filter(i => i.product.allow_pre_order).reduce((acc, i) => acc + i.product.price * i.quantity, 0);
-    dueToday = Math.max(0, totalAdvanceDepositRequired + readyStockSubtotal - couponDiscount + deliveryCharges);
-  } else {
-    dueToday = finalTotalAmount;
-  }
-
-  const balanceRemaining = finalTotalAmount - dueToday;
+  const finalTotalAmount = Math.max(0, rawSubtotal-couponDiscount+deliveryCharges);
+  const dueToday = Math.min(finalTotalAmount,readySubtotal+totalAdvanceDepositRequired+deliveryCharges);
+  const balanceRemaining = Math.round((finalTotalAmount-dueToday)*100)/100;
 
   const handleRemoveItem = (product_id: string | number) => {
     const cartItemId = itemsList.find(i => i.product_id === product_id)?.id;
     if (cartItemId) {
       removeItem(cartItemId);
-      toast.success("Item removed from reservation");
+      toast.success("Item removed from cart");
     }
   };
 
   if (itemsList.length === 0) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center bg-wood-50 font-inter text-wood-900 border-t border-wood-200">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center bg-white font-inter text-wood-900 border-t border-wood-200">
         <div className="w-28 h-28 bg-white border border-wood-200 rounded-full flex items-center justify-center text-wood-400 shadow-sm mb-6 relative">
           <ShoppingBag size={48} />
           <div className="absolute top-2 right-2 w-5 h-5 bg-terracotta-500 rounded-full border-2 border-white"></div>
@@ -102,7 +78,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-wood-50 text-wood-900 font-inter pb-20">
+    <div className="min-h-screen bg-white text-wood-900 font-inter pb-20">
       <div className="max-w-6xl mx-auto px-4 lg:px-8 pt-10">
         <div className="mb-8">
           <h1 className="font-playfair text-3xl font-bold text-wood-900 mb-2">Shopping Bag</h1>
@@ -124,13 +100,9 @@ export default function CartPage() {
             {/* List */}
             <div className="space-y-6">
               {itemsList.map((item) => {
-                const isMadeToOrder = item.product.allow_pre_order && item.product.deposit_policy?.is_required;
-                let depositPerItem = 0;
-                if (isMadeToOrder) {
-                  depositPerItem = item.product.deposit_policy!.deposit_type === 'PERCENTAGE'
-                    ? (item.product.price * item.product.deposit_policy!.deposit_value) / 100
-                    : item.product.deposit_policy!.deposit_value;
-                }
+                const preorderQuantity = item.preorder_quantity ?? Math.max(0,item.quantity-item.product.stock_quantity);
+                const isMadeToOrder = preorderQuantity>0;
+                const depositPerItem = item.product.price*0.2*preorderQuantity/item.quantity;
 
                 return (
                   <div key={item.id} className="grid grid-cols-1 md:grid-cols-12 gap-4 md:items-center bg-white p-5 rounded-2xl border border-wood-200 shadow-sm relative group">
@@ -144,7 +116,7 @@ export default function CartPage() {
 
                     {/* Img + Details */}
                     <div className="col-span-1 md:col-span-6 min-w-0 flex items-start gap-3 sm:gap-5">
-                      <div className="w-20 h-20 sm:w-24 sm:h-24 bg-wood-50 rounded-xl overflow-hidden shrink-0 border border-wood-100">
+                      <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-xl overflow-hidden shrink-0 border border-wood-100">
                         <img src={getProductImage(item.product.images)} alt={item.product.name} className="w-full h-full object-cover" />
                       </div>
                       <div className="min-w-0 flex-1 pr-6">
@@ -172,7 +144,7 @@ export default function CartPage() {
                     {/* Qty */}
                     <div className="col-span-1 md:col-span-2 flex items-center md:justify-center mt-4 md:mt-0 gap-3">
                       <span className="text-xs text-wood-500 font-bold uppercase md:hidden tracking-wider">QTY</span>
-                      <div className="flex items-center gap-3 bg-wood-50 border border-wood-200 rounded-lg p-1.5 shadow-xs">
+                      <div className="flex items-center gap-3 bg-white border border-wood-200 rounded-lg p-1.5 shadow-xs">
                         <button
                           onClick={() => {
                             if (item.quantity > 1) {
@@ -204,7 +176,7 @@ export default function CartPage() {
                         <span className="font-bold text-wood-900">{formatPrice(item.product.price * item.quantity)}</span>
                         {isMadeToOrder && (
                           <span className="text-[10px] text-wood-500 font-medium mt-1 text-right max-w-[120px]">
-                            Req. Deposit: <strong className="text-wood-900">{formatPrice(depositPerItem * item.quantity)}</strong>
+                            20% pre-book advance: <strong className="text-wood-900">{formatPrice(depositPerItem * item.quantity)}</strong>
                           </span>
                         )}
                       </div>
@@ -230,7 +202,7 @@ export default function CartPage() {
                       placeholder="Studio Voucher Code"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
-                      className="flex-1 bg-wood-50 border border-wood-200 px-4 py-2.5 rounded-lg text-xs font-semibold focus:outline-none focus:border-wood-900 text-wood-900"
+                      className="flex-1 bg-white border border-wood-200 px-4 py-2.5 rounded-lg text-xs font-semibold focus:outline-none focus:border-wood-900 text-wood-900"
                     />
                     <button
                       onClick={handleValidateCoupon}
@@ -283,7 +255,7 @@ export default function CartPage() {
 
                 {/* Advanced Deposit Split info */}
                 {balanceRemaining > 0 && (
-                  <div className="flex flex-col gap-2 bg-wood-50 p-4 rounded-xl border border-wood-100 mb-6">
+                  <div className="flex flex-col gap-2 bg-white p-4 rounded-xl border border-wood-100 mb-6">
                     <span className="text-[11px] font-bold tracking-widest text-wood-500 uppercase">Payment Plan</span>
                     <div className="flex justify-between items-center text-sm font-bold text-wood-900">
                       <span>Due Today (Deposit)</span>
@@ -300,7 +272,7 @@ export default function CartPage() {
                   href="/customer/orders/checkout"
                   className="w-full bg-wood-900 hover:bg-wood-950 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.98]"
                 >
-                  <span>{balanceRemaining > 0 ? "Secure Pre-Order with Deposit" : "Proceed to Secure Checkout"}</span>
+                  <span>{balanceRemaining > 0 ? "Review Pre-Booking" : "Proceed to Secure Checkout"}</span>
                   <ArrowRight size={16} />
                 </Link>
 

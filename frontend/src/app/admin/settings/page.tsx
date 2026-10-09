@@ -41,7 +41,7 @@ export default function AdminSettingsPage() {
                 type="number"
                 value={platformMargin}
                 onChange={(e) => setPlatformMargin(e.target.value)}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               />
               <p className="text-[11px] text-[#808080] mt-1">Customer price is set by the store administrator.</p>
             </div>
@@ -52,7 +52,7 @@ export default function AdminSettingsPage() {
                 type="number"
                 value={promoterDiscount}
                 onChange={(e) => setPromoterDiscount(e.target.value)}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               />
               <p className="text-[11px] text-[#808080] mt-1">Fixed discount given to customer using promoter coupon</p>
             </div>
@@ -63,7 +63,7 @@ export default function AdminSettingsPage() {
                 type="number"
                 value={promoterCommission}
                 onChange={(e) => setPromoterCommission(e.target.value)}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#2E7D32] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#2E7D32] focus:outline-none focus:border-[#0D0D0D]"
               />
               <p className="text-[11px] text-[#808080] mt-1">Direct amount transferred to promoter balance upon purchase</p>
             </div>
@@ -74,7 +74,7 @@ export default function AdminSettingsPage() {
                 type="number"
                 value={platformProfit}
                 onChange={(e) => setPlatformProfit(e.target.value)}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               />
               <p className="text-[11px] text-[#808080] mt-1">Platform retained profit share on promoter coupon usage</p>
             </div>
@@ -95,7 +95,7 @@ export default function AdminSettingsPage() {
                 type="email"
                 value={supportEmail}
                 onChange={(e) => setSupportEmail(e.target.value)}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               />
             </div>
 
@@ -105,7 +105,7 @@ export default function AdminSettingsPage() {
                 type="text"
                 value={supportPhone}
                 onChange={(e) => setSupportPhone(e.target.value)}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               />
             </div>
           </div>

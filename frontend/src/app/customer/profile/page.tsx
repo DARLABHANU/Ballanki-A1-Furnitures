@@ -271,15 +271,15 @@ export default function CustomerProfilePage() {
             <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4 font-garamond max-w-md">
               <div>
                 <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Full Name *</label>
-                <input {...profileForm.register("full_name")} className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
+                <input {...profileForm.register("full_name")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
               </div>
               <div>
                 <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Phone Number</label>
-                <input {...profileForm.register("phone")} type="tel" className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="+91 98765 43210" />
+                <input {...profileForm.register("phone")} type="tel" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="+91 98765 43210" />
               </div>
               <div>
                 <label className="text-xs font-bold text-[#808080] block mb-1">Email Address</label>
-                <input value={user?.email || ""} disabled className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] opacity-60 cursor-not-allowed" />
+                <input value={user?.email || ""} disabled className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] opacity-60 cursor-not-allowed" />
               </div>
               <button type="submit" disabled={isSaving} className="bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl font-bold text-xs transition-all shadow-xs">
                 {isSaving ? "Saving..." : "Save Changes"}
@@ -295,24 +295,24 @@ export default function CustomerProfilePage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Bank Name</label>
-                  <input {...payoutForm.register("payout_bank_name")} className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-semibold bg-[#F8F5F0]" placeholder="e.g. State Bank of India" />
+                  <input {...payoutForm.register("payout_bank_name")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-semibold bg-white" placeholder="e.g. State Bank of India" />
                 </div>
                 <div>
                   <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Account Holder Name</label>
-                  <input {...payoutForm.register("payout_account_holder_name")} className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-semibold bg-[#F8F5F0]" placeholder="Full name on bank account" />
+                  <input {...payoutForm.register("payout_account_holder_name")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-semibold bg-white" placeholder="Full name on bank account" />
                 </div>
                 <div>
                   <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Account Number</label>
-                  <input {...payoutForm.register("payout_account_number")} className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-mono bg-[#F8F5F0]" placeholder="Enter account number" />
+                  <input {...payoutForm.register("payout_account_number")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-mono bg-white" placeholder="Enter account number" />
                 </div>
                 <div>
                   <label className="text-xs font-bold text-[#1A1A1A] block mb-1">IFSC Code</label>
-                  <input {...payoutForm.register("payout_ifsc_code")} className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-mono uppercase bg-[#F8F5F0]" placeholder="e.g. SBIN0001234" />
+                  <input {...payoutForm.register("payout_ifsc_code")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-mono uppercase bg-white" placeholder="e.g. SBIN0001234" />
                 </div>
               </div>
               <div>
                 <label className="text-xs font-bold text-[#1A1A1A] block mb-1">UPI ID (VPA)</label>
-                <input {...payoutForm.register("payout_upi_id")} className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-mono bg-[#F8F5F0]" placeholder="e.g. name@upi" />
+                <input {...payoutForm.register("payout_upi_id")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-mono bg-white" placeholder="e.g. name@upi" />
               </div>
               <button type="submit" disabled={isSaving} className="bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl font-bold text-xs transition-all shadow-xs">
                 {isSaving ? "Saving..." : "Save Payout Credentials"}
@@ -327,15 +327,15 @@ export default function CustomerProfilePage() {
             <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4 font-garamond max-w-md">
               <div>
                 <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Current Password *</label>
-                <input {...passwordForm.register("current_password")} type="password" className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
+                <input {...passwordForm.register("current_password")} type="password" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
               </div>
               <div>
                 <label className="text-xs font-bold text-[#1A1A1A] block mb-1">New Password *</label>
-                <input {...passwordForm.register("new_password")} type="password" className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
+                <input {...passwordForm.register("new_password")} type="password" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
               </div>
               <div>
                 <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Confirm New Password *</label>
-                <input {...passwordForm.register("confirm_password")} type="password" className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
+                <input {...passwordForm.register("confirm_password")} type="password" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
               </div>
               <button type="submit" disabled={isSaving} className="bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl font-bold text-xs transition-all shadow-xs">
                 {isSaving ? "Saving..." : "Update Password"}
@@ -357,7 +357,7 @@ export default function CustomerProfilePage() {
             </div>
 
             {showAddressForm && (
-              <form onSubmit={addressForm.handleSubmit(onAddressSubmit)} className="space-y-3 bg-[#F8F5F0] p-4 rounded-2xl border border-[#E2DAC8] font-garamond max-w-lg">
+              <form onSubmit={addressForm.handleSubmit(onAddressSubmit)} className="space-y-3 bg-white p-4 rounded-2xl border border-[#E2DAC8] font-garamond max-w-lg">
                 <div>
                   <label className="text-xs font-bold block mb-1">Address Label</label>
                   <input {...addressForm.register("label")} placeholder="Home / Work" className="w-full border rounded-xl px-3 py-2 text-xs" />
@@ -396,7 +396,7 @@ export default function CustomerProfilePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {addresses.map((addr) => (
-                <div key={addr.id} className="p-4 border border-[#E2DAC8] rounded-2xl bg-[#F8F5F0] flex justify-between items-start font-garamond">
+                <div key={addr.id} className="p-4 border border-[#E2DAC8] rounded-2xl bg-white flex justify-between items-start font-garamond">
                   <div>
                     <span className="text-[10px] font-bold bg-[#EFEBE3] text-[#2E7D32] px-2 py-0.5 rounded uppercase">{addr.label}</span>
                     <p className="font-bold text-xs mt-1">{addr.full_name}</p>

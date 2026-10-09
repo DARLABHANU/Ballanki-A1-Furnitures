@@ -179,7 +179,7 @@ function ProductsContent() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search sofas, beds, oak woods..."
-            className="w-full bg-wood-50 border border-wood-200 rounded-lg pl-10 pr-4 py-3 text-sm font-medium text-wood-900 focus:outline-none focus:border-wood-900 transition-colors shadow-sm"
+            className="w-full bg-white border border-wood-200 rounded-lg pl-10 pr-4 py-3 text-sm font-medium text-wood-900 focus:outline-none focus:border-wood-900 transition-colors shadow-sm"
           />
         </form>
 
@@ -232,7 +232,7 @@ function ProductsContent() {
 
           {/* Active Filter Chips */}
           {(selectedFabric || selectedWood || minPrice || maxPrice || search || minRating) && (
-            <div className="flex flex-wrap gap-2 items-center bg-wood-50 p-4 rounded-xl border border-wood-100">
+            <div className="flex flex-wrap gap-2 items-center bg-white p-4 rounded-xl border border-wood-100">
               <span className="text-[11px] font-bold tracking-wider text-wood-500 uppercase mr-1">Active Filters:</span>
 
               {selectedWood && (
@@ -271,9 +271,9 @@ function ProductsContent() {
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {Array(6).fill(0).map((_, i) => (
                 <div key={i} className="animate-pulse bg-white border border-wood-100 rounded-xl p-4">
-                  <div className="aspect-[4/3] bg-wood-50 rounded-lg mb-4" />
-                  <div className="h-4 bg-wood-50 rounded mb-3 w-3/4" />
-                  <div className="h-4 bg-wood-50 rounded w-1/2" />
+                  <div className="aspect-[4/3] bg-white rounded-lg mb-4" />
+                  <div className="h-4 bg-white rounded mb-3 w-3/4" />
+                  <div className="h-4 bg-white rounded w-1/2" />
                 </div>
               ))}
             </div>

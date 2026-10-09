@@ -39,7 +39,7 @@ export default function WebsiteSettingsPage() {
                 type="text"
                 value={siteName}
                 onChange={(e) => setSiteName(e.target.value)}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required
               />
             </div>
@@ -50,7 +50,7 @@ export default function WebsiteSettingsPage() {
                 type="text"
                 value={footerText}
                 onChange={(e) => setFooterText(e.target.value)}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required
               />
             </div>
@@ -71,7 +71,7 @@ export default function WebsiteSettingsPage() {
                 type="text"
                 value={seoTitle}
                 onChange={(e) => setSeoTitle(e.target.value)}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required
               />
             </div>
@@ -82,7 +82,7 @@ export default function WebsiteSettingsPage() {
                 rows={3}
                 value={seoMeta}
                 onChange={(e) => setSeoMeta(e.target.value)}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required
               />
             </div>

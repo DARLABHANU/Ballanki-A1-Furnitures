@@ -35,7 +35,7 @@ export default function MarketingToolsPage() {
                 type="text"
                 value={broadcastSubject}
                 onChange={(e) => setBroadcastSubject(e.target.value)}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required
               />
             </div>
@@ -46,7 +46,7 @@ export default function MarketingToolsPage() {
                 rows={5}
                 value={broadcastMessage}
                 onChange={(e) => setBroadcastMessage(e.target.value)}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required
               />
             </div>
@@ -71,7 +71,7 @@ export default function MarketingToolsPage() {
           </div>
 
           <div className="space-y-4 text-xs">
-            <div className="p-4 bg-[#F8F5F0] border border-[#E2DAC8] rounded-2xl space-y-2">
+            <div className="p-4 bg-white border border-[#E2DAC8] rounded-2xl space-y-2">
               <div className="flex items-center gap-2 text-[#0D0D0D] font-bold">
                 <MessageSquare size={16} />
                 <span>WhatsApp Promoter Blast</span>
@@ -85,7 +85,7 @@ export default function MarketingToolsPage() {
               </button>
             </div>
 
-            <div className="p-4 bg-[#F8F5F0] border border-[#E2DAC8] rounded-2xl space-y-2">
+            <div className="p-4 bg-white border border-[#E2DAC8] rounded-2xl space-y-2">
               <div className="flex items-center gap-2 text-[#0D0D0D] font-bold">
                 <Megaphone size={16} />
                 <span>Banner Campaign</span>

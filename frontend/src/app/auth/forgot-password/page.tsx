@@ -71,7 +71,7 @@ export default function ForgotPasswordPage() {
               {...register("email")}
               type="email"
               placeholder="yourname@example.com"
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl pl-10 pr-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#E2DAC8] rounded-xl pl-10 pr-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               autoComplete="email"
               required
             />

@@ -5,7 +5,7 @@ import Footer from "@/components/layout/Footer";
 
 export default function RefundPolicyPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8F5F0] font-garamond text-[#1A1A1A]">
+    <div className="flex flex-col min-h-screen bg-white font-garamond text-[#1A1A1A]">
       <Navbar />
       <main className="flex-1 py-12 px-4">
         <div className="max-w-4xl mx-auto bg-white border border-[#E2DAC8] p-4 sm:p-8 md:p-12 rounded-3xl shadow-xs space-y-8">

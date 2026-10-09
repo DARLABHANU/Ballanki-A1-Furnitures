@@ -1,6 +1,6 @@
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-dvh grid lg:grid-cols-2 bg-[#F8F5F0] font-garamond text-[#1A1A1A]">
+    <div className="min-h-dvh grid lg:grid-cols-2 bg-white font-garamond text-[#1A1A1A]">
       {/* Left: Decorative Dark Forest Green Panel matching Admin Panel Theme */}
       <div className="hidden lg:flex flex-col justify-between bg-[#0D0D0D] p-8 xl:p-16 relative overflow-hidden text-wood-100">
         {/* Background Pattern */}
@@ -52,7 +52,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       {/* Right: Form area with Admin Panel Card Styling — perfectly centered for mobile */}
-      <div className="flex items-center justify-center p-4 sm:p-8 md:p-12 bg-[#F8F5F0] min-h-dvh">
+      <div className="flex items-center justify-center p-4 sm:p-8 md:p-12 bg-white min-h-dvh">
         <div className="w-full max-w-md bg-white border border-[#E2DAC8] rounded-3xl p-5 sm:p-8 shadow-xs">
           {/* Mobile Logo Header */}
           <div className="lg:hidden text-center mb-6">

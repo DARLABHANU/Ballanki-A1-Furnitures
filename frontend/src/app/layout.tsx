@@ -52,7 +52,7 @@ const MAINTENANCE_MODE = false;
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
-      <body className="bg-wood-50 font-inter text-wood-900 antialiased" suppressHydrationWarning>
+      <body className="bg-white font-inter text-wood-900 antialiased" suppressHydrationWarning>
         <ImpersonationBanner />
         {!MAINTENANCE_MODE && <AuthInitializer />}
         <Toaster

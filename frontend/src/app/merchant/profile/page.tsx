@@ -121,7 +121,7 @@ export default function MerchantProfilePage() {
       {/* Profile Form */}
       <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
         <div className="flex items-center gap-3 border-b border-[#EFEBE3] pb-4">
-          <div className="w-16 h-16 rounded-2xl bg-[#F8F5F0] border border-[#E2DAC8] flex items-center justify-center overflow-hidden flex-shrink-0">
+          <div className="w-16 h-16 rounded-2xl bg-white border border-[#E2DAC8] flex items-center justify-center overflow-hidden flex-shrink-0">
             {watch("logo_url") ? (
               <img src={watch("logo_url")} alt="Store Logo" className="w-full h-full object-cover" />
             ) : (
@@ -137,7 +137,7 @@ export default function MerchantProfilePage() {
             </p>
             
             <div className="mt-2">
-              <label className="cursor-pointer inline-flex items-center gap-1.5 bg-[#F8F5F0] border border-[#E2DAC8] px-3 py-1.5 rounded-lg text-[11px] font-bold text-[#1A1A1A] hover:bg-[#E2DAC8] transition-colors">
+              <label className="cursor-pointer inline-flex items-center gap-1.5 bg-white border border-[#E2DAC8] px-3 py-1.5 rounded-lg text-[11px] font-bold text-[#1A1A1A] hover:bg-[#E2DAC8] transition-colors">
                 {isUploading ? <Loader2 size={12} className="animate-spin" /> : "Upload Logo"}
                 <input type="file" accept="image/*" onChange={handleLogoUpload} disabled={isUploading} className="hidden" />
               </label>
@@ -149,7 +149,7 @@ export default function MerchantProfilePage() {
           <div>
             <label className="font-bold text-[#1A1A1A] block mb-1">Business / Store Name *</label>
             <input {...register("business_name")}
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               placeholder="e.g. Sowmya Collections" />
             {errors.business_name && <p className="text-red-500 text-[11px] mt-1">{errors.business_name.message}</p>}
           </div>
@@ -157,14 +157,14 @@ export default function MerchantProfilePage() {
           <div>
             <label className="font-bold text-[#1A1A1A] block mb-1">Business Description</label>
             <textarea {...register("business_description")} rows={3}
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
+              className="w-full bg-white border border-[#E2DAC8] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
               placeholder="Tell customers about your store, specialities, and craftsmanship..." />
           </div>
 
           <div>
             <label className="font-bold text-[#1A1A1A] block mb-1">GSTIN (Optional)</label>
             <input {...register("gstin")}
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               placeholder="22AAAAA0000A1Z5" />
           </div>
 
@@ -172,13 +172,13 @@ export default function MerchantProfilePage() {
             <div>
               <label className="font-bold text-[#1A1A1A] block mb-1">Bank Account Number</label>
               <input {...register("bank_account")}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 placeholder="Account number" />
             </div>
             <div>
               <label className="font-bold text-[#1A1A1A] block mb-1">IFSC Code</label>
               <input {...register("ifsc_code")}
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 placeholder="SBIN0001234" />
             </div>
           </div>

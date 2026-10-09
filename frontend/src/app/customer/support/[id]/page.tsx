@@ -90,7 +90,7 @@ export default function CustomerTicketDetailsPage() {
 
   if (loading) {
     return (
-      <div className="h-96 flex items-center justify-center bg-[#F8F5F0]">
+      <div className="h-96 flex items-center justify-center bg-white">
         <Loader2 className="animate-spin text-[#0D0D0D]" size={32} />
       </div>
     );
@@ -99,10 +99,10 @@ export default function CustomerTicketDetailsPage() {
   if (!ticket) return null;
 
   return (
-    <div className="min-h-screen bg-[#F8F5F0] text-[#1A1A1A] font-garamond">
+    <div className="min-h-screen bg-white text-[#1A1A1A] font-garamond">
 
       {/* ── Mobile Top Bar ── */}
-      <div className="md:hidden sticky top-0 z-40 bg-[#F8F5F0] border-b border-[#E2DAC8] shadow-xs">
+      <div className="md:hidden sticky top-0 z-40 bg-white border-b border-[#E2DAC8] shadow-xs">
         <div className="flex items-center justify-between px-4 py-3.5">
           <button
             onClick={() => router.back()}
@@ -163,7 +163,7 @@ export default function CustomerTicketDetailsPage() {
                     className={`max-w-[85%] rounded-2xl p-4 space-y-1 ${
                       isMe
                         ? "bg-[#0D0D0D] text-white rounded-br-none"
-                        : "bg-[#F8F5F0] border border-[#E2DAC8] text-[#1A1A1A] rounded-bl-none"
+                        : "bg-white border border-[#E2DAC8] text-[#1A1A1A] rounded-bl-none"
                     }`}
                   >
                     <p className="text-xs font-bold text-wood-300">
@@ -188,7 +188,7 @@ export default function CustomerTicketDetailsPage() {
                 value={replyMessage}
                 onChange={(e) => setReplyMessage(e.target.value)}
                 placeholder="Type your message..."
-                className="flex-1 bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 text-xs font-garamond text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="flex-1 bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 text-xs font-garamond text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required
               />
               <button

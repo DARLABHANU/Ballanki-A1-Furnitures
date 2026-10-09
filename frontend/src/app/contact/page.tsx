@@ -4,7 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 export default function ContactUsPage() {
-  return <div className="flex min-h-screen flex-col bg-[#F8F5F0] font-garamond text-[#1A1A1A]">
+  return <div className="flex min-h-screen flex-col bg-white font-garamond text-[#1A1A1A]">
     <Navbar/>
     <main className="flex-1 px-4 py-16"><section className="mx-auto max-w-2xl rounded-3xl border border-[#E2DAC8] bg-white p-8 text-center shadow-sm">
       <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#EFEBE3] text-[#1B4D3E]"><MessageCircle size={22}/></span>

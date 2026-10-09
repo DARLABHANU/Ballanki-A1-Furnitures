@@ -71,7 +71,7 @@ function MerchantAnalyticsContent() {
             </button>
           </div>
 
-          <div className="relative h-56 w-full pt-4 bg-[#F8F5F0] border border-[#E2DAC8] rounded-2xl p-4">
+          <div className="relative h-56 w-full pt-4 bg-white border border-[#E2DAC8] rounded-2xl p-4">
             <svg viewBox="0 0 500 160" className="w-full h-40 overflow-visible">
               <defs>
                 <linearGradient id="sellerAnalyticsGrad" x1="0" y1="0" x2="0" y2="1">

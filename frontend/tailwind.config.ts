@@ -39,14 +39,14 @@ const config: Config = {
         primary: "#bd740f",
         secondary: "#965B0B",
         accent: "#D99443",
-        background: "#FFF6EB",
+        background: "#FFFFFF",
         // Keeping legacy class names but mapping them to new furniture theme to avoid breaking existing pages too hard
         gold: {
           50: "#FFF6EB", 100: "#F5D6A8", 200: "#EBB978", 300: "#C77A16", 400: "#bd740f",
           500: "#bd740f", 600: "#965B0B", 700: "#7A480A", 800: "#4D2D06", 900: "#2B1803",
         },
         brown: "#7A480A",
-        cream: "#FFF6EB",
+        cream: "#FFFFFF",
         muted: "#D99443",
       },
       fontFamily: {

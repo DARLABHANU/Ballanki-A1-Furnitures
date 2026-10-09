@@ -3,7 +3,7 @@ import Footer from "@/components/layout/Footer";
 
 export default function PrivacyPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8F5F0] font-garamond text-[#1A1A1A]">
+    <div className="flex flex-col min-h-screen bg-white font-garamond text-[#1A1A1A]">
       <Navbar />
 
       <main className="flex-1 py-12 px-4">

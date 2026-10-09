@@ -242,7 +242,7 @@ export default function SupportDashboardPage() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-[#F8F5F0] font-garamond text-[#1A1A1A]">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-white font-garamond text-[#1A1A1A]">
       {/* Mobile Top Bar */}
       <header className="lg:hidden flex items-center justify-between p-4 bg-[#0D0D0D] border-b border-wood-800/40">
         <div className="flex flex-col">
@@ -292,7 +292,7 @@ export default function SupportDashboardPage() {
                 <select
                   value={ticketStatusFilter}
                   onChange={(e) => setTicketStatusFilter(e.target.value)}
-                  className="bg-[#F8F5F0] border border-[#E2DAC8] text-xs font-semibold text-[#1A1A1A] px-3 py-2 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
+                  className="bg-white border border-[#E2DAC8] text-xs font-semibold text-[#1A1A1A] px-3 py-2 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
                 >
                   <option value="">All Statuses</option>
                   <option value="open">Open</option>
@@ -306,7 +306,7 @@ export default function SupportDashboardPage() {
                 <select
                   value={ticketPriorityFilter}
                   onChange={(e) => setTicketPriorityFilter(e.target.value)}
-                  className="bg-[#F8F5F0] border border-[#E2DAC8] text-xs font-semibold text-[#1A1A1A] px-3 py-2 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
+                  className="bg-white border border-[#E2DAC8] text-xs font-semibold text-[#1A1A1A] px-3 py-2 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
                 >
                   <option value="">All Priorities</option>
                   <option value="low">Low</option>
@@ -337,7 +337,7 @@ export default function SupportDashboardPage() {
                         className={`p-4 border rounded-2xl cursor-pointer transition-all ${
                           selectedTicket?.id === t.id
                             ? "bg-[#0D0D0D] text-white border-[#0D0D0D]"
-                            : "bg-[#F8F5F0] border-[#E2DAC8] hover:border-[#0D0D0D]"
+                            : "bg-white border-[#E2DAC8] hover:border-[#0D0D0D]"
                         }`}
                       >
                         <div className="flex justify-between items-start mb-1">
@@ -370,7 +370,7 @@ export default function SupportDashboardPage() {
                           <select
                             value={ticketStatusUpdate}
                             onChange={(e) => setTicketStatusUpdate(e.target.value)}
-                            className="bg-[#F8F5F0] border border-[#E2DAC8] text-xs font-semibold text-[#1A1A1A] px-3 py-1.5 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
+                            className="bg-white border border-[#E2DAC8] text-xs font-semibold text-[#1A1A1A] px-3 py-1.5 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
                           >
                             <option value="open">Open</option>
                             <option value="in_progress">In Progress</option>
@@ -380,7 +380,7 @@ export default function SupportDashboardPage() {
                       </div>
 
                       {/* Messages Flow */}
-                      <div className="space-y-3 max-h-[350px] overflow-y-auto p-4 bg-[#F8F5F0] border border-[#E2DAC8] rounded-2xl">
+                      <div className="space-y-3 max-h-[350px] overflow-y-auto p-4 bg-white border border-[#E2DAC8] rounded-2xl">
                         <div className="bg-white p-4 rounded-xl border border-[#E2DAC8]">
                           <p className="text-xs font-bold text-[#1A1A1A] mb-1">{selectedTicket.customer_name || selectedTicket.email}</p>
                           <p className="text-xs text-[#666666] leading-relaxed">{selectedTicket.description}</p>
@@ -412,7 +412,7 @@ export default function SupportDashboardPage() {
                         onChange={(e) => setAgentReplyMsg(e.target.value)}
                         placeholder="Type agent response message..."
                         rows={3}
-                        className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl p-3 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
+                        className="w-full bg-white border border-[#E2DAC8] rounded-xl p-3 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
                       />
                       <div className="flex justify-end">
                         <button
@@ -452,7 +452,7 @@ export default function SupportDashboardPage() {
                   <select
                     value={searchType}
                     onChange={(e) => setSearchType(e.target.value as any)}
-                    className="bg-[#F8F5F0] border border-[#E2DAC8] text-xs font-semibold text-[#1A1A1A] px-4 py-2.5 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
+                    className="bg-white border border-[#E2DAC8] text-xs font-semibold text-[#1A1A1A] px-4 py-2.5 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
                   >
                     <option value="email">Email Address</option>
                     <option value="account_number">Account Number</option>
@@ -467,7 +467,7 @@ export default function SupportDashboardPage() {
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                     placeholder="Enter customer email, account number, or name..."
-                    className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                    className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                     required
                   />
                 </div>
@@ -497,7 +497,7 @@ export default function SupportDashboardPage() {
                         className={`p-4 border rounded-2xl cursor-pointer transition-all ${
                           selectedUser?.id === u.id
                             ? "bg-[#0D0D0D] text-white border-[#0D0D0D]"
-                            : "bg-[#F8F5F0] border-[#E2DAC8] hover:border-[#0D0D0D]"
+                            : "bg-white border-[#E2DAC8] hover:border-[#0D0D0D]"
                         }`}
                       >
                         <p className="font-bold text-xs">{u.full_name}</p>
@@ -518,7 +518,7 @@ export default function SupportDashboardPage() {
                       </div>
 
                       {/* Impersonation Form */}
-                      <div className="bg-[#F8F5F0] border border-[#E2DAC8] p-4 rounded-2xl space-y-3">
+                      <div className="bg-white border border-[#E2DAC8] p-4 rounded-2xl space-y-3">
                         <h4 className="text-xs font-bold text-[#1A1A1A] flex items-center gap-1.5">
                           <UserCheck size={16} className="text-[#0D0D0D]" /> Support Impersonation Session
                         </h4>
@@ -555,7 +555,7 @@ export default function SupportDashboardPage() {
                         ) : (
                           <div className="space-y-2">
                             {userOrders.map((o) => (
-                              <div key={o.id} className="p-3 bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl flex justify-between items-center text-xs">
+                              <div key={o.id} className="p-3 bg-white border border-[#E2DAC8] rounded-xl flex justify-between items-center text-xs">
                                 <div>
                                   <span className="font-bold text-[#1A1A1A]">Order #{o.id}</span>
                                   <span className="text-[#808080] block text-[10px]">{formatDate(o.created_at)}</span>
@@ -606,7 +606,7 @@ export default function SupportDashboardPage() {
                     </thead>
                     <tbody className="divide-y divide-[#EFEBE3]">
                       {auditLogs.map((log: any) => (
-                        <tr key={log.id} className="hover:bg-[#F8F5F0]/60 transition-colors">
+                        <tr key={log.id} className="hover:bg-white/60 transition-colors">
                           <td className="py-3 px-3 font-mono font-bold text-[#808080]">#{log.id}</td>
                           <td className="py-3 px-3 font-bold text-[#1A1A1A]">Agent #{log.support_user_id || log.user_id}</td>
                           <td className="py-3 px-3 text-[#666666]">User #{log.target_user_id}</td>

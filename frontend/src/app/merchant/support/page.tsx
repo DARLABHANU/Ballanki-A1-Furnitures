@@ -34,7 +34,7 @@ export default function MerchantSupportPage() {
       {/* FAQ Section */}
       <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-5">
         <div className="flex items-center gap-3 border-b border-[#EFEBE3] pb-4">
-          <div className="w-10 h-10 rounded-2xl bg-[#F8F5F0] border border-[#E2DAC8] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-white border border-[#E2DAC8] flex items-center justify-center">
             <HelpCircle size={18} className="text-[#0D0D0D]" />
           </div>
           <div>
@@ -48,7 +48,7 @@ export default function MerchantSupportPage() {
             <div key={idx} className="border border-[#E2DAC8] rounded-2xl overflow-hidden">
               <button
                 onClick={() => setExpandedFaq(expandedFaq === idx ? null : idx)}
-                className="w-full flex items-center justify-between p-4 text-left hover:bg-[#F8F5F0] transition-colors"
+                className="w-full flex items-center justify-between p-4 text-left hover:bg-white transition-colors"
               >
                 <span className="font-bold text-xs text-[#1A1A1A]">{faq.q}</span>
                 {expandedFaq === idx ? <ChevronUp size={14} className="text-[#808080]" /> : <ChevronDown size={14} className="text-[#808080]" />}
@@ -66,7 +66,7 @@ export default function MerchantSupportPage() {
       {/* Contact Support */}
       <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-5">
         <div className="flex items-center gap-3 border-b border-[#EFEBE3] pb-4">
-          <div className="w-10 h-10 rounded-2xl bg-[#F8F5F0] border border-[#E2DAC8] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-white border border-[#E2DAC8] flex items-center justify-center">
             <MessageSquare size={18} className="text-[#0D0D0D]" />
           </div>
           <div>
@@ -79,13 +79,13 @@ export default function MerchantSupportPage() {
           <div>
             <label className="font-bold text-[#1A1A1A] block mb-1">Subject</label>
             <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)}
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               placeholder="e.g. Payout delay, Product listing issue" />
           </div>
           <div>
             <label className="font-bold text-[#1A1A1A] block mb-1">Message</label>
             <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={4}
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
+              className="w-full bg-white border border-[#E2DAC8] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
               placeholder="Describe your issue in detail..." />
           </div>
           <button onClick={handleSubmit} disabled={isSending}

@@ -244,7 +244,7 @@ function MerchantDashboardContent() {
                 <div className="overflow-x-auto pb-2 -mx-2 px-2 sm:mx-0 sm:px-0">
                   <div className="flex sm:grid sm:grid-cols-3 lg:grid-cols-5 gap-2 text-[11px] min-w-max sm:min-w-0">
                     
-                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-[#F8F5F0] rounded-xl border border-[#E2DAC8]">
+                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#E2DAC8]">
                       {hasLogo ? <CheckSquare size={14} className="text-[#2E7D32] flex-shrink-0" /> : <Square size={14} className="text-[#808080] flex-shrink-0" />}
                       <div>
                         <span className="font-bold text-[#1A1A1A] block truncate">Store Profile</span>
@@ -252,7 +252,7 @@ function MerchantDashboardContent() {
                       </div>
                     </div>
 
-                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-[#F8F5F0] rounded-xl border border-[#E2DAC8]">
+                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#E2DAC8]">
                       {hasProducts ? <CheckSquare size={14} className="text-[#2E7D32] flex-shrink-0" /> : <Square size={14} className="text-[#808080] flex-shrink-0" />}
                       <div>
                         <span className="font-bold text-[#1A1A1A] block truncate">Add Products</span>
@@ -260,7 +260,7 @@ function MerchantDashboardContent() {
                       </div>
                     </div>
 
-                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-[#F8F5F0] rounded-xl border border-[#E2DAC8]">
+                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#E2DAC8]">
                       {hasBank ? <CheckSquare size={14} className="text-[#2E7D32] flex-shrink-0" /> : <Square size={14} className="text-[#808080] flex-shrink-0" />}
                       <div>
                         <span className="font-bold text-[#1A1A1A] block truncate">Bank Details</span>
@@ -268,7 +268,7 @@ function MerchantDashboardContent() {
                       </div>
                     </div>
 
-                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-[#F8F5F0] rounded-xl border border-[#E2DAC8]">
+                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#E2DAC8]">
                       {hasBanner ? <CheckSquare size={14} className="text-[#2E7D32] flex-shrink-0" /> : <Square size={14} className="text-[#808080] flex-shrink-0" />}
                       <div>
                         <span className="font-bold text-[#1A1A1A] block truncate">Store Banner</span>
@@ -276,7 +276,7 @@ function MerchantDashboardContent() {
                       </div>
                     </div>
 
-                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-[#F8F5F0] rounded-xl border border-[#E2DAC8]">
+                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#E2DAC8]">
                       {isApproved ? <CheckSquare size={14} className="text-[#2E7D32] flex-shrink-0" /> : <Square size={14} className="text-[#808080] flex-shrink-0" />}
                       <div>
                         <span className="font-bold text-[#1A1A1A] block truncate">Verify Account</span>
@@ -312,10 +312,10 @@ function MerchantDashboardContent() {
                 <div
                   key={ord.id}
                   onClick={() => router.push(`/merchant/orders?id=${ord.id}`)}
-                  className="flex items-center justify-between p-2.5 rounded-2xl hover:bg-[#F8F5F0] transition-colors cursor-pointer border border-[#EFEBE3]"
+                  className="flex items-center justify-between p-2.5 rounded-2xl hover:bg-white transition-colors cursor-pointer border border-[#EFEBE3]"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#F8F5F0] flex items-center justify-center border border-[#E2DAC8] text-[#808080]">
+                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center border border-[#E2DAC8] text-[#808080]">
                       <Package size={20} />
                     </div>
                     <div>

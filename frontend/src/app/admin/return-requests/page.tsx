@@ -131,7 +131,7 @@ function ReturnRequestsContent() {
               placeholder="Search disputes..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
             />
           </div>
         </div>
@@ -160,7 +160,7 @@ function ReturnRequestsContent() {
                   <tr><td colSpan={7} className="py-8 text-center text-[#808080]">No return requests found.</td></tr>
                 ) : (
                   displayList.map((item) => (
-                    <tr key={item.id} className="hover:bg-[#F8F5F0]/60 transition-colors">
+                    <tr key={item.id} className="hover:bg-white/60 transition-colors">
                       <td className="py-3.5 px-3 font-extrabold text-[#1A1A1A]">{item.order_number}</td>
                       <td className="py-3.5 px-3 font-semibold text-[#1A1A1A]">{item.customer_name}</td>
                       <td className="py-3.5 px-3 text-[#666666] font-bold">{item.store_name}</td>
@@ -210,14 +210,14 @@ function ReturnRequestsContent() {
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-[#F8F5F0] disabled:opacity-50 transition-colors"
+              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={page >= totalPages}
-              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-[#F8F5F0] disabled:opacity-50 transition-colors"
+              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
             >
               <ChevronRight size={16} />
             </button>

@@ -39,7 +39,7 @@ export default function PaymentHistoryPage() {
 
   if (authLoading || isLoading) {
     return (
-      <div className="h-96 flex items-center justify-center bg-[#F8F5F0]">
+      <div className="h-96 flex items-center justify-center bg-white">
         <Loader2 className="animate-spin text-[#0D0D0D]" size={32} />
       </div>
     );
@@ -71,7 +71,7 @@ export default function PaymentHistoryPage() {
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-4 md:py-6">
         {payments.length === 0 ? (
           <div className="bg-white border border-[#E2DAC8] rounded-3xl p-12 text-center shadow-xs space-y-4 max-w-lg mx-auto my-8">
-            <div className="w-16 h-16 bg-[#F8F5F0] rounded-full flex items-center justify-center mx-auto text-[#808080]">
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto text-[#808080]">
               <CreditCard size={28} />
             </div>
             <h2 className="font-cormorant text-2xl font-bold text-[#1A1A1A]">No Transactions Found</h2>
@@ -126,7 +126,7 @@ export default function PaymentHistoryPage() {
             <div className="hidden md:block bg-white border border-[#E2DAC8] rounded-2xl overflow-hidden shadow-xs">
               <table className="w-full text-left border-collapse font-garamond">
                 <thead>
-                  <tr className="bg-[#F8F5F0] border-b border-[#E2DAC8] text-xs font-bold text-[#1A1A1A]">
+                  <tr className="bg-white border-b border-[#E2DAC8] text-xs font-bold text-[#1A1A1A]">
                     <th className="py-3.5 px-4">Order Ref</th>
                     <th className="py-3.5 px-4">Date</th>
                     <th className="py-3.5 px-4">Payment Method</th>
@@ -139,7 +139,7 @@ export default function PaymentHistoryPage() {
                     const paymentStatus = p.payment_status || "paid";
                     const isPaid = paymentStatus === "paid";
                     return (
-                      <tr key={p.id} className="hover:bg-[#F8F5F0] transition-colors">
+                      <tr key={p.id} className="hover:bg-white transition-colors">
                         <td className="py-3.5 px-4 font-bold text-[#1A1A1A]">
                           <Link href={`/customer/orders/${p.id}`} className="hover:text-[#0D0D0D] flex items-center gap-1">
                             #{p.order_number} <ExternalLink size={11} className="text-[#808080]" />

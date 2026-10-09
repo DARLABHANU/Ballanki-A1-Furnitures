@@ -107,10 +107,10 @@ export default function CustomerSupportPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F5F0] text-[#1A1A1A] font-garamond">
+    <div className="min-h-screen bg-white text-[#1A1A1A] font-garamond">
 
       {/* ── Mobile Top Bar ── */}
-      <div className="md:hidden sticky top-0 z-40 bg-[#F8F5F0] border-b border-[#E2DAC8] shadow-xs">
+      <div className="md:hidden sticky top-0 z-40 bg-white border-b border-[#E2DAC8] shadow-xs">
         <div className="flex items-center justify-between px-4 py-3.5">
           <button
             onClick={() => router.back()}
@@ -186,7 +186,7 @@ export default function CustomerSupportPage() {
                   placeholder="Summarize your issue..."
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 />
               </div>
 
@@ -198,7 +198,7 @@ export default function CustomerSupportPage() {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                    className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   >
                     <option value="general_inquiry">General Inquiry</option>
                     <option value="order_help">Order Help</option>
@@ -214,7 +214,7 @@ export default function CustomerSupportPage() {
                   <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value)}
-                    className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                    className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   >
                     <option value="low">Low Priority</option>
                     <option value="medium">Medium Priority</option>
@@ -230,7 +230,7 @@ export default function CustomerSupportPage() {
                 <select
                   value={selectedOrderId}
                   onChange={(e) => setSelectedOrderId(e.target.value)}
-                  className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 >
                   <option value="">-- No Linked Order --</option>
                   {orders.map((order) => (
@@ -251,7 +251,7 @@ export default function CustomerSupportPage() {
                   placeholder="Provide all relevant details..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl p-3 text-xs font-garamond text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
+                  className="w-full bg-white border border-[#E2DAC8] rounded-xl p-3 text-xs font-garamond text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
                 />
               </div>
 
@@ -270,7 +270,7 @@ export default function CustomerSupportPage() {
           <div className="space-y-4">
             {tickets.length === 0 ? (
               <div className="bg-white border border-[#E2DAC8] rounded-3xl p-12 text-center shadow-xs space-y-4 max-w-lg mx-auto my-8">
-                <div className="w-16 h-16 bg-[#F8F5F0] rounded-full flex items-center justify-center mx-auto text-[#808080]">
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto text-[#808080]">
                   <HelpCircle size={28} />
                 </div>
                 <h2 className="font-cormorant text-2xl font-bold text-[#1A1A1A]">No Support Requests</h2>
@@ -300,7 +300,7 @@ export default function CustomerSupportPage() {
                           <span className="font-garamond text-xs font-bold text-[#0D0D0D]">
                             TICKET #{t.id}
                           </span>
-                          <span className="text-[10px] text-[#666666] font-bold bg-[#F8F5F0] border border-[#E2DAC8] px-2 py-0.5 rounded-md">
+                          <span className="text-[10px] text-[#666666] font-bold bg-white border border-[#E2DAC8] px-2 py-0.5 rounded-md">
                             {categoryLabels[t.category] || t.category}
                           </span>
                           <span className={`text-[10px] font-bold uppercase px-2 py-0.5 border rounded-md ${getStatusBadge(t.status)}`}>

@@ -161,13 +161,13 @@ function ProductsContent() {
               placeholder="Search products..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
             />
           </div>
 
           {/* Category Filter + Add Product Button */}
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full lg:w-auto justify-start lg:justify-end">
-            <div className="relative border border-[#E2DAC8] rounded-xl px-3 py-2 bg-[#F8F5F0]">
+            <div className="relative border border-[#E2DAC8] rounded-xl px-3 py-2 bg-white">
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
@@ -213,7 +213,7 @@ function ProductsContent() {
               </thead>
               <tbody className="divide-y divide-[#EFEBE3]">
                 {displayList.map((item) => (
-                  <tr key={item.id} className="hover:bg-[#F8F5F0]/60 transition-colors">
+                  <tr key={item.id} className="hover:bg-white/60 transition-colors">
 
                     {/* Image & Product Name */}
                     <td className="py-3 px-3">
@@ -309,14 +309,14 @@ function ProductsContent() {
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-[#F8F5F0] disabled:opacity-50 transition-colors"
+              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={page >= totalPages}
-              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-[#F8F5F0] disabled:opacity-50 transition-colors"
+              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
             >
               <ChevronRight size={16} />
             </button>

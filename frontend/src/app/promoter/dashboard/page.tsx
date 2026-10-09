@@ -224,7 +224,7 @@ export default function PromoterDashboardPage() {
         ) : (
           <div className="grid md:grid-cols-2 gap-4">
             {coupons.map((c) => (
-              <div key={c.id} className="p-4 border border-[#E2DAC8] bg-[#F8F5F0] rounded-2xl space-y-4 flex flex-col justify-between">
+              <div key={c.id} className="p-4 border border-[#E2DAC8] bg-white rounded-2xl space-y-4 flex flex-col justify-between">
                 <div>
                   <div className="flex justify-between items-start">
                     <span className="font-bold text-xs bg-[#0D0D0D] text-white px-2.5 py-1 rounded-lg tracking-wider">
@@ -276,7 +276,7 @@ export default function PromoterDashboardPage() {
               </thead>
               <tbody className="divide-y divide-[#EFEBE3]">
                 {commissions.map((c) => (
-                  <tr key={c.id} className="hover:bg-[#F8F5F0]/60 transition-colors">
+                  <tr key={c.id} className="hover:bg-white/60 transition-colors">
                     <td className="py-3 px-3 text-[#808080] font-bold">#{c.id}</td>
                     <td className="py-3 px-3 font-bold text-[#1A1A1A]">Order #{c.order_id}</td>
                     <td className="py-3 px-3 font-extrabold text-[#2E7D32]">{formatPrice(c.amount)}</td>
@@ -311,7 +311,7 @@ export default function PromoterDashboardPage() {
               type="button"
               onClick={() => setPayoutMode("upi")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                payoutMode === "upi" ? "bg-[#0D0D0D] text-white" : "border border-[#E2DAC8] text-[#666666] hover:bg-[#F8F5F0]"
+                payoutMode === "upi" ? "bg-[#0D0D0D] text-white" : "border border-[#E2DAC8] text-[#666666] hover:bg-white"
               }`}
             >
               UPI Payout
@@ -320,7 +320,7 @@ export default function PromoterDashboardPage() {
               type="button"
               onClick={() => setPayoutMode("bank")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                payoutMode === "bank" ? "bg-[#0D0D0D] text-white" : "border border-[#E2DAC8] text-[#666666] hover:bg-[#F8F5F0]"
+                payoutMode === "bank" ? "bg-[#0D0D0D] text-white" : "border border-[#E2DAC8] text-[#666666] hover:bg-white"
               }`}
             >
               Bank Account
@@ -335,7 +335,7 @@ export default function PromoterDashboardPage() {
                 value={payoutUpiId}
                 onChange={(e) => setPayoutUpiId(e.target.value)}
                 placeholder="e.g. promotername@okaxis"
-                className="w-full max-w-md bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full max-w-md bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required={payoutMode === "upi"}
               />
             </div>
@@ -348,7 +348,7 @@ export default function PromoterDashboardPage() {
                   value={payoutBankName}
                   onChange={(e) => setPayoutBankName(e.target.value)}
                   placeholder="e.g. State Bank of India"
-                  className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   required={payoutMode === "bank"}
                 />
               </div>
@@ -359,7 +359,7 @@ export default function PromoterDashboardPage() {
                   value={payoutAccountHolderName}
                   onChange={(e) => setPayoutAccountHolderName(e.target.value)}
                   placeholder="e.g. John Doe"
-                  className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   required={payoutMode === "bank"}
                 />
               </div>
@@ -370,7 +370,7 @@ export default function PromoterDashboardPage() {
                   value={payoutAccountNumber}
                   onChange={(e) => setPayoutAccountNumber(e.target.value)}
                   placeholder="Bank account number"
-                  className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   required={payoutMode === "bank"}
                 />
               </div>
@@ -381,7 +381,7 @@ export default function PromoterDashboardPage() {
                   value={payoutIfscCode}
                   onChange={(e) => setPayoutIfscCode(e.target.value)}
                   placeholder="e.g. SBIN0001234"
-                  className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   required={payoutMode === "bank"}
                 />
               </div>

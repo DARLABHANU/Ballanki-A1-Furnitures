@@ -17,7 +17,7 @@ async function notifyUser(userId,title,message,link,key) {
 async function orderEmail(order,event) {
  try {
   const customer=order.customer?._id||order.customer;
-  const text='Order '+order.order_number+'\nStatus: '+order.status.replaceAll('_',' ')+'\nTotal: INR '+Number(order.total_amount).toFixed(2)+'\nPayment: '+order.payment_status+(order.tracking_number?'\nTracking: '+order.tracking_number:'')+(order.items?.length?'\n\nItems:\n'+order.items.map(item=>item.product_name+' × '+item.quantity).join('\n'):'');
+  const text='Order '+order.order_number+'\nStatus: '+order.status.replaceAll('_',' ')+'\nTotal: INR '+Number(order.total_amount).toFixed(2)+(order.amount_due_now!=null?'\nInitial payment required: INR '+order.amount_due_now+'\nPre-book advance (20%): INR '+order.advance_amount+'\nBalance after initial payment: INR '+order.balance_amount:'')+'\nPayment: '+order.payment_status+(order.tracking_number?'\nTracking: '+order.tracking_number:'')+(order.items?.length?'\n\nItems:\n'+order.items.map(item=>item.product_name+' × '+item.quantity).join('\n'):'');
   await notifyUser(customer,'Order '+event,text,'/customer/orders/'+order._id,'order-'+order._id+'-'+event+'-customer');
   const admins=await User.find({role:'admin',is_active:true,is_verified:true});
   for(const admin of admins) await notifyUser(admin._id,event==='placed'?'New order':'Order '+event,text,'/admin/orders/'+order._id,'order-'+order._id+'-'+event+'-'+admin._id);

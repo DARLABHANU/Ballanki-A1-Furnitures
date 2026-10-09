@@ -58,7 +58,7 @@ export default function ProductCard({ product }: Props) {
     <div className="bg-white border border-wood-200 rounded-lg p-4 flex flex-col justify-between h-full hover:shadow-xl transition-all duration-300 group font-inter text-wood-900 relative overflow-hidden">
       <Link href={`/customer/products/${product.id}`} className="flex-1 flex flex-col">
         {/* Product Image */}
-        <div className="relative aspect-[4/3] sm:aspect-square overflow-hidden bg-wood-50 mb-4 rounded-xl border border-wood-100">
+        <div className="relative aspect-[4/3] sm:aspect-square overflow-hidden bg-white mb-4 rounded-xl border border-wood-100">
           <img
             src={getProductImage(product.images)}
             alt={product.name}
@@ -140,7 +140,7 @@ export default function ProductCard({ product }: Props) {
 
           {/* Estimate Display */}
           {isMadeToOrder && (product.manufacturing_duration_days ?? 0) > 0 && (
-            <div className="bg-wood-50 rounded p-2 mt-auto mb-2 text-xs text-wood-700 space-y-1 border border-wood-100">
+            <div className="bg-white rounded p-2 mt-auto mb-2 text-xs text-wood-700 space-y-1 border border-wood-100">
               <div className="flex items-center gap-1.5 font-medium">
                 <Clock size={12} className="text-wood-500" />
                 <span>Est. Making time: {product.manufacturing_duration_days} days</span>
@@ -169,7 +169,7 @@ export default function ProductCard({ product }: Props) {
 
         <button
           onClick={handleNegotiateClick}
-          className="px-3 bg-white border border-wood-300 hover:border-wood-900 hover:bg-wood-50 text-wood-900 rounded flex items-center justify-center transition-all"
+          className="px-3 bg-white border border-wood-300 hover:border-wood-900 hover:bg-white text-wood-900 rounded flex items-center justify-center transition-all"
           title="Negotiate Price"
         >
           <MessageCircle size={15} />

@@ -128,7 +128,7 @@ export default function MerchantOrderDetailPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.back()}
-            className="w-8 h-8 rounded-full border border-[#E2DAC8] bg-white flex items-center justify-center text-[#1A1A1A] hover:bg-[#F8F5F0] transition-colors"
+            className="w-8 h-8 rounded-full border border-[#E2DAC8] bg-white flex items-center justify-center text-[#1A1A1A] hover:bg-white transition-colors"
           >
             <ArrowLeft size={16} />
           </button>
@@ -152,7 +152,7 @@ export default function MerchantOrderDetailPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.back()}
-            className="w-8 h-8 rounded-full border border-[#E2DAC8] bg-white flex items-center justify-center text-[#1A1A1A] hover:bg-[#F8F5F0] transition-colors"
+            className="w-8 h-8 rounded-full border border-[#E2DAC8] bg-white flex items-center justify-center text-[#1A1A1A] hover:bg-white transition-colors"
           >
             <ArrowLeft size={16} />
           </button>
@@ -172,7 +172,7 @@ export default function MerchantOrderDetailPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => window.print()}
-            className="inline-flex items-center gap-1.5 bg-white border border-[#E2DAC8] hover:bg-[#F8F5F0] text-[#1A1A1A] px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
+            className="inline-flex items-center gap-1.5 bg-white border border-[#E2DAC8] hover:bg-white text-[#1A1A1A] px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
           >
             <Printer size={14} />
             <span>Print Invoice</span>
@@ -202,7 +202,7 @@ export default function MerchantOrderDetailPage() {
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                    className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                     required
                   >
                     {ORDER_STATUS_OPTIONS.map((opt) => (
@@ -221,7 +221,7 @@ export default function MerchantOrderDetailPage() {
                     value={trackingNumber}
                     onChange={(e) => setTrackingNumber(e.target.value)}
                     placeholder="e.g. BLUEDART987654321"
-                    className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                    className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   />
                 </div>
 
@@ -235,7 +235,7 @@ export default function MerchantOrderDetailPage() {
                   value={currentLocation}
                   onChange={(e) => setCurrentLocation(e.target.value)}
                   placeholder="e.g. BlueDart Express - Dispatched from Guntur Sorting Hub"
-                  className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 />
               </div>
 
@@ -247,7 +247,7 @@ export default function MerchantOrderDetailPage() {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="e.g. Package handed over to BlueDart courier agent. Estimated delivery in 2 business days."
-                  className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-xl p-3 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#E2DAC8] rounded-xl p-3 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 />
               </div>
 
@@ -282,7 +282,7 @@ export default function MerchantOrderDetailPage() {
                     <img
                       src={item.product_image || (item.product?.images?.[0]) || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=200&auto=format&fit=crop"}
                       alt={item.product_name || "Product"}
-                      className="w-14 h-14 rounded-xl object-cover border border-[#E2DAC8] bg-[#F8F5F0]"
+                      className="w-14 h-14 rounded-xl object-cover border border-[#E2DAC8] bg-white"
                     />
                     <div>
                       <h4 className="font-bold text-xs text-[#1A1A1A] line-clamp-1">{item.product_name || item.product?.name || "Furniture Assembly"}</h4>

@@ -67,7 +67,7 @@ export default function CustomerDashboard() {
             className="bg-white border border-[#E2DAC8] rounded-3xl p-5 shadow-xs flex items-center justify-between hover:border-[#0D0D0D] transition-all group"
           >
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-[#F8F5F0] border border-[#E2DAC8] rounded-2xl flex items-center justify-center text-[#0D0D0D]">
+              <div className="w-10 h-10 bg-white border border-[#E2DAC8] rounded-2xl flex items-center justify-center text-[#0D0D0D]">
                 <Icon size={20} />
               </div>
               <div>
@@ -107,7 +107,7 @@ export default function CustomerDashboard() {
               </thead>
               <tbody className="divide-y divide-[#EFEBE3]">
                 {recentOrders.map((order) => (
-                  <tr key={order.id} className="hover:bg-[#F8F5F0]/60 transition-colors">
+                  <tr key={order.id} className="hover:bg-white/60 transition-colors">
                     <td className="py-3 px-3 font-mono font-bold text-[#1A1A1A]">#{order.order_number}</td>
                     <td className="py-3 px-3 text-[#808080]">{formatDate(order.created_at)}</td>
                     <td className="py-3 px-3">

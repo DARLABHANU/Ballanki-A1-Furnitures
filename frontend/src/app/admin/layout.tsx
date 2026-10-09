@@ -153,7 +153,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   );
 
   return (
-    <div className="dashboard-shell min-h-dvh bg-[#F4F6F4] text-wood-900 font-garamond flex flex-col lg:flex-row">
+    <div className="dashboard-shell min-h-dvh bg-white text-wood-900 font-garamond flex flex-col lg:flex-row">
 
       {/* Desktop Sidebar */}
       <aside className="hidden lg:block w-60 flex-shrink-0 min-h-screen border-r border-wood-950 bg-wood-900">
@@ -186,7 +186,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <input
                 type="text"
                 placeholder="Search anything..."
-                className="w-full bg-[#F8F5F0] border border-[#E2DAC8] rounded-full pl-9 pr-4 py-1.5 text-xs font-garamond text-wood-900 placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-1.5 text-xs font-garamond text-wood-900 placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
               />
             </div>
           </div>

@@ -58,7 +58,7 @@ function OrdersContent() {
   }, [statusFilter, searchParams]);
 
   return (
-    <div className="space-y-6 text-wood-900 font-inter bg-wood-50 min-h-[85vh]">
+    <div className="space-y-6 text-wood-900 font-inter bg-white min-h-[85vh]">
 
       {showSuccess && (
         <div className="max-w-4xl mx-auto px-6 pt-6">
@@ -104,7 +104,7 @@ function OrdersContent() {
           </div>
         ) : data.length === 0 ? (
           <div className="bg-white border border-wood-200 rounded-2xl p-12 text-center shadow-sm space-y-4 max-w-lg mx-auto my-8">
-            <div className="w-20 h-20 bg-wood-50 rounded-full flex items-center justify-center mx-auto text-wood-400">
+            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto text-wood-400">
               <Package size={32} />
             </div>
             <h2 className="font-playfair text-2xl font-bold text-wood-900">No Reservations Found</h2>
@@ -150,7 +150,7 @@ function OrdersContent() {
                       {formatPrice(order.total_amount)}
                     </span>
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-wood-50 flex items-center justify-center text-wood-500 group-hover:bg-wood-900 group-hover:text-white transition-colors cursor-pointer shadow-sm">
+                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-wood-500 group-hover:bg-wood-900 group-hover:text-white transition-colors cursor-pointer shadow-sm">
                     <ChevronRight size={18} />
                   </div>
                 </div>
