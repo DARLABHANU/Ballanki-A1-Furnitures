@@ -51,7 +51,7 @@ for(const key of ['settings','website-settings']){
 }
 router.get('/return-requests',wrap(async(req,res)=>res.json(page((await ReturnRequest.find().populate('order_id').sort({createdAt:-1})).map(r=>({...plain(r),order:r.order_id?orderView(r.order_id):null})),req.query))));
 router.patch('/return-requests/:id/approval',wrap(async(req,res)=>{if(!['approved','rejected'].includes(req.body.status))fail(400,'Invalid return decision');const r=await ReturnRequest.findOneAndUpdate({_id:id(req.params.id),status:'pending'},{$set:pick(req.body,['status','admin_notes'])},{new:true});if(!r)fail(409,'Return is missing or already processed');res.json(plain(r));}));
-router.post('/return-requests/:id/complete',(req,res)=>res.status(409).json({error:'Automated refunds are not enabled. Contact the store owner to process any collected payment through the PhonePe dashboard.'}));
+router.post('/return-requests/:id/complete',(req,res)=>res.status(409).json({error:'Automated refunds are not enabled. Contact the store owner to process any collected payment through the Razorpay dashboard.'}));
 router.delete('/return-requests/:id',(req,res)=>res.status(409).json({error:'Return records are retained for audit. Approve or reject the request instead.'}));
 // Local orders are unpaid, so they never create earned commissions or settlements.
 for(const resource of ['commissions','withdrawals','settlements']){

@@ -1,0 +1,5 @@
+{
+  "to": "daarlabhanumurthy@gmail.com",
+  "subject": "Order payment received — Ballanki A1 Furnitures",
+  "text": "Order BA-1792314688189-E14F8C\nStatus: confirmed\nTotal: INR 1515.00\nInitial payment required: INR 1503\nPre-book advance (20%): INR 3\nBalance after initial payment: INR 12\nPayment: partially_paid\n\nItems:\ntest 1 × 1\n\nOpen your account: http://localhost:3000/customer/orders/6ad48d406d4abe883c86872a\n\nSign in to view details and reply. Replies to negotiation emails do not appear in the website chat."
+}

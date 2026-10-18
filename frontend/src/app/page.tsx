@@ -1,221 +1,112 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Navbar from "@/components/layout/Navbar";
-import HomeDiscovery from "@/components/home/HomeDiscovery";
-import { productApi, api } from "@/lib/api";
-import Footer from "@/components/layout/Footer";
-import {
-  Heart, ShieldCheck, Truck, RefreshCw, Headphones
-} from "lucide-react";
-import { useWishlistStore } from "@/store/wishlistStore";
-import { useCartStore } from "@/store/cartStore";
-import { useAuthStore } from "@/store/authStore";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { Armchair, ArrowRight, BedDouble, BookOpen, ChevronDown, ChevronLeft, ChevronRight, Heart, Home, LayoutGrid, Loader2, MapPin, Menu, MessageCircle, Package, Search, ShoppingBag, Sofa, Table2, Tv, User, Warehouse, X } from "lucide-react";
 import toast from "react-hot-toast";
+import { productApi } from "@/lib/api";
 import { Product } from "@/types";
-import { getProductImage } from "@/lib/utils";
+import { formatPrice, getApiError, getProductImage } from "@/lib/utils";
+import { useAuthStore } from "@/store/authStore";
+import { useCartStore } from "@/store/cartStore";
+import { useWishlistStore } from "@/store/wishlistStore";
+import { useDeliveryLocationStore } from "@/store/deliveryLocationStore";
+import DeliveryLocationModal from "@/components/customer/DeliveryLocationModal";
+import NotificationBell from "@/components/NotificationBell";
 
-export default function HomePage() {
-  const { isAuthenticated } = useAuthStore();
-  const { wishlistIds, toggleWishlist } = useWishlistStore();
-  const { addItem } = useCartStore();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
-  const [newsletterEmail, setNewsletterEmail] = useState("");
-  useEffect(() => {
-    setIsLoadingProducts(true);
-    productApi.list({ limit: 4 })
-      .then((res: any) => {
-        setProducts(res.data.items || res.data.data || res.data || []);
-      })
-      .catch((err: any) => {
-        console.error("Failed to load products", err);
-      })
-      .finally(() => {
-        setIsLoadingProducts(false);
-      });
-  }, []);
+const categories = [
+  {name:"All furniture",slug:"",icon:LayoutGrid,color:"#e5efff"},
+  {name:"Sofas",slug:"sofa",icon:Sofa,color:"#e9e2d7"},
+  {name:"Chairs",slug:"chair",icon:Armchair,color:"#f7e9d0"},
+  {name:"Dining",slug:"dining",icon:Table2,color:"#e2ecd8"},
+  {name:"Beds",slug:"bed",icon:BedDouble,color:"#e5e4f5"},
+  {name:"Cupboards",slug:"cupboard",icon:Warehouse,color:"#f3dfd8"},
+  {name:"Tables",slug:"table",icon:Table2,color:"#dcecee"},
+  {name:"Wardrobes",slug:"wardrobe",icon:Warehouse,color:"#eee7d8"},
+  {name:"TV units",slug:"tv",icon:Tv,color:"#e4e9f1"},
+  {name:"Storage",slug:"storage",icon:Warehouse,color:"#dfece4"},
+  {name:"Office",slug:"office",icon:Armchair,color:"#e8e1f2"},
+  {name:"Recliners",slug:"recliner",icon:Sofa,color:"#f2e4db"},
+  {name:"Shoe racks",slug:"shoe",icon:Warehouse,color:"#e7eddb"},
+  {name:"Bookshelves",slug:"bookshelf",icon:BookOpen,color:"#f5e9ca"},
+  {name:"Study desks",slug:"desk",icon:Table2,color:"#e0ecf7"},
+  {name:"Dressing tables",slug:"dressing",icon:Table2,color:"#f1e2ed"},
+  {name:"Mattresses",slug:"mattress",icon:BedDouble,color:"#e5ebf0"},
+  {name:"Outdoor",slug:"outdoor",icon:Home,color:"#dfe9dc"},
+  {name:"Kids furniture",slug:"kids",icon:BedDouble,color:"#f5e1d0"},
+];
+const PAGE_SIZE=24;
 
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newsletterEmail.trim()) return;
-    try { await api.post("/newsletter", { email: newsletterEmail }); toast.success("Subscription saved"); setNewsletterEmail(""); } catch (err: any) { toast.error(err.response?.data?.error || "Subscription could not be saved"); }
-  };
+export default function HomePage(){
+  const router=useRouter();
+  const {isAuthenticated,role}=useAuthStore();
+  const {cart,fetchCart}=useCartStore();
+  const {wishlistIds,toggleWishlist,fetchWishlist}=useWishlistStore();
+  const {location,openModal}=useDeliveryLocationStore();
+  const [query,setQuery]=useState("");
+  const [menuOpen,setMenuOpen]=useState(false);
+  const [products,setProducts]=useState<Product[]>([]);
+  const [loading,setLoading]=useState(true);
+  const [error,setError]=useState("");
+  const [page,setPage]=useState(1);
+  const [hasMore,setHasMore]=useState(false);
+  const [saving,setSaving]=useState<string|number|null>(null);
+  const categoryRail=useRef<HTMLDivElement>(null);
+  const menuRef=useRef<HTMLDivElement>(null);
+  const mounted=useRef(false);
+  const fetchPage=useCallback(async(nextPage:number)=>{
+    setLoading(true);setError("");
+    try{const {data}=await productApi.list({page:nextPage,page_size:PAGE_SIZE,sort_by:"created_at",sort_order:"desc"});if(!mounted.current)return;const rows:Product[]=data.items||[];setProducts(previous=>nextPage===1?rows:[...previous,...rows.filter(row=>!previous.some(p=>String(p.id)===String(row.id)))]);setPage(nextPage);setHasMore(nextPage<(data.pages||1));}
+    catch(e){if(mounted.current)setError(getApiError(e));}
+    finally{if(mounted.current)setLoading(false);}
+  },[]);
+  useEffect(()=>{mounted.current=true;void fetchPage(1);const coupon=new URLSearchParams(window.location.search).get("coupon");if(coupon)Cookies.set("affiliate_coupon",coupon,{expires:7,sameSite:"Lax"});return()=>{mounted.current=false;};},[fetchPage]);
+  useEffect(()=>{if(isAuthenticated){void fetchCart();void fetchWishlist();}},[isAuthenticated,fetchCart,fetchWishlist]);
+  useEffect(()=>{if(!menuOpen)return;const outside=(e:PointerEvent)=>{if(!menuRef.current?.contains(e.target as Node))setMenuOpen(false);};const escape=(e:KeyboardEvent)=>{if(e.key==="Escape")setMenuOpen(false);};document.addEventListener("pointerdown",outside);document.addEventListener("keydown",escape);return()=>{document.removeEventListener("pointerdown",outside);document.removeEventListener("keydown",escape);};},[menuOpen]);
+  const account= !isAuthenticated?"/auth/login":role==="admin"?"/admin/dashboard":"/customer/profile";
+  const search=(event:React.FormEvent)=>{event.preventDefault();router.push(query.trim()?`/customer/products?search=${encodeURIComponent(query.trim())}`:"/customer/products");};
+  const wishlist=async(product:Product)=>{if(!isAuthenticated){toast.error("Sign in to save furniture");return;}if(saving!==null)return;setSaving(product.id);try{const added=await toggleWishlist(product.id);toast.success(added?"Saved to wishlist":"Removed from wishlist");}catch(e){toast.error(getApiError(e));}finally{setSaving(null);}};
+  const scrollCategories=(direction:number)=>{const rail=categoryRail.current;if(rail)rail.scrollBy({left:direction*rail.clientWidth*0.8,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});};
 
-  const displayProducts = products.map((p) => {
-    const origPrice = (p as any).compare_price || (p as any).original_price;
-    const discVal = origPrice && origPrice > p.price ? Math.round(((origPrice - p.price) / origPrice) * 100) : 0;
-    return {
-      id: p.id,
-      name: p.name,
-      rating: p.rating_avg || null,
-      reviews: p.rating_count || null,
-      price: p.price,
-      originalPrice: origPrice && origPrice > p.price ? origPrice : null,
-      discount: discVal > 0 ? `${discVal}% OFF` : null,
-      img: getProductImage(p.images),
-    };
-  });
-
-  return (
-    <div className="storefront-home min-h-screen bg-[#faf8f3] text-[#203b31] font-inter flex flex-col">
-      <Navbar discovery />
-
-      <main className="flex-1 w-full pb-8">
-        <HomeDiscovery products={products} loading={isLoadingProducts} />
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 py-10 space-y-14">
-
-          {/* ==============================================================================
-              FEATURED PRODUCTS
-          ============================================================================== */}
-          <section className="space-y-10">
-            <div className="flex items-end justify-between gap-4">
-              <div className="space-y-2 text-left">
-                <span className="font-outfit text-xs font-bold tracking-[0.2em] uppercase text-wood-500">The collection</span>
-                <h2 className="font-playfair text-2xl md:text-4xl font-bold text-[#203b31]">Fresh finds for your home</h2>
-              </div>
-              <Link href="/customer/products" className="font-outfit text-sm font-bold text-[#62755c] hover:text-[#203b31] transition-colors uppercase tracking-widest border-b border-wood-300 pb-1">
-                View All
-              </Link>
-            </div>
-
-            {isLoadingProducts && <p role="status" className="text-sm text-slate-500">Loading the collection…</p>}
-            {!isLoadingProducts && !displayProducts.length && <div className="rounded-2xl border border-[#e0e4d9] bg-white p-8 text-center"><p className="text-sm text-slate-600">The collection is unavailable right now. Please try again shortly.</p><Link href="/customer/products" className="mt-3 inline-block text-sm underline">Browse furniture</Link></div>}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-              {displayProducts.map((item) => {
-                const isWished = wishlistIds.includes(item.id);
-                return (
-                  <Link
-                    href={`/customer/products/${item.id}`}
-                    key={item.id}
-                    className="group"
-                  >
-                    <div className="relative aspect-[4/5] bg-white rounded-xl overflow-hidden mb-4 border border-wood-200 group-hover:border-wood-400 transition-colors duration-300">
-                      {/* Discount Badge */}
-                      {item.discount && (
-                        <div className="absolute top-3 left-3 bg-wood-800 text-white font-outfit text-[9px] font-bold px-2.5 py-1 rounded-sm uppercase tracking-widest z-10 shadow-sm">
-                          {item.discount}
-                        </div>
-                      )}
-
-                      {/* Wishlist Button */}
-                      <button
-                        onClick={async (e) => {
-                          e.preventDefault();
-                          if (!isAuthenticated) { toast.error("Please sign in to save to wishlist"); return; }
-                          const added = await toggleWishlist(item.id);
-                          toast.success(added ? "Added to wishlist" : "Removed from wishlist");
-                        }}
-                        aria-label={isWished ? `Remove ${item.name} from wishlist` : `Save ${item.name} to wishlist`}
-                        className="absolute top-3 right-3 w-8 h-8 bg-white/70 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-white border border-wood-200 shadow-sm z-10 transition-transform opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:-translate-y-2 lg:group-hover:translate-y-0 duration-300"
-                      >
-                        <Heart size={14} className={isWished ? "fill-wood-600 text-[#62755c]" : "text-[#203b31]"} />
-                      </button>
-
-                      {/* Add to Cart Overlay Button */}
-                      <button
-                        onClick={async (e) => {
-                          e.preventDefault();
-                          await addItem(item.id, 1);
-                          toast.success("Added to cart");
-                        }}
-                        className="absolute bottom-4 left-4 right-4 bg-[#203f34] text-white font-outfit text-xs font-bold py-3 rounded-lg opacity-100 translate-y-0 lg:opacity-0 lg:translate-y-4 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all duration-300 shadow-xl z-10 hover:bg-[#315b49]"
-                      >
-                        + Add To Cart
-                      </button>
-
-                      <img
-                        src={item.img}
-                        alt={item.name}
-                        className="w-full h-full object-contain p-4 transition-transform duration-700 group-hover:scale-105"
-                      />
-                    </div>
-
-                    <div className="text-center space-y-1.5 px-2">
-                      <h3 className="font-playfair text-base font-bold text-[#203b31] decoration-1 underline-offset-4 group-hover:underline">
-                        {item.name}
-                      </h3>
-                      <div className="flex items-center justify-center gap-2">
-                        <span className="font-inter text-sm font-semibold text-[#203b31]">
-                          ₹{item.price.toLocaleString("en-IN")}
-                        </span>
-                        {item.originalPrice && (
-                          <span className="font-inter text-[11px] text-wood-400 line-through">
-                            ₹{item.originalPrice.toLocaleString("en-IN")}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </section>
-
-          {/* ==============================================================================
-              AESTHETIC BANNER / BRAND STORY (Warm Wood Theme)
-          ============================================================================== */}
-          <section className="bg-[#e9eddf] text-[#203b31] border border-[#dde3d2] rounded-[2rem] p-8 md:p-16 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-12 shadow-md">
-            <div className="absolute top-0 right-0 w-1/2 h-full overflow-hidden opacity-10 pointer-events-none">
-              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full transform scale-150 -translate-y-12">
-                <path fill="#C4B299" d="M47.7,-67.2C59.9,-59.4,67,-44,72.4,-28.4C77.7,-12.8,81.4,3,76.5,16.4C71.6,29.8,58.2,40.8,44.9,50C31.5,59.3,18.3,66.8,3.2,62.3C-11.9,57.7,-25.1,41.1,-38.7,30.3C-52.2,19.5,-66,14.6,-71.2,5C-76.3,-4.5,-72.8,-18.8,-63.9,-29.4C-55,-40,-40.7,-46.9,-27.6,-54.3C-14.6,-61.7,-2.8,-69.5,10.2,-73.6C23.2,-77.7,35.5,-75,47.7,-67.2Z" transform="translate(100 100)" />
-              </svg>
-            </div>
-
-            <div className="w-full md:w-1/2 space-y-6 relative z-10">
-              <span className="font-outfit text-xs font-bold tracking-[0.2em] uppercase text-wood-700">A home that feels like you</span>
-              <h2 className="font-playfair text-4xl md:text-5xl font-bold leading-tight text-[#203b31]">
-                Bring your space <br />
-                <span className="italic font-normal text-slate-700">to life.</span>
-              </h2>
-              <p className="font-outfit text-sm text-slate-600 leading-loose max-w-md">
-                Start with a piece you love. Browse our furniture, check the details and talk to our team when you need a little help deciding.
-              </p>
-              <div className="pt-4">
-                <h4 className="font-playfair text-2xl italic text-wood-700">B. A1 Furnitures.</h4>
-              </div>
-            </div>
-
-            <div className="w-full md:w-5/12 relative z-10">
-              <div className="bg-white rounded-2xl p-6 md:p-8 space-y-6 shadow-xl">
-                <div className="space-y-2">
-                  <h3 className="font-playfair text-2xl font-bold text-[#203b31]">Stay in the loop</h3>
-                  <p className="font-outfit text-xs text-[#62755c]">Get furniture updates and news from Ballanki.</p>
-                </div>
-                <form onSubmit={handleSubscribe} className="space-y-4">
-                  <input
-                    type="email"
-                    required
-                    placeholder="Email Address"
-                    value={newsletterEmail}
-                    onChange={(e) => setNewsletterEmail(e.target.value)}
-                    className="w-full bg-white border border-wood-200 px-4 py-3 text-sm font-outfit text-[#203b31] placeholder-wood-500 rounded-xl focus:outline-none focus:border-wood-500 transition-all"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full bg-[#203f34] hover:bg-[#315b49] text-white font-outfit text-xs uppercase tracking-widest font-bold py-3.5 rounded-xl transition-colors shadow-sm"
-                  >
-                    Keep me updated
-                  </button>
-                </form>
-              </div>
-            </div>
-          </section>
-
+  return <div className="marketplace-home min-h-screen bg-white font-inter text-[#123337]">
+    <header className="sticky top-0 z-50 border-b border-[#e5e9eb] bg-white">
+      <div className="mx-auto max-w-[1320px] px-3 sm:px-6 lg:px-8">
+        <div className="flex h-[66px] items-center gap-2 sm:gap-4 lg:h-20">
+          <div ref={menuRef} className="relative lg:hidden"><button type="button" aria-label={menuOpen?"Close menu":"Open menu"} aria-expanded={menuOpen} onClick={()=>setMenuOpen(v=>!v)} className="grid h-10 w-8 place-items-center">{menuOpen?<X size={21}/>:<Menu size={21}/>}</button>{menuOpen&&<nav aria-label="Shopping menu" className="absolute left-0 top-12 w-60 rounded-lg border bg-white p-2 shadow-lg">{[{href:"/customer/products",text:"Browse furniture"},{href:"/customer/orders",text:"My orders"},{href:"/customer/wishlist",text:"Wishlist"},{href:"/customer/cart",text:"Shopping cart"},{href:account,text:isAuthenticated?"My account":"Login / Sign up"},{href:"/contact",text:"Contact the store"}].map(item=><Link key={item.href} onClick={()=>setMenuOpen(false)} href={item.href} className="block rounded px-3 py-3 text-sm hover:bg-slate-50">{item.text}</Link>)}</nav>}</div>
+          <Link href="/" aria-label="Ballanki A1 Furnitures home" className="shrink-0"><img src="/logo.png" alt="Ballanki A1 Furnitures" className="h-11 w-[64px] object-contain sm:h-14 sm:w-[90px]"/></Link>
+          <button type="button" onClick={openModal} className="ml-auto flex min-w-0 max-w-[190px] items-center gap-1.5 text-left lg:ml-0 lg:max-w-[210px] lg:rounded-md lg:border lg:px-3 lg:py-3"><MapPin size={15} className="shrink-0"/><span className="truncate text-[10px] font-medium sm:text-xs">{location?`${location.city}, ${location.state}`:"Select location"}</span><ChevronDown size={14} className="shrink-0"/></button>
+          <form role="search" aria-label="Desktop furniture search" onSubmit={search} className="hidden min-w-0 flex-1 lg:flex"><input aria-label="Search furniture" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find sofas, chairs, beds and more" className="h-12 min-w-0 flex-1 rounded-l-md border-2 border-r-0 border-[#123337] bg-white px-4 text-sm outline-none focus:bg-slate-50"/><button type="submit" aria-label="Search" className="grid h-12 w-14 place-items-center rounded-r-md bg-[#123337] text-white"><Search size={23}/></button></form>
+          <div className="flex shrink-0 items-center gap-1 lg:gap-3"><NotificationBell/><Link href="/customer/wishlist" aria-label={`Wishlist, ${wishlistIds.length} items`} className="relative hidden p-2 sm:block"><Heart size={23}/>{wishlistIds.length>0&&<span className="absolute -right-1 -top-1 rounded-full bg-[#315b49] px-1.5 text-[10px] text-white">{wishlistIds.length}</span>}</Link><Link href="/customer/cart" aria-label={`Cart, ${cart.item_count||0} items`} className="relative p-1.5 lg:p-2"><ShoppingBag size={21}/>{cart.item_count>0&&<span className="absolute -right-1 -top-1 rounded-full bg-[#315b49] px-1.5 text-[10px] text-white">{cart.item_count}</span>}</Link><Link href={account} className="hidden min-h-10 items-center gap-2 whitespace-nowrap border-b-2 border-[#123337] px-1 text-sm font-semibold lg:inline-flex"><User size={18}/>{isAuthenticated?"My account":"Login / Sign up"}</Link></div>
         </div>
+        <form role="search" aria-label="Mobile furniture search" onSubmit={search} className="mb-3 flex min-w-0 items-center rounded-md border border-[#123337] lg:hidden"><Search size={19} className="ml-3 shrink-0"/><input aria-label="Search furniture" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search sofas, beds, tables…" className="h-11 min-w-0 flex-1 rounded-md bg-transparent px-2.5 text-sm outline-none"/><button type="submit" aria-label="Search" className="grid h-11 w-11 shrink-0 place-items-center"><ArrowRight size={19}/></button></form>
+      </div>
+    </header>
 
-        <section className="mx-auto grid max-w-7xl grid-cols-2 gap-5 border-t border-[#e3e5dc] px-5 py-8 md:grid-cols-4">
-          {[
-            { icon: Truck, title: "Delivery information", desc: "Check charges at checkout", href: "/shipping" },
-            { icon: RefreshCw, title: "Clear return policies", desc: "Read the details before you buy", href: "/returns" },
-            { icon: Headphones, title: "Here to help", desc: "Talk to our store team", href: "/customer/support" },
-            { icon: ShieldCheck, title: "Your orders, in one place", desc: "Follow your order progress", href: "/customer/orders" },
-          ].map(({ icon: Icon, title, desc, href }) => <Link key={title} href={href} className="flex items-start gap-3"><Icon size={21} className="shrink-0 text-[#697b58]" /><div><h3 className="font-inter text-xs font-semibold">{title}</h3><p className="mt-1 text-[10px] leading-5 text-slate-500">{desc}</p></div></Link>)}
-        </section>
-      </main>
+    <main className="mx-auto max-w-[1320px] px-3 pb-10 pt-5 sm:px-6 sm:pt-7 lg:px-8">
+      <section aria-label="Furniture categories" className="mb-6 border-b border-[#e9ecee] pb-4 sm:mb-8 sm:pb-6">
+        <div className="mb-4 flex items-center justify-between gap-3"><h1 className="font-inter text-sm font-semibold sm:text-base">Explore furniture</h1><div className="flex gap-1"><button type="button" aria-label="Previous categories" onClick={()=>scrollCategories(-1)} className="grid h-8 w-8 place-items-center rounded-full border border-[#e2e7e8] hover:bg-slate-50"><ChevronLeft size={17}/></button><button type="button" aria-label="More categories" onClick={()=>scrollCategories(1)} className="grid h-8 w-8 place-items-center rounded-full border border-[#e2e7e8] hover:bg-slate-50"><ChevronRight size={17}/></button></div></div>
+        <div ref={categoryRail} tabIndex={0} aria-label="All furniture categories, swipe to explore" className="grid auto-cols-[68px] grid-flow-col grid-rows-2 scrollbar-none gap-x-3 gap-y-5 overflow-x-auto overscroll-x-contain pb-2 sm:auto-cols-[90px] sm:gap-x-5 lg:auto-cols-[108px] lg:gap-x-4">{categories.map(({name,slug,icon:Icon,color})=><Link key={name} href={slug?`/customer/products?category=${slug}`:"/customer/products"} className="group flex flex-col items-center gap-1.5 text-center"><span style={{background:color}} className="grid h-11 w-12 shrink-0 place-items-center rounded-xl transition-transform group-hover:-translate-y-0.5 sm:h-14 sm:w-16"><Icon size={28} strokeWidth={1.7}/></span><span className="max-w-full text-[10px] font-medium leading-3 sm:text-xs sm:leading-4">{name}</span></Link>)}</div>
+      </section>
 
-      <Footer />
-    </div>
-  );
+      <section aria-labelledby="fresh-heading"><div className="mb-4 flex items-center justify-between gap-3 sm:mb-5"><h2 id="fresh-heading" className="font-inter text-lg font-medium tracking-tight sm:text-2xl">Fresh recommendations</h2><Link href="/customer/products" className="inline-flex min-h-10 items-center gap-1 text-[11px] font-semibold underline underline-offset-4 sm:text-xs">View all<ArrowRight size={14}/></Link></div>
+        {error&&<div role="alert" className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-100 bg-red-50 p-4 text-sm"><p>Couldn’t load the collection. Please try again.</p><button type="button" onClick={()=>void fetchPage(products.length?page+1:1)} className="font-semibold underline">Try again</button></div>}
+        <div className="grid grid-cols-2 items-stretch gap-2.5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">{products.map(product=>{const saved=wishlistIds.includes(product.id);const ready=product.stock_quantity>0;return <article key={product.id} className="group relative flex min-w-0 flex-col overflow-hidden rounded-md border border-[#dce2e4] bg-white transition-shadow hover:shadow-md">
+          <div className="relative aspect-square overflow-hidden bg-[#f5f6f7]"><Link href={`/customer/products/${product.id}`} aria-label={`View ${product.name}`} className="block h-full"><img src={getProductImage(product.images)} alt={product.name} loading="lazy" onError={e=>{e.currentTarget.onerror=null;e.currentTarget.src="/placeholder-product.svg";}} className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.03]"/></Link><button type="button" aria-label={saved?`Remove ${product.name} from wishlist`:`Save ${product.name} to wishlist`} aria-pressed={saved} disabled={saving!==null} onClick={()=>void wishlist(product)} className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-white shadow-sm disabled:opacity-60 sm:h-9 sm:w-9">{saving===product.id?<Loader2 size={17} className="animate-spin"/>:<Heart size={19} fill={saved?"#315b49":"none"} stroke={saved?"#315b49":"#123337"}/>}</button>{product.is_featured&&<span className="absolute bottom-2 left-2 rounded-sm bg-[#fff0a6] px-2 py-1 text-[8px] font-bold tracking-wide sm:text-[9px]">FEATURED</span>}</div>
+          <div className={`flex flex-1 flex-col border-l-[3px] p-2.5 sm:p-3.5 ${product.is_featured?"border-l-[#ebcb52]":"border-l-transparent"}`}><Link href={`/customer/products/${product.id}`} className="block"><p className="text-base font-bold tracking-tight sm:text-xl">{formatPrice(product.price)}</p><h3 className="mt-1 line-clamp-2 font-inter text-xs font-normal leading-5 text-[#4d6266] sm:text-sm">{product.name}</h3></Link><p className="mt-2 truncate text-[9px] text-[#6b7d80] sm:text-[10px]">{product.subcategory||product.category?.name||"Furniture"}</p><div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-1 pt-3 text-[9px] sm:text-[10px]"><span className={ready?"text-[#315b49]":"text-[#736449]"}>{ready?`${product.stock_quantity} in stock`:product.allow_pre_order?"Made to order":"Out of stock"}</span>{product.created_at&&!Number.isNaN(Date.parse(product.created_at))&&<time dateTime={product.created_at} className="text-[#7a898c]">{new Date(product.created_at).toLocaleDateString("en-IN",{day:"numeric",month:"short",timeZone:"UTC"})}</time>}</div></div>
+          <div className="grid grid-cols-2 border-t border-[#e8edef] text-[10px] font-medium sm:text-xs"><Link href={`/customer/products/${product.id}`} className="flex min-h-10 items-center justify-center gap-1 border-r border-[#e8edef] hover:bg-slate-50"><Package size={13}/>Details</Link><Link href={`/customer/products/${product.id}?negotiate=1`} className="flex min-h-10 items-center justify-center gap-1 hover:bg-slate-50"><MessageCircle size={13}/>Negotiate</Link></div>
+        </article>;})}
+        {loading&&Array.from({length:products.length?4:8},(_,i)=><div key={`loading-${i}`} aria-hidden="true" className="animate-pulse overflow-hidden rounded-md border border-[#e2e7e8]"><div className="aspect-square bg-[#f0f2f3]"/><div className="space-y-3 p-3"><div className="h-4 w-20 rounded bg-slate-100"/><div className="h-3 w-4/5 rounded bg-slate-100"/><div className="h-3 w-1/2 rounded bg-slate-100"/></div></div>)}</div>
+        {loading&&<p role="status" className="mt-4 text-center text-xs text-[#6b7d80]">Loading furniture…</p>}
+        {!loading&&!error&&!products.length&&<div className="rounded-lg border border-dashed p-10 text-center"><ShoppingBag size={28} className="mx-auto mb-3 text-[#78908a]"/><h3 className="font-inter text-base font-semibold">The collection is coming together</h3><p className="mt-2 text-sm text-[#6b7d80]">Products will appear here when the store publishes them.</p></div>}
+        {!loading&&!error&&hasMore&&<div className="mt-8 text-center"><button type="button" onClick={()=>void fetchPage(page+1)} className="min-h-11 rounded border-2 border-[#123337] px-8 text-sm font-semibold hover:bg-[#f2f6f5]">Load more furniture</button></div>}
+      </section>
+    </main>
+    <footer className="border-t border-[#e5e9eb] bg-[#f7f9f9] px-4 py-7 text-[#63777a]"><div className="mx-auto flex max-w-[1256px] flex-col justify-between gap-4 text-[11px] sm:flex-row"><p>© {new Date().getFullYear()} Ballanki A1 Furnitures</p><nav aria-label="Store information" className="flex flex-wrap gap-x-5 gap-y-3"><Link href="/contact">Contact & support</Link><Link href="/shipping-policy">Delivery</Link><Link href="/refund-policy">Returns</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></nav></div></footer>
+    <DeliveryLocationModal/>
+  </div>;
 }
+
+
+

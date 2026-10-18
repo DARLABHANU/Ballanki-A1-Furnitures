@@ -199,7 +199,7 @@ export const reviewApi = {
 
 export const paymentApi = {
  config:()=>api.get('/payments/config'),
- start:(order_id:string|number)=>api.post('/payments/phonepe/start',{order_id}),
- status:(order_id:string|number)=>api.post('/payments/phonepe/status',{order_id}),
+ start:(order_id:string|number)=>api.post('/payments/razorpay/start',{order_id}),
+ status:(order_id:string|number)=>api.post('/payments/razorpay/status',{order_id}),
+ verify:(data:{order_id:string|number;razorpay_order_id:string;razorpay_payment_id:string;razorpay_signature:string})=>api.post('/payments/razorpay/verify',data),
 };
-export function openPhonePeCheckout(value:string){const url=new URL(value);if(url.protocol!=="https:"||!(url.hostname==="phonepe.com"||url.hostname.endsWith(".phonepe.com")))throw new Error("Invalid payment redirect");window.location.assign(url.href);}
