@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { MapPin, X, Loader2, CheckCircle, Search, Navigation } from "lucide-react";
 import { useDeliveryLocationStore, DeliveryLocation } from "@/store/deliveryLocationStore";
+import {detectDeliveryLocation} from "@/lib/detectDeliveryLocation";
 import toast from "react-hot-toast";
 
 interface PostOffice {
@@ -19,7 +20,7 @@ interface PincodeAPIResponse {
 }
 
 export default function DeliveryLocationModal() {
-  const { location, setLocation, isModalOpen, closeModal } = useDeliveryLocationStore();
+  const { location, setLocation, isModalOpen, closeModal, isDetecting, detectionError, detectedLocation } = useDeliveryLocationStore();
   const [pincode, setPincode] = useState(location?.pincode || "");
   const [isLookingUp, setIsLookingUp] = useState(false);
   const [lookupResult, setLookupResult] = useState<DeliveryLocation | null>(null);
@@ -38,56 +39,35 @@ export default function DeliveryLocationModal() {
     }
   }, [isModalOpen, location]);
 
-  // Auto-lookup when pincode reaches 6 digits
+  useEffect(()=>{
+    if(isModalOpen && detectedLocation)setPincode(detectedLocation.pincode);
+  },[isModalOpen,detectedLocation]);
+
+  // Cancel outdated lookups when the PIN changes or the picker closes.
   useEffect(() => {
-    if (pincode.length === 6 && /^\d{6}$/.test(pincode)) {
-      handleLookup(pincode);
-    } else {
-      setLookupResult(null);
-      setLookupError("");
+    if (!isModalOpen || !/^[1-9]\d{5}$/.test(pincode)) {
+      setLookupResult(null);setLookupError('');setIsLookingUp(false);return;
     }
-  }, [pincode]);
-
-  const handleLookup = async (code: string) => {
-    setIsLookingUp(true);
-    setLookupResult(null);
-    setLookupError("");
-
-    try {
-      const response = await fetch(`https://api.postalpincode.in/pincode/${code}`, {
-        cache: "force-cache",
-      });
-
-      if (!response.ok) throw new Error("Network error");
-
-      const data: PincodeAPIResponse[] = await response.json();
-      const result = data[0];
-
-      if (result.Status === "Success" && result.PostOffice && result.PostOffice.length > 0) {
-        const po = result.PostOffice[0];
-        const loc: DeliveryLocation = {
-          pincode: code,
-          city: po.Name,
-          district: po.District,
-          state: po.State,
-        };
-        setLookupResult(loc);
-        setLookupError("");
-      } else {
-        setLookupResult(null);
-        setLookupError("Invalid PIN code. Please enter a valid 6-digit Indian PIN code.");
-      }
-    } catch {
-      setLookupResult(null);
-      setLookupError("Unable to look up this PIN code. Please check your connection and try again.");
-    } finally {
-      setIsLookingUp(false);
-    }
-  };
+    const controller=new AbortController();let active=true;
+    setIsLookingUp(true);setLookupResult(null);setLookupError('');
+    const timer=setTimeout(async()=>{
+      const timeout=setTimeout(()=>controller.abort(),8000);
+      try{
+        const response=await fetch(`https://api.postalpincode.in/pincode/${pincode}`,{signal:controller.signal});
+        if(!response.ok)throw new Error('Network error');
+        const data:PincodeAPIResponse[]=await response.json();const po=data[0]?.Status==='Success'?data[0]?.PostOffice?.[0]:undefined;
+        if(!active)return;
+        if(po)setLookupResult({pincode,city:po.Name,district:po.District,state:po.State});
+        else setLookupError('Invalid PIN code. Please enter a valid 6-digit Indian PIN code.');
+      }catch{if(active)setLookupError('Unable to look up this PIN code. Please check your connection and retry.');}
+      finally{clearTimeout(timeout);if(active)setIsLookingUp(false);}
+    },250);
+    return()=>{active=false;clearTimeout(timer);controller.abort();};
+  },[pincode,isModalOpen]);
 
   const handleConfirm = () => {
     if (!lookupResult) return;
-    setLocation(lookupResult);
+    setLocation({...lookupResult,source:"manual",approximate:false});
     toast.success(`Delivering to ${lookupResult.district}, ${lookupResult.state} 📦`);
     closeModal();
   };
@@ -130,7 +110,7 @@ export default function DeliveryLocationModal() {
                   Select Delivery Location
                 </h2>
                 <p className="text-[10px] text-[#808080] leading-none mt-0.5">
-                  Enter PIN code to select your delivery location
+                  Detect your area or enter a delivery PIN code
                 </p>
               </div>
             </div>
@@ -146,6 +126,10 @@ export default function DeliveryLocationModal() {
           {/* ── Body ── */}
           <div className="px-5 py-5 space-y-4">
 
+            <button onClick={()=>void detectDeliveryLocation(true)} disabled={isDetecting} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#214f40] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60">{isDetecting?<Loader2 size={16} className="animate-spin"/>:<Navigation size={16}/>} {isDetecting?'Finding your nearby PIN code…':'Use my current location'}</button>
+            <p className="text-[11px] leading-5 text-slate-500">With your permission, your approximate coordinates are sent to OpenStreetMap to find a nearby PIN code. Check the area before ordering. Your full street address is still required at checkout. <a className="underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap contributors</a></p>
+            {detectedLocation&&<p role="status" className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-amber-900">Suggested nearby PIN: <strong>{detectedLocation.pincode}</strong>. Map postal boundaries may differ from your address. Check this PIN, edit it if needed, then confirm below. It has not been saved yet.</p>}
+            {detectionError&&<p role="status" className="rounded-lg bg-amber-50 p-3 text-xs text-amber-900">{detectionError}</p>}
             {/* Current Location Display (if set) */}
             {location && !lookupResult && (
               <div className="flex items-center gap-3 p-3 bg-[#F0F9F1] border border-[#E2DAC8] rounded-xl">
@@ -223,7 +207,7 @@ export default function DeliveryLocationModal() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2">
                       <CheckCircle size={16} className="text-[#2E7D32] flex-shrink-0" />
-                      <span className="text-xs font-bold text-[#1A1A1A]">Delivery available!</span>
+                      <span className="text-xs font-bold text-[#1A1A1A]">PIN code found</span>
                     </div>
                     <span className="text-[10px] font-bold text-[#0D0D0D] bg-[#E2DAC8] px-2 py-0.5 rounded-full">
                       PIN {lookupResult.pincode}

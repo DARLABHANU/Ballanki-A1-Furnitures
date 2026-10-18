@@ -15,7 +15,6 @@ import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useDeliveryLocationStore } from "@/store/deliveryLocationStore";
 import { authApi } from "@/lib/api";
-import DeliveryLocationModal from "@/components/customer/DeliveryLocationModal";
 
 import NotificationBell from "@/components/NotificationBell";
 
@@ -318,7 +317,7 @@ export default function Navbar({ discovery = false }: { discovery?: boolean }) {
       </header>
 
       {/* Modal is rendered here but only visible when open */}
-      <DeliveryLocationModal />
+      
 
       {/* ════════════════════════════════════════════════ */}
       {/* MOBILE SLIDE-IN DRAWER                          */}

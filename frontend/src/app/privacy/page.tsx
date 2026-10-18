@@ -14,7 +14,7 @@ export default function PrivacyPage() {
               LEGAL DOCUMENTATION
             </span>
             <h1 className="font-cormorant text-3xl md:text-4xl font-bold text-[#1A1A1A]">Privacy Policy</h1>
-            <p className="text-xs text-[#808080]">Last Updated: August 2026</p>
+            <p className="text-xs text-[#808080]">Last Updated: 18 October 2026</p>
           </div>
 
           {/* Legal Text Content */}
@@ -27,6 +27,7 @@ export default function PrivacyPage() {
               <ul className="list-disc pl-5 space-y-1">
                 <li><strong>Personal details</strong>: Name, email address, phone number, and mailing address to complete registrations and secure deliveries.</li>
                 <li><strong>Transaction metadata</strong>: Cart lists, coupon logs, and order histories to fulfill purchases.</li>
+                <li><strong>Optional device location</strong>: After browser permission, we round coordinates to approximately 100 metres and send them to OpenStreetMap Nominatim to identify a nearby Indian PIN code. We keep the selected delivery area in browser storage and briefly cache approximate lookups on the server; we do not store GPS coordinates in your account. You can decline permission and enter a PIN code manually.</li>
                 <li><strong>Technical traces</strong>: IP addresses and browser logs to ensure platform integrity and performance.</li>
               </ul>
             </section>
@@ -60,7 +61,7 @@ export default function PrivacyPage() {
             <section className="space-y-2">
               <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A]">5. Data Sharing &amp; Third Parties</h2>
               <p>
-                We do not sell, rent, or trade your personal information with external brokers. Data is shared only with certified courier partners to fulfill shipping dispatches, or when legally compelled by regulatory audits.
+                We do not sell, rent, or trade your personal information with external brokers. For optional location detection, approximate coordinates are shared with OpenStreetMap Nominatim. Manual PIN-code lookups use the Postal PIN Code service. Delivery information is also shared with courier partners to fulfill orders, or where required by law.
               </p>
             </section>
           </div>

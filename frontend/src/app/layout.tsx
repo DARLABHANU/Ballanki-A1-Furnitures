@@ -6,6 +6,7 @@ import "./globals.css";
 import AuthInitializer from "@/components/AuthInitializer";
 import ImpersonationBanner from "@/components/ImpersonationBanner";
 import SessionGate from "@/components/SessionGate";
+import DeliveryLocationInitializer from "@/components/customer/DeliveryLocationInitializer";
 import BottomNav from "@/components/layout/BottomNav";
 
 const playfair = Playfair_Display({
@@ -138,6 +139,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         ) : (
           <SessionGate>{children}</SessionGate>
         )}
+        {!MAINTENANCE_MODE && <DeliveryLocationInitializer />}
         <BottomNav />
       </body>
     </html>

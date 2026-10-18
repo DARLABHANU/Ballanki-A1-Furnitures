@@ -1,4 +1,5 @@
 "use client";
+import {useDeliveryLocationStore} from '@/store/deliveryLocationStore';
 import PaymentShell from '@/components/checkout/PaymentShell';
 import {MapPin, CreditCard, ShoppingBag, LockKeyhole, ChevronRight} from 'lucide-react';
 import {useEffect,useRef,useState} from 'react';
@@ -16,7 +17,9 @@ const schema=z.object({full_name:z.string().min(2),phone:z.string().regex(/^[6-9
 type Form=z.infer<typeof schema>;
 export default function CheckoutPage(){
  const router=useRouter();const {cart,fetchCart,resetCart}=useCartStore();const [addresses,setAddresses]=useState<Address[]>([]);const [selected,setSelected]=useState<string>('');const [loading,setLoading]=useState(true);const [error,setError]=useState('');const [saving,setSaving]=useState(false);const [showForm,setShowForm]=useState(false);const [code,setCode]=useState('');const [coupon,setCoupon]=useState('');const [discount,setDiscount]=useState(0);const key=useRef('');const [quote,setQuote]=useState<any>(null);const [quoteError,setQuoteError]=useState('');const [paymentConfig,setPaymentConfig]=useState<{enabled:boolean;environment:string}|null>(null);
- const {register,handleSubmit,reset,formState:{errors}}=useForm<Form>({resolver:zodResolver(schema)});
+ const location=useDeliveryLocationStore(s=>s.location);
+ const {register,handleSubmit,reset,getValues,setValue,formState:{errors}}=useForm<Form>({resolver:zodResolver(schema)});
+ useEffect(()=>{if(!location)return;for(const [field,value] of [['city',location.city],['state',location.state],['pincode',location.pincode]] as const){if(!getValues(field))setValue(field,value);}},[location,getValues,setValue]);
  useEffect(()=>{key.current=sessionStorage.getItem('checkout-key')||crypto.randomUUID();sessionStorage.setItem('checkout-key',key.current);Promise.all([paymentApi.config().then(({data})=>setPaymentConfig(data)),fetchCart(),addressApi.list().then(({data})=>{setAddresses(data.items);setSelected(String(data.items[0]?.id||''));setShowForm(!data.items.length);})]).catch(e=>setError(getApiError(e))).finally(()=>setLoading(false));},[fetchCart]);
  useEffect(()=>{let active=true;setQuote(null);setQuoteError('');if(cart.items.length)api.post('/orders/quote',{coupon_code:coupon||undefined}).then(({data})=>{if(active)setQuote(data);}).catch(e=>{if(active)setQuoteError(getApiError(e));});return()=>{active=false;};},[cart,coupon]);
  const saveAddress=async(data:Form)=>{setSaving(true);try{const {data:address}=await addressApi.create({...data,label:'Home',country:'India'});setAddresses(v=>[...v,address]);setSelected(String(address.id));setShowForm(false);reset();}catch(e){toast.error(getApiError(e));}finally{setSaving(false);}};

@@ -1,0 +1,97 @@
+{
+  "all": {
+    "source": "https://www.pexels.com/photo/7535060/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "sofa": {
+    "source": "https://www.pexels.com/photo/11558114/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "chair": {
+    "source": "https://www.pexels.com/photo/11112728/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "dining": {
+    "source": "https://www.pexels.com/photo/3935321/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "bed": {
+    "source": "https://www.pexels.com/photo/8583933/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "cupboard": {
+    "source": "https://www.pexels.com/photo/11112749/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "table": {
+    "source": "https://www.pexels.com/photo/15253318/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "wardrobe": {
+    "source": "https://www.pexels.com/photo/6580394/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "tv": {
+    "source": "https://www.pexels.com/photo/36834040/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "storage": {
+    "source": "https://www.pexels.com/photo/7794448/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "office": {
+    "source": "https://www.pexels.com/photo/5483154/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "recliner": {
+    "source": "https://www.pexels.com/photo/11112734/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "shoe": {
+    "source": "https://www.pexels.com/photo/1020372/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "bookshelf": {
+    "source": "https://www.pexels.com/photo/1098601/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "desk": {
+    "source": "https://www.pexels.com/photo/1263558/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "dressing": {
+    "source": "https://www.pexels.com/photo/16476339/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "mattress": {
+    "source": "https://www.pexels.com/photo/6523294/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "outdoor": {
+    "source": "https://www.pexels.com/photo/12715505/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  },
+  "kids": {
+    "source": "https://www.pexels.com/photo/6692944/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Category navigation photograph; not a product listing"
+  }
+}

@@ -55,7 +55,7 @@ export default function ProductCard({ product }: Props) {
   const isMadeToOrder = product.fulfillment_type === 'MADE_TO_ORDER' || product.fulfillment_type === 'CUSTOM_ORDER';
 
   return (
-    <div className="bg-white border border-wood-200 rounded-lg p-4 flex flex-col justify-between h-full hover:shadow-xl transition-all duration-300 group font-inter text-wood-900 relative overflow-hidden">
+    <div className="bg-white border border-wood-200 rounded-lg p-4 flex flex-col justify-between h-full shadow-[0_2px_10px_rgba(0,0,0,0.14)] hover:shadow-[0_6px_18px_rgba(0,0,0,0.20)] transition-shadow duration-200 group font-inter text-wood-900 relative overflow-hidden">
       <Link href={`/customer/products/${product.id}`} className="flex-1 flex flex-col">
         {/* Product Image */}
         <div className="relative aspect-[4/3] sm:aspect-square overflow-hidden bg-white mb-4 rounded-xl border border-wood-100">
@@ -170,7 +170,7 @@ export default function ProductCard({ product }: Props) {
         <button
           onClick={handleNegotiateClick}
           className="px-3 bg-white border border-wood-300 hover:border-wood-900 hover:bg-white text-wood-900 rounded flex items-center justify-center transition-all"
-          title="Negotiate Price"
+          title="Chat" aria-label="Chat with the store"
         >
           <MessageCircle size={15} />
         </button>
