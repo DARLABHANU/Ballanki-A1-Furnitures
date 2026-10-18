@@ -1,72 +1,11 @@
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="min-h-dvh grid lg:grid-cols-2 bg-white font-garamond text-[#1A1A1A]">
-      {/* Left: Decorative Dark Forest Green Panel matching Admin Panel Theme */}
-      <div className="hidden lg:flex flex-col justify-between bg-[#0D0D0D] p-8 xl:p-16 relative overflow-hidden text-wood-100">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="admin-auth-pattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-                <path d="M30 0 L60 30 L30 60 L0 30 Z" fill="none" stroke="#A3E635" strokeWidth="0.5" />
-                <circle cx="30" cy="30" r="3" fill="#A3E635" opacity="0.5" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#admin-auth-pattern)" />
-          </svg>
-        </div>
-
-        {/* Logo Header */}
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-2xl bg-[#333333] border border-wood-700/50 flex items-center justify-center text-wood-300 font-cormorant font-bold text-xl">
-              R
-            </div>
-            <div>
-              <h1 className="font-cormorant text-2xl font-bold tracking-widest text-white">BALLANKI A1 FURNITURES</h1>
-              <p className="text-[10px] font-semibold tracking-widest text-wood-400 uppercase">
-                PREMIUM CRAFTED FURNITURE &amp; DECOR
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Center Quotation / Illustration */}
-        <div className="relative z-10 text-center space-y-4">
-          <div className="w-48 h-48 mx-auto rounded-full bg-wood-950/60 border border-wood-800/40 flex items-center justify-center p-6 shadow-2xl">
-            <div className="w-36 h-36 rounded-full border border-wood-700/50 flex items-center justify-center">
-              <span className="font-cormorant text-4xl font-extrabold text-wood-200">✦</span>
-            </div>
-          </div>
-          <blockquote className="font-cormorant text-2xl italic text-wood-100 max-w-sm mx-auto leading-relaxed">
-            &ldquo;Where timeless Indian heritage meets modern elegance.&rdquo;
-          </blockquote>
-        </div>
-
-        {/* Footer info */}
-        <div className="relative z-10">
-          <p className="text-xs text-wood-400/80">
-            © 2025 Ballanki A1 Furnitures Management System. All rights reserved.
-          </p>
-        </div>
-      </div>
-
-      {/* Right: Form area with Admin Panel Card Styling — perfectly centered for mobile */}
-      <div className="flex items-center justify-center p-4 sm:p-8 md:p-12 bg-white min-h-dvh">
-        <div className="w-full max-w-md bg-white border border-[#E2DAC8] rounded-3xl p-5 sm:p-8 shadow-xs">
-          {/* Mobile Logo Header */}
-          <div className="lg:hidden text-center mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-[#0D0D0D] text-white flex items-center justify-center font-cormorant font-bold text-2xl mx-auto mb-2 shadow-sm">
-              R
-            </div>
-            <h1 className="font-cormorant text-xl sm:text-2xl font-bold text-[#1A1A1A] tracking-wide sm:tracking-widest">BALLANKI A1 FURNITURES</h1>
-            <p className="text-[10px] font-bold text-[#808080] tracking-widest mt-0.5 uppercase">
-              AUTHENTICATION PORTAL
-            </p>
-          </div>
-          {children}
-        </div>
-      </div>
-    </div>
-  );
+import Link from "next/link";
+import { ArrowLeft, MessageCircle, Heart, Package } from "lucide-react";
+export default function AuthLayout({children}:{children:React.ReactNode}){
+ return <div className="flex min-h-dvh flex-col bg-[#f7f9f8] font-inter text-[#123337]">
+  <header className="border-b border-[#e2e8e6] bg-white"><div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8"><Link href="/" aria-label="Ballanki A1 Furnitures home"><img src="/logo.png" alt="Ballanki A1 Furnitures" className="h-12 w-20 shrink-0 object-contain sm:h-16 sm:w-24"/></Link><Link href="/" className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-xs font-medium text-[#4d6266] hover:text-[#123337] sm:text-sm"><ArrowLeft size={16}/>Back to shopping</Link></div></header>
+  <main className="mx-auto grid w-full max-w-6xl flex-1 items-center gap-6 px-4 py-6 sm:px-6 sm:py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-stretch lg:gap-8 lg:px-8 lg:py-10 xl:gap-12">
+   <section className="hidden min-w-0 self-stretch rounded-2xl bg-[#eaf1ed] px-8 py-8 lg:flex lg:flex-col lg:justify-between"><div><span className="text-[11px] font-semibold uppercase tracking-[.18em] text-[#527365]">Made for your everyday</span><h1 className="mt-5 max-w-sm font-inter text-3xl font-semibold xl:text-4xl leading-[1.2] tracking-tight">A little closer<br/>to your kind of home.</h1><p className="mt-4 max-w-xs text-sm leading-6 text-[#587069]">Find furniture you love, chat with the store, and keep every order in one place.</p></div><div className="relative my-7 flex justify-center"><div className="absolute inset-x-7 bottom-0 h-36 rounded-[50%] bg-[#d8e5dd]"/><img src="/images/categories/chair.jpg" alt="Wooden chair with a natural finish" width={320} height={320} className="relative h-64 w-64 rounded-3xl object-cover mix-blend-multiply xl:h-72 xl:w-72"/></div><div className="grid grid-cols-3 gap-3 border-t border-[#ceddd3] pt-6 text-[11px] font-medium text-[#315b49]"><span className="flex flex-col gap-2"><Heart size={19}/>Save favourites</span><span className="flex flex-col gap-2"><MessageCircle size={19}/>Chat with us</span><span className="flex flex-col gap-2"><Package size={19}/>Track orders</span></div></section>
+   <section aria-label="Your account" className="mx-auto w-full min-w-0 max-w-md lg:max-w-none"><div className="h-full rounded-2xl border border-[#e1e7e4] bg-white px-5 py-6 shadow-[0_4px_24px_rgba(0,0,0,0.04)] sm:p-7 lg:p-8"><div className="mx-auto w-full max-w-[400px]">{children}</div></div></section>
+  </main><footer className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-center gap-x-5 gap-y-2 px-4 py-5 text-[11px] text-[#75867e] sm:justify-between sm:px-6 lg:px-8"><span>© {new Date().getFullYear()} Ballanki A1 Furnitures</span><div className="flex gap-5"><Link href="/privacy" className="hover:underline">Privacy</Link><Link href="/terms" className="hover:underline">Terms</Link><Link href="/contact" className="hover:underline">Need help?</Link></div></footer>
+ </div>;
 }
