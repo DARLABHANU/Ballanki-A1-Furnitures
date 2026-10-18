@@ -4,7 +4,7 @@ export type OrderStatus =
   | "pending" | "confirmed" | "processing"
   | "shipped" | "out_for_delivery" | "delivered"
   | "cancelled" | "refunded";
-export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
+export type PaymentStatus = "partially_paid" | "pending" | "paid" | "failed" | "refunded";
 export type CommissionStatus = "pending" | "approved" | "paid" | "rejected";
 
 // ─── User ─────────────────────────────────────────────────────────────────────
@@ -177,6 +177,10 @@ export interface Order {
   payment_status: PaymentStatus;
   payment_method?: string;
   payment_reference?: string;
+  paid_amount?: number;
+  outstanding_amount?: number;
+  payment_environment?: "sandbox" | "production";
+  payment_active_id?: string;
   razorpay_order_id?: string;
   razorpay_payment_id?: string;
   razorpay_signature?: string;

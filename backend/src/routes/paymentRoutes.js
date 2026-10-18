@@ -1,0 +1,7 @@
+const router=require('express').Router();const phonepe=require('../lib/phonepe');const service=require('../lib/paymentService');const Attempt=require('../models/PaymentAttempt');const {Order}=require('../models/Commerce');const {authenticate}=require('../middleware/auth');const {asyncRoute:wrap,fail,id,plain}=require('../lib/http');
+router.get('/payments/config',(req,res)=>res.json({enabled:phonepe.configured(),mode:phonepe.mode(),environment:phonepe.environment()}));
+router.post('/payments/phonepe/webhook',wrap(async(req,res)=>{if(!phonepe.validWebhook(req.get('Authorization')))fail(401,'Invalid webhook authorization');if(!['checkout.order.completed','checkout.order.failed'].includes(req.body.event))return res.json({received:true});const ref=req.body.payload?.merchantOrderId;if(typeof ref!=='string'||ref.length>63)fail(400,'Invalid payment reference');const attempt=await Attempt.findOne({merchant_order_id:ref});if(!attempt)fail(404,'Payment attempt not found');await service.reconcile(attempt);res.json({received:true});}));
+router.use('/payments',authenticate);
+router.post('/payments/phonepe/start',wrap(async(req,res)=>res.json(await service.start(id(req.body.order_id),req.user._id))));
+router.post('/payments/phonepe/status',wrap(async(req,res)=>{const order=await Order.findOne({_id:id(req.body.order_id),customer:req.user._id});if(!order)fail(404,'Order not found');res.json(plain(await service.refresh(order)));}));
+module.exports=router;

@@ -4,26 +4,11 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ChevronLeft, Loader2, Package, CreditCard, RotateCcw, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
-import { orderApi } from "@/lib/api";
+import { orderApi, paymentApi, openPhonePeCheckout } from "@/lib/api";
 import { Order } from "@/types";
 import { formatPrice, formatDate, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from "@/lib/utils";
 import OrderTracker from "@/components/customer/OrderTracker";
 import { useAuthStore } from "@/store/authStore";
-
-const loadRazorpayScript = () => {
-  return new Promise((resolve) => {
-    if (typeof window !== "undefined" && (window as any).Razorpay) {
-      resolve(true);
-      return;
-    }
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.async = true;
-    script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
-    document.body.appendChild(script);
-  });
-};
 
 export default function OrderDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -34,6 +19,9 @@ export default function OrderDetailPage() {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const [isRefunding, setIsRefunding] = useState(false);
+  const [paymentConfig,setPaymentConfig]=useState<{enabled:boolean;environment:string}|null>(null);
+  const [paymentMessage,setPaymentMessage]=useState("");
+  useEffect(()=>{paymentApi.config().then(({data})=>setPaymentConfig(data)).catch(()=>{});},[]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -57,7 +45,8 @@ export default function OrderDetailPage() {
     setIsRefunding(true);
     try {
       const { data } = await orderApi.refund(id, { reason });
-      setOrder(data.order);
+      // The return endpoint returns a request, not the order.
+      const updated=await orderApi.get(id);setOrder(updated.data);
       toast.success("RMA return request submitted successfully!");
     } catch (err: any) {
       toast.error(err.response?.data?.detail || "Failed to request return.");
@@ -80,67 +69,9 @@ export default function OrderDetailPage() {
     }
   };
 
-  const handlePayNow = async () => {
-    if (!order) return;
-    setIsProcessingPayment(true);
-
-    const isScriptLoaded = await loadRazorpayScript();
-    if (!isScriptLoaded) {
-      toast.error("Failed to load Razorpay payment window.");
-      setIsProcessingPayment(false);
-      return;
-    }
-
-    if (!(order as any).razorpay_order_id) {
-      try {
-        const { data: updatedOrder } = await orderApi.razorpayVerify({
-          razorpay_order_id: String(order.id),
-          razorpay_payment_id: "test_bypass_payment",
-          razorpay_signature: "test_bypass_signature",
-        });
-        setOrder(updatedOrder);
-        toast.success("Order payment confirmed!");
-      } catch {
-        toast.error("Payment confirmation failed.");
-      } finally {
-        setIsProcessingPayment(false);
-      }
-      return;
-    }
-
-    const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_key",
-      amount: Math.round(order.total_amount * 100),
-      currency: "INR",
-      name: "Ballanki A1 Furnitures Marketplace",
-      description: `Payment for Order #${order.order_number}`,
-      order_id: (order as any).razorpay_order_id,
-      handler: async function (response: any) {
-        try {
-          const { data: updatedOrder } = await orderApi.razorpayVerify({
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-          });
-          setOrder(updatedOrder);
-          toast.success("Payment verified successfully!");
-        } catch {
-          toast.error("Payment verification failed.");
-        } finally {
-          setIsProcessingPayment(false);
-        }
-      },
-      prefill: {
-        name: user?.full_name || "",
-        email: user?.email || "",
-        contact: user?.phone || "",
-      },
-      theme: { color: "#0D0D0D" },
-    };
-
-    const rzp = new (window as any).Razorpay(options);
-    rzp.open();
-  };
+  const refreshPayment = async()=>{setIsProcessingPayment(true);try{const {data}=await paymentApi.status(id);setOrder(data);setPaymentMessage(data.payment_status==="paid"?"Payment verified. Order fully paid.":data.payment_status==="partially_paid"?"Advance verified. The remaining balance is shown below.":"Payment is not confirmed yet. Check again if you have just paid.");}catch(e:any){setPaymentMessage(e.response?.data?.error||"Could not verify payment. Please retry.");}finally{setIsProcessingPayment(false);}};
+  useEffect(()=>{if(!isAuthenticated||!order?.payment_active_id)return;let stopped=false;const check=()=>paymentApi.status(id).then(({data})=>{if(!stopped){setOrder(data);setPaymentMessage(data.payment_status==="paid"?"Payment verified.":data.payment_status==="partially_paid"?"Advance payment verified.":"Payment pending. You can check its status below.");}}).catch(()=>{if(!stopped)setPaymentMessage("Verification is temporarily unavailable. Check payment status again.");});void check();const timer=window.setInterval(()=>{if(!document.hidden)void check();},10000);return()=>{stopped=true;window.clearInterval(timer);};},[id,isAuthenticated,order?.payment_active_id]);
+  const handlePayNow=async()=>{setIsProcessingPayment(true);try{const {data}=await paymentApi.start(id);openPhonePeCheckout(data.redirect_url);}catch(e:any){toast.error(e.response?.data?.error||"Could not start payment. Check its status and retry.");}finally{setIsProcessingPayment(false);}};
 
   if (isLoading) {
     return (
@@ -154,6 +85,7 @@ export default function OrderDetailPage() {
 
   return (
     <div className="min-h-screen bg-white text-[#1A1A1A] font-garamond">
+      <div className="mx-auto max-w-6xl px-4 pt-4 text-sm space-y-2">{(order.payment_environment==="sandbox"||paymentConfig?.environment==="sandbox")&&<p className="rounded-lg bg-amber-50 p-3">PhonePe sandbox test payment — no real funds collected.</p>}{paymentMessage&&<p role="status" className="rounded-lg border p-3">{paymentMessage}</p>}<p>Verified paid: {formatPrice(order.paid_amount||0)} · Outstanding: {formatPrice(order.outstanding_amount??Math.max(0,order.total_amount-(order.paid_amount||0)))}</p>{order.payment_method==="phonepe"&&<button disabled={isProcessingPayment} onClick={refreshPayment} className="underline disabled:opacity-50">Check payment status</button>}</div>
       {/* ── Mobile Header ── */}
       <div className="md:hidden sticky top-0 z-40 bg-white border-b border-[#E2DAC8] shadow-xs">
         <div className="flex items-center justify-between px-4 py-3.5">
@@ -215,7 +147,7 @@ export default function OrderDetailPage() {
               Items Ordered ({order.items.length})
             </h2>
             <div className="space-y-3 divide-y divide-[#F2EFE9]">
-              {order.amount_due_now!==undefined&&<div className="mb-4 rounded-xl bg-amber-50 p-4 text-sm space-y-2"><p>Initial payment required: {formatPrice(order.amount_due_now)} · Payment status: {order.payment_status}</p>{order.has_preorder&&<><p>20% pre-book advance: {formatPrice(order.advance_amount||0)}</p><p>Balance after initial payment: {formatPrice(order.balance_amount||0)}</p></>}<p>No payment is collected while online payments are disabled.</p>{order.items.map(i=><p key={i.id}>{i.product_name}: {i.ready_stock_quantity??i.quantity} ready · {i.preorder_quantity||0} pre-booked{i.expected_delivery_date?` · Admin expected delivery: ${new Date(i.expected_delivery_date).toLocaleDateString('en-IN',{timeZone:'UTC'})}`:' · Delivery date awaiting admin confirmation'}</p>)}</div>}
+              {order.amount_due_now!==undefined&&<div className="mb-4 rounded-xl bg-amber-50 p-4 text-sm space-y-2"><p>Initial payment required: {formatPrice(order.amount_due_now)} · Payment status: {order.payment_status}</p>{order.has_preorder&&<><p>20% pre-book advance: {formatPrice(order.advance_amount||0)}</p><p>Balance after initial payment: {formatPrice(order.balance_amount||0)}</p></>}<p>{order.payment_environment==="sandbox"?"Sandbox payments are simulated; no real money is collected.":paymentConfig?.enabled?"Payments are confirmed only after server verification with PhonePe.":"Online payments are currently unavailable."}</p>{order.items.map(i=><p key={i.id}>{i.product_name}: {i.ready_stock_quantity??i.quantity} ready · {i.preorder_quantity||0} pre-booked{i.expected_delivery_date?` · Admin expected delivery: ${new Date(i.expected_delivery_date).toLocaleDateString('en-IN',{timeZone:'UTC'})}`:' · Delivery date awaiting admin confirmation'}</p>)}</div>}
               {order.items.map((item) => (
                 <div key={item.id} className="pt-3 first:pt-0 flex items-center gap-3">
                   <div className="w-16 h-16 rounded-xl overflow-hidden bg-white border border-[#E2DAC8] flex-shrink-0">
@@ -260,7 +192,7 @@ export default function OrderDetailPage() {
                 <span className="font-bold text-[#1A1A1A]">{order.shipping_amount === 0 ? "FREE" : formatPrice(order.shipping_amount)}</span>
               </div>
               <div className="flex justify-between">
-                <span>GST Tax (18%)</span>
+                <span>Tax</span>
                 <span className="font-bold text-[#1A1A1A]">{formatPrice(order.tax_amount)}</span>
               </div>
 
@@ -272,13 +204,13 @@ export default function OrderDetailPage() {
 
             {/* Action Buttons */}
             <div className="pt-3 border-t border-[#EFEBE3] space-y-2">
-              {order.payment_status === "pending" && order.status === "pending" && (
+              {paymentConfig?.enabled && order.payment_status !== "paid" && !["cancelled","refunded"].includes(order.status) && (
                 <button
                   onClick={handlePayNow}
                   disabled={isProcessingPayment}
                   className="w-full bg-[#0D0D0D] text-white py-3 rounded-xl font-bold text-xs shadow-xs"
                 >
-                  {isProcessingPayment ? "Processing..." : "PAY NOW VIA RAZORPAY"}
+                  {isProcessingPayment ? "Processing..." : (order.payment_status === "partially_paid"?"PAY REMAINING BALANCE VIA PHONEPE":"PAY VIA PHONEPE")}
                 </button>
               )}
 

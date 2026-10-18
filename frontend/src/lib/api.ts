@@ -196,3 +196,10 @@ export const reviewApi = {
     api.post(`/products/${productId}/reviews`, data),
   getForMerchant: () => api.get("/merchant/reviews"),
 };
+
+export const paymentApi = {
+ config:()=>api.get('/payments/config'),
+ start:(order_id:string|number)=>api.post('/payments/phonepe/start',{order_id}),
+ status:(order_id:string|number)=>api.post('/payments/phonepe/status',{order_id}),
+};
+export function openPhonePeCheckout(value:string){const url=new URL(value);if(url.protocol!=="https:"||!(url.hostname==="phonepe.com"||url.hostname.endsWith(".phonepe.com")))throw new Error("Invalid payment redirect");window.location.assign(url.href);}

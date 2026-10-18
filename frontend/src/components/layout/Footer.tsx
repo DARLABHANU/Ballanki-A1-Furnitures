@@ -57,7 +57,7 @@ export default function Footer() {
           <div className="flex flex-col items-center">
             <ShieldCheck size={24} className="text-wood-400 mb-2" />
             <h4 className="font-playfair text-xs font-bold text-slate-900 uppercase">Secure Payments</h4>
-            <p className="font-inter text-[11px] text-slate-600 mt-0.5">Local orders are saved with payment pending</p>
+            <p className="font-inter text-[11px] text-slate-600 mt-0.5">Payment options are shown at checkout</p>
           </div>
           <div className="flex flex-col items-center">
             <Banknote size={24} className="text-wood-400 mb-2" />
