@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Heart, Loader2, MapPin, Menu, MessageCircle, Package, Search, ShoppingBag, User, X } from "lucide-react";
 import toast from "react-hot-toast";
+import {furnitureCategories as categories,categoryBrowserHref} from "@/lib/furnitureCategories";
 import { productApi } from "@/lib/api";
 import { Product } from "@/types";
 import { formatPrice, getApiError, getProductImage } from "@/lib/utils";
@@ -15,27 +16,7 @@ import { useWishlistStore } from "@/store/wishlistStore";
 import { useDeliveryLocationStore } from "@/store/deliveryLocationStore";
 import NotificationBell from "@/components/NotificationBell";
 
-const categories = [
-  {name:"All furniture",slug:"",image:"/images/categories/all.jpg"},
-  {name:"Sofas",slug:"sofa",image:"/images/categories/sofa.jpg"},
-  {name:"Chairs",slug:"chair",image:"/images/categories/chair.jpg"},
-  {name:"Dining",slug:"dining",image:"/images/categories/dining.jpg"},
-  {name:"Beds",slug:"bed",image:"/images/categories/bed.jpg"},
-  {name:"Cupboards",slug:"cupboard",image:"/images/categories/cupboard.jpg"},
-  {name:"Tables",slug:"table",image:"/images/categories/table.jpg"},
-  {name:"Wardrobes",slug:"wardrobe",image:"/images/categories/wardrobe.jpg"},
-  {name:"TV units",slug:"tv",image:"/images/categories/tv.jpg"},
-  {name:"Storage",slug:"storage",image:"/images/categories/storage.jpg"},
-  {name:"Office",slug:"office",image:"/images/categories/office.jpg"},
-  {name:"Recliners",slug:"recliner",image:"/images/categories/recliner.jpg"},
-  {name:"Shoe racks",slug:"shoe",image:"/images/categories/shoe.jpg"},
-  {name:"Bookshelves",slug:"bookshelf",image:"/images/categories/bookshelf.jpg"},
-  {name:"Study desks",slug:"desk",image:"/images/categories/desk.jpg"},
-  {name:"Dressing tables",slug:"dressing",image:"/images/categories/dressing.jpg"},
-  {name:"Mattresses",slug:"mattress",image:"/images/categories/mattress.jpg"},
-  {name:"Outdoor",slug:"outdoor",image:"/images/categories/outdoor.jpg"},
-  {name:"Kids furniture",slug:"kids",image:"/images/categories/kids.jpg"},
-];
+
 const PAGE_SIZE=24;
 
 export default function HomePage(){
@@ -86,7 +67,7 @@ export default function HomePage(){
     <main className="mx-auto max-w-[1320px] px-3 pb-10 pt-5 sm:px-6 sm:pt-7 lg:px-8">
       <section aria-label="Furniture categories" className="mb-6 border-b border-[#e9ecee] pb-4 sm:mb-8 sm:pb-6">
         <div className="mb-4 flex items-center justify-between gap-3"><h1 className="font-inter text-sm font-semibold sm:text-base">Explore furniture</h1><div className="flex gap-1"><button type="button" aria-label="Previous categories" onClick={()=>scrollCategories(-1)} className="grid h-8 w-8 place-items-center rounded-full border border-[#e2e7e8] hover:bg-slate-50"><ChevronLeft size={17}/></button><button type="button" aria-label="More categories" onClick={()=>scrollCategories(1)} className="grid h-8 w-8 place-items-center rounded-full border border-[#e2e7e8] hover:bg-slate-50"><ChevronRight size={17}/></button></div></div>
-        <div ref={categoryRail} tabIndex={0} aria-label="All furniture categories, swipe to explore" className="grid auto-cols-[68px] grid-flow-col grid-rows-2 scrollbar-none gap-x-3 gap-y-5 overflow-x-auto overscroll-x-contain pb-2 sm:auto-cols-[90px] sm:gap-x-5 lg:auto-cols-[108px] lg:gap-x-4">{categories.map(({name,slug,image})=><Link key={name} href={slug?`/customer/products?category=${slug}`:"/customer/products"} className="group flex flex-col items-center gap-1.5 text-center"><span className="block h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-slate-100 bg-[#f6f5f2] transition-transform group-hover:-translate-y-0.5 sm:h-16 sm:w-16"><img src={image} alt="" width={64} height={64} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105" onError={event=>{const img=event.currentTarget;if(!img.dataset.fallback){img.dataset.fallback="true";img.src="/images/categories/all.jpg";}}}/></span><span className="max-w-full text-[10px] font-medium leading-3 sm:text-xs sm:leading-4">{name}</span></Link>)}</div>
+        <div ref={categoryRail} tabIndex={0} aria-label="All furniture categories, swipe to explore" className="grid auto-cols-[68px] grid-flow-col grid-rows-2 scrollbar-none gap-x-3 gap-y-5 overflow-x-auto overscroll-x-contain pb-2 sm:auto-cols-[90px] sm:gap-x-5 lg:auto-cols-[108px] lg:gap-x-4">{categories.map(({name,slug,image})=><Link key={name} href={categoryBrowserHref(slug)} className="group flex flex-col items-center gap-1.5 text-center"><span className="block h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-slate-100 bg-[#f6f5f2] transition-transform group-hover:-translate-y-0.5 sm:h-16 sm:w-16"><img src={image} alt="" width={64} height={64} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105" onError={event=>{const img=event.currentTarget;if(!img.dataset.fallback){img.dataset.fallback="true";img.src="/images/categories/all.jpg";}}}/></span><span className="max-w-full text-[10px] font-medium leading-3 sm:text-xs sm:leading-4">{name}</span></Link>)}</div>
       </section>
 
       <section aria-labelledby="fresh-heading"><div className="mb-4 flex items-center justify-between gap-3 sm:mb-5"><h2 id="fresh-heading" className="font-inter text-lg font-medium tracking-tight sm:text-2xl">Fresh recommendations</h2><Link href="/customer/products" className="inline-flex min-h-10 items-center gap-1 text-[11px] font-semibold underline underline-offset-4 sm:text-xs">View all<ArrowRight size={14}/></Link></div>

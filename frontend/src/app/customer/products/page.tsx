@@ -1,305 +1,35 @@
 "use client";
-
-import { useEffect, useState, useRef, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { Search, X, ChevronLeft, ChevronRight, Sparkles, Filter } from "lucide-react";
-import { ProductListResponse } from "@/types";
-import ProductCard from "@/components/customer/ProductCard";
-import FilterSidebar from "@/components/customer/FilterSidebar";
-import { productApi } from "@/lib/api";
-
-const SORT_OPTIONS = [
-  { value: "created_at:desc", label: "Newest Arrivals" },
-  { value: "price:asc", label: "Price: Low to High" },
-  { value: "price:desc", label: "Price: High to Low" },
-  { value: "rating_avg:desc", label: "Highest Rated" },
-  { value: "total_sold:desc", label: "Best Selling" },
-];
-
-const CATEGORY_STORY_PILLS = [
-  { id: "all", name: "All Collections", query: {} },
-  { id: "sofas", name: "Sofas & Lounges", query: { category: "sofas" } },
-  { id: "tables", name: "Dining & Coffee Tables", query: { category: "tables" } },
-  { id: "chairs", name: "Accent Chairs", query: { category: "chairs" } },
-  { id: "beds", name: "Beds & Headboards", query: { category: "beds" } },
-  { id: "oak", name: "Solid Oak", query: { wood_type: "oak" } },
-  { id: "walnut", name: "Premium Walnut", query: { wood_type: "walnut" } },
-  { id: "leather", name: "Leather Upholstery", query: { fabric: "leather" } },
-];
-
-function ProductsContent() {
-  const params = useSearchParams();
-  const router = useRouter();
-  const [data, setData] = useState<ProductListResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
-
-  const [search, setSearch] = useState(params.get("search") || "");
-  const [sort, setSort] = useState("created_at:desc");
-  const [minPrice, setMinPrice] = useState(params.get("min_price") || "");
-  const [maxPrice, setMaxPrice] = useState(params.get("max_price") || "");
-
-  // Furniture specific filters
-  const [selectedFabric, setSelectedFabric] = useState(params.get("fabric") || "");
-  const [selectedWood, setSelectedWood] = useState(params.get("wood_type") || "");
-
-  const [minRating, setMinRating] = useState(params.get("min_rating") || "");
-  const [page, setPage] = useState(1);
-
-  const categoryParam = params.get("category");
-  const subcategoryParam = params.get("subcategory");
-  const searchParam = params.get("search");
-  const fabricParam = params.get("fabric");
-  const woodParam = params.get("wood_type");
-
-  const fetchProducts = async (currentPage = page) => {
-    setIsLoading(true);
-    const [sort_by, sort_order] = sort.split(":");
-
-    try {
-      const res = await productApi.list({
-        page: currentPage,
-        search: search || undefined,
-        sort_by,
-        sort_order,
-        min_price: minPrice || undefined,
-        max_price: maxPrice || undefined,
-        category: categoryParam || undefined,
-        fabric: selectedFabric || undefined,
-        wood_type: selectedWood || undefined,
-        min_rating: minRating || undefined
-      });
-      setData(res.data);
-    } catch (err) {
-      console.error("Failed to load products:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts(page);
-  }, [page, sort, minPrice, maxPrice, selectedFabric, selectedWood, minRating, categoryParam, subcategoryParam, searchParam]);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setPage(1);
-    fetchProducts(1);
-  };
-
-  const applyFabricFilter = (fab: string) => {
-    setSelectedFabric(selectedFabric.toLowerCase() === fab.toLowerCase() ? "" : fab);
-    setPage(1);
-  };
-
-  const applyWoodFilter = (wood: string) => {
-    setSelectedWood(selectedWood.toLowerCase() === wood.toLowerCase() ? "" : wood);
-    setPage(1);
-  };
-
-  const applyPriceRange = (min: string, max: string) => {
-    if (minPrice === min && maxPrice === max) {
-      setMinPrice(""); setMaxPrice("");
-    } else {
-      setMinPrice(min); setMaxPrice(max);
-    }
-    setPage(1);
-  };
-
-  const clearAllFilters = () => {
-    setSearch("");
-    setMinPrice("");
-    setMaxPrice("");
-    setSelectedFabric("");
-    setSelectedWood("");
-    setMinRating("");
-    setPage(1);
-    router.push("/customer/products");
-  };
-
-  return (
-    <div className="max-w-7xl mx-auto space-y-6 text-wood-900 font-inter px-0 sm:px-2 md:px-0 py-3 sm:py-6">
-
-      {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-wood-200 pb-4">
-        <div>
-          <span className="text-[10px] font-bold tracking-widest text-wood-600 bg-wood-200 border border-wood-300 px-2.5 py-1 rounded-md uppercase inline-block mb-1">
-            FURNITURE CATALOG
-          </span>
-          <h1 className="font-playfair text-3xl md:text-4xl font-bold text-wood-900 mt-1">
-            {subcategoryParam ? subcategoryParam : categoryParam ? categoryParam.charAt(0).toUpperCase() + categoryParam.slice(1) : "Discover Masterpieces"}
-          </h1>
-          <p className="text-sm text-wood-600 mt-2 max-w-2xl">
-            Explore authentic handcrafted sofas, robust dining tables, and luxurious bedroom furniture built to elevate your sanctuary.
-          </p>
-        </div>
-      </div>
-
-      {/* Horizontal Story Category Pills */}
-      <div className="flex gap-2 min-w-0 max-w-full overflow-x-auto pb-3 pt-1 scrollbar-none">
-        {CATEGORY_STORY_PILLS.map((pill) => {
-          let isActive = false;
-          if (pill.id === "all") {
-            isActive = !categoryParam && !selectedFabric && !selectedWood;
-          } else {
-            if (pill.query.category) isActive = categoryParam === pill.query.category;
-            if (pill.query.fabric) isActive = selectedFabric.toLowerCase() === pill.query.fabric.toLowerCase();
-            if (pill.query.wood_type) isActive = selectedWood.toLowerCase() === pill.query.wood_type.toLowerCase();
-          }
-
-          return (
-            <button
-              key={pill.id}
-              onClick={() => {
-                if (pill.id === "all") clearAllFilters();
-                else {
-                  if (pill.query.fabric) applyFabricFilter(pill.query.fabric);
-                  if (pill.query.wood_type) applyWoodFilter(pill.query.wood_type);
-                  if (pill.query.category) router.push(`/customer/products?category=${pill.query.category}`);
-                }
-              }}
-              className={`px-4 py-2 rounded font-semibold whitespace-nowrap transition-all flex items-center gap-2 border text-[13px] ${isActive
-                ? "bg-wood-900 text-white border-wood-900 shadow-sm"
-                : "bg-white text-wood-600 border-wood-200 hover:border-wood-900 hover:text-wood-900"
-                }`}
-            >
-              {pill.id === "all" ? <Sparkles size={14} className="text-amber-500" /> : null}
-              {pill.name}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Top Controls Bar */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-between">
-        {/* Search */}
-        <form onSubmit={handleSearch} className="w-full sm:w-96 relative">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-wood-500" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search sofas, beds, oak woods..."
-            className="w-full bg-white border border-wood-200 rounded-lg pl-10 pr-4 py-3 text-sm font-medium text-wood-900 focus:outline-none focus:border-wood-900 transition-colors shadow-sm"
-          />
-        </form>
-
-        <div className="flex gap-3 w-full sm:w-auto items-center">
-          <select
-            value={sort}
-            onChange={(e) => { setSort(e.target.value); setPage(1); }}
-            className="bg-white border border-wood-200 text-sm font-medium text-wood-900 px-4 py-3 rounded-lg focus:outline-none focus:border-wood-900 shadow-sm flex-1 sm:w-56 cursor-pointer"
-          >
-            {SORT_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
-            ))}
-          </select>
-
-          <button
-            onClick={() => setShowMobileFilters(!showMobileFilters)}
-            className="lg:hidden inline-flex items-center gap-2 bg-wood-900 text-white px-5 py-3 rounded-lg text-sm font-bold shadow-md transition-all"
-          >
-            <Filter size={15} />
-            <span>Filters</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Main Catalog Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-
-        {/* We will update FilterSidebar visually too, passing it our new parameters */}
-        <FilterSidebar
-          selectedCategory={categoryParam || ""}
-          selectedFabric={selectedFabric}
-          selectedWood={selectedWood}
-          minPrice={minPrice}
-          maxPrice={maxPrice}
-          onCategorySelect={(slug) => {
-            if (!slug) router.push("/customer/products");
-            else router.push(`/customer/products?category=${slug}`);
-            setPage(1);
-          }}
-          onFabricSelect={applyFabricFilter}
-          onWoodSelect={applyWoodFilter}
-          onPriceRangeSelect={applyPriceRange}
-          onClearAll={clearAllFilters}
-          showMobileFilters={showMobileFilters}
-          onCloseMobileFilters={() => setShowMobileFilters(false)}
-        />
-
-        {/* Product Grid Area */}
-        <main className="lg:col-span-3 space-y-6">
-
-          {/* Active Filter Chips */}
-          {(selectedFabric || selectedWood || minPrice || maxPrice || search || minRating) && (
-            <div className="flex flex-wrap gap-2 items-center bg-white p-4 rounded-xl border border-wood-100">
-              <span className="text-[11px] font-bold tracking-wider text-wood-500 uppercase mr-1">Active Filters:</span>
-
-              {selectedWood && (
-                <span className="bg-wood-800 text-wood-50 text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                  Type: {selectedWood} <X size={12} className="cursor-pointer hover:text-white" onClick={() => setSelectedWood("")} />
-                </span>
-              )}
-              {selectedFabric && (
-                <span className="bg-wood-800 text-wood-50 text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                  Material: {selectedFabric} <X size={12} className="cursor-pointer hover:text-white" onClick={() => setSelectedFabric("")} />
-                </span>
-              )}
-              {search && (
-                <span className="bg-wood-800 text-wood-50 text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                  &ldquo;{search}&rdquo; <X size={12} className="cursor-pointer hover:text-white" onClick={() => setSearch("")} />
-                </span>
-              )}
-              {(minPrice || maxPrice) && (
-                <span className="bg-wood-800 text-wood-50 text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                  ₹{minPrice || "0"} - ₹{maxPrice || "Max"} <X size={12} className="cursor-pointer hover:text-white" onClick={() => { setMinPrice(""); setMaxPrice(""); }} />
-                </span>
-              )}
-              <button onClick={clearAllFilters} className="text-xs text-red-600 font-bold hover:underline ml-auto bg-red-50 px-3 py-1.5 rounded-full">Clear All</button>
-            </div>
-          )}
-
-          {/* Results count */}
-          {data && (
-            <p className="text-sm font-medium text-wood-500">
-              Showing <strong className="text-wood-900">{(data.items || []).length}</strong> meticulously crafted pieces
-            </p>
-          )}
-
-          {/* Grid */}
-          {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {Array(6).fill(0).map((_, i) => (
-                <div key={i} className="animate-pulse bg-white border border-wood-100 rounded-xl p-4">
-                  <div className="aspect-[4/3] bg-white rounded-lg mb-4" />
-                  <div className="h-4 bg-white rounded mb-3 w-3/4" />
-                  <div className="h-4 bg-white rounded w-1/2" />
-                </div>
-              ))}
-            </div>
-          ) : data?.items?.length === 0 ? (
-            <div className="text-center py-20 bg-white border border-wood-200 rounded-2xl p-8 shadow-sm">
-              <p className="font-playfair text-3xl text-wood-900 mb-3 font-bold">No Pieces Found</p>
-              <p className="text-sm text-wood-500 mb-8 max-w-md mx-auto">We couldn't find any furniture matching your exact specifications. Try broadening your materials, price limits, or categories.</p>
-              <button onClick={clearAllFilters} className="border-2 border-wood-900 text-wood-900 hover:bg-wood-900 hover:text-white px-8 py-3 rounded-lg text-sm font-bold transition-all shadow-sm">Clear All Filters</button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-7">
-              {data?.items?.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          )}
-        </main>
-      </div>
-    </div>
-  );
+import {Suspense,useEffect,useState} from 'react';
+import Link from 'next/link';
+import {useRouter,useSearchParams} from 'next/navigation';
+import {Search,SlidersHorizontal,X,ChevronRight,ChevronLeft,PackageSearch,RotateCcw} from 'lucide-react';
+import {api} from '@/lib/api';
+import {getApiError} from '@/lib/utils';
+import {ProductListResponse} from '@/types';
+import {furnitureCategories,categoryBrowserHref} from '@/lib/furnitureCategories';
+import MarketplaceProductCard from '@/components/customer/MarketplaceProductCard';
+const sorts=[['created_at:desc','Newest first'],['price:asc','Price: low to high'],['price:desc','Price: high to low'],['rating_avg:desc','Highest rated'],['total_sold:desc','Best selling']];
+function ProductResults(){
+ const router=useRouter(),params=useSearchParams(),query=params.toString();
+ const category=params.get('category')||'',subcategory=params.get('subcategory')||'',search=params.get('search')||'';
+ const selected=furnitureCategories.find(c=>c.slug===category);const title=subcategory||selected?.name||(category?category.replace(/-/g,' '):'All furniture');
+ const [data,setData]=useState<ProductListResponse|null>(null),[loading,setLoading]=useState(true),[error,setError]=useState(''),[retry,setRetry]=useState(0),[mobileFilters,setMobileFilters]=useState(false);
+ const [searchInput,setSearchInput]=useState(search),[minimum,setMinimum]=useState(params.get('min_price')||''),[maximum,setMaximum]=useState(params.get('max_price')||''),[priceError,setPriceError]=useState('');
+ const sort=(params.get('sort_by')||'created_at')+':'+(params.get('sort_order')||'desc');
+ const page=Math.max(1,Number.parseInt(params.get('page')||'1')||1);
+ const update=(patch:Record<string,string|null>)=>{const next=new URLSearchParams(query);if(!('page' in patch))next.delete('page');for(const [key,value] of Object.entries(patch)){if(value===null||!value)next.delete(key);else next.set(key,value);}router.replace('/customer/products'+(next.size?'?'+next:''),{scroll:false});};
+ const reset=()=>{setMinimum('');setMaximum('');setPriceError('');router.replace('/customer/products'+(category?'?category='+encodeURIComponent(category):''),{scroll:false});};
+ useEffect(()=>{setSearchInput(search);setMinimum(params.get('min_price')||'');setMaximum(params.get('max_price')||'');},[query]);
+ useEffect(()=>{const controller=new AbortController();setLoading(true);setError('');setData(null);const q=new URLSearchParams(query);q.set('page_size','24');q.set('page',String(page));api.get('/products',{params:q,signal:controller.signal}).then(({data})=>{if(!controller.signal.aborted)setData(data);}).catch(e=>{if(!controller.signal.aborted)setError(getApiError(e));}).finally(()=>{if(!controller.signal.aborted)setLoading(false);});return()=>controller.abort();},[query,retry]);
+ useEffect(()=>{if(!mobileFilters)return;const old=document.body.style.overflow;document.body.style.overflow='hidden';const close=(e:KeyboardEvent)=>{if(e.key==='Escape')setMobileFilters(false);};document.addEventListener('keydown',close);return()=>{document.body.style.overflow=old;document.removeEventListener('keydown',close);};},[mobileFilters]);
+ const priceSubmit=(e:React.FormEvent)=>{e.preventDefault();if((minimum&&Number(minimum)<0)||(maximum&&Number(maximum)<0)||(minimum&&maximum&&Number(minimum)>Number(maximum))){setPriceError('Enter a valid minimum and maximum price.');return;}setPriceError('');update({min_price:minimum,max_price:maximum});};
+ const filtered=['search','min_price','max_price','wood_type','fabric','min_rating','subcategory'].filter(k=>params.has(k));
+ const filterBody=<div className="space-y-6"><div className="flex items-center justify-between"><h2 className="font-inter text-base font-semibold">Filters</h2><button onClick={reset} className="text-xs font-semibold text-[#315b49] hover:underline">Reset</button></div><label className="block text-xs font-semibold">Category<select aria-label="Filter by category" value={category} onChange={e=>update({category:e.target.value,subcategory:null})} className="mt-2 w-full rounded-lg border border-[#dce4df] bg-white px-3 py-3 text-sm">{furnitureCategories.map(c=><option key={c.slug} value={c.slug}>{c.name}</option>)}{category&&!selected&&<option value={category}>{title}</option>}</select></label><form onSubmit={priceSubmit} className="border-t border-[#e7ece9] pt-5"><h3 className="mb-3 text-xs font-semibold">Budget</h3><div className="grid grid-cols-2 gap-2"><label className="text-[11px] text-slate-500">Minimum ₹<input aria-label="Minimum price" type="number" min="0" step="0.01" inputMode="decimal" value={minimum} onChange={e=>setMinimum(e.target.value)} placeholder="0" className="mt-1 w-full rounded-lg border border-[#dce4df] px-2 py-2.5 text-sm"/></label><label className="text-[11px] text-slate-500">Maximum ₹<input aria-label="Maximum price" type="number" min="0" step="0.01" inputMode="decimal" value={maximum} onChange={e=>setMaximum(e.target.value)} placeholder="Any" className="mt-1 w-full rounded-lg border border-[#dce4df] px-2 py-2.5 text-sm"/></label></div>{priceError&&<p role="alert" className="mt-2 text-xs text-red-700">{priceError}</p>}<button className="mt-3 w-full rounded-lg border border-[#315b49] px-3 py-2.5 text-xs font-semibold text-[#315b49]">Apply budget</button></form><label className="block border-t border-[#e7ece9] pt-5 text-xs font-semibold">Wood type<select aria-label="Filter by wood type" value={params.get('wood_type')||''} onChange={e=>update({wood_type:e.target.value})} className="mt-2 w-full rounded-lg border border-[#dce4df] bg-white px-3 py-3 text-sm"><option value="">Any wood</option>{['Oak','Walnut','Teak','Ash','Acacia','Mahogany','Pine'].map(v=><option key={v} value={v.toLowerCase()}>{v}</option>)}</select></label><label className="block text-xs font-semibold">Upholstery<select aria-label="Filter by upholstery" value={params.get('fabric')||''} onChange={e=>update({fabric:e.target.value})} className="mt-2 w-full rounded-lg border border-[#dce4df] bg-white px-3 py-3 text-sm"><option value="">Any fabric</option>{['Leather','Linen','Velvet','Cotton Blend','Faux Leather','Boucle'].map(v=><option key={v} value={v.toLowerCase()}>{v}</option>)}</select></label><Link href={categoryBrowserHref(category)} className="flex items-center justify-between border-t border-[#e7ece9] pt-5 text-xs font-semibold text-[#315b49]">Explore categories<ChevronRight size={16}/></Link></div>;
+ return <div className="min-h-[65dvh] bg-[#f8faf9] font-inter text-[#123337]"><div className="mx-auto max-w-[1320px] px-3 py-5 sm:px-6 sm:py-7 lg:px-8"><nav aria-label="Breadcrumb" className="mb-4 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500 sm:text-xs"><Link href="/" className="hover:underline">Home</Link><ChevronRight size={12}/><Link href={categoryBrowserHref(category)} className="hover:underline">Categories</Link><ChevronRight size={12}/><span className="font-medium capitalize text-[#315b49]">{title}</span></nav><div className="mb-5 flex items-start justify-between gap-3"><div><h1 className="font-inter text-2xl font-semibold tracking-tight capitalize sm:text-3xl">{title}</h1><p role="status" className="mt-2 text-xs text-slate-500 sm:text-sm">{loading?'Finding matching furniture…':error?'Results are temporarily unavailable':`${data?.total||0} product${data?.total===1?'':'s'}${search?` matching “${search}”`:''}`}</p></div><Link href={categoryBrowserHref(category)} className="mt-1 shrink-0 rounded-lg border border-[#dce4df] bg-white px-3 py-2 text-xs font-medium sm:text-sm">Change category</Link></div>
+ <form onSubmit={e=>{e.preventDefault();update({search:searchInput.trim()});}} className="mb-5 flex overflow-hidden rounded-xl border border-[#cddbd2] bg-white"><label htmlFor="catalog-search" className="sr-only">Search products</label><Search size={19} className="my-auto ml-3 shrink-0 text-slate-400"/><input id="catalog-search" type="search" value={searchInput} onChange={e=>setSearchInput(e.target.value)} placeholder={`Search ${title.toLowerCase()}…`} className="min-w-0 flex-1 bg-transparent px-3 py-3.5 text-sm outline-none"/><button aria-label="Search products" className="shrink-0 bg-[#214f40] px-4 text-white sm:px-5"><Search size={19}/></button></form>
+ <div className="grid items-start gap-6 lg:grid-cols-[230px_minmax(0,1fr)]"><aside className="hidden rounded-xl border border-[#e0e7e2] bg-white p-5 lg:block">{filterBody}</aside><main className="min-w-0"><div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-[#e0e7e2] pb-4"><button onClick={()=>setMobileFilters(true)} className="inline-flex items-center gap-2 rounded-lg border border-[#dce4df] bg-white px-3 py-2.5 text-xs font-semibold lg:hidden"><SlidersHorizontal size={15}/>Filters{filtered.length>0&&` (${filtered.length})`}</button><span className="hidden text-sm text-slate-500 lg:block">{data?`Showing ${data.items.length} of ${data.total}`:'Furniture for your home'}</span><label className="ml-auto flex min-w-0 items-center gap-2 text-xs text-slate-500"><span className="hidden sm:inline">Sort by</span><select aria-label="Sort products" value={sort} onChange={e=>{const [sort_by,sort_order]=e.target.value.split(':');update({sort_by,sort_order});}} className="min-w-0 max-w-[210px] rounded-lg border border-[#dce4df] bg-white px-3 py-2.5 text-xs font-medium text-[#123337] sm:text-sm">{sorts.map(([v,l])=><option key={v} value={v}>{l}</option>)}</select></label></div>
+ {filtered.length>0&&<div className="mb-5 flex flex-wrap gap-2">{filtered.map(key=><button key={key} onClick={()=>update({[key]:null})} className="inline-flex max-w-full items-center gap-2 rounded-full border border-[#d7e3da] bg-white px-3 py-1.5 text-[11px] text-[#315b49]">{key.replaceAll('_',' ')}: <span className="truncate">{params.get(key)}</span><X size={12} className="shrink-0"/><span className="sr-only">Remove filter</span></button>)}</div>}
+ {error?<div role="alert" className="rounded-xl border border-[#dce4df] bg-white p-8 text-center"><p className="text-sm text-slate-600">{error}</p><button onClick={()=>setRetry(v=>v+1)} className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#214f40] px-5 py-3 text-sm text-white"><RotateCcw size={15}/>Try again</button></div>:loading?<div aria-label="Loading products" className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-3">{Array.from({length:6},(_,i)=><div key={i} className="animate-pulse rounded-xl border border-[#e3e8e5] bg-white"><div className="aspect-square rounded-t-xl bg-[#edf1ee]"/><div className="space-y-3 p-4"><div className="h-4 w-20 rounded bg-slate-100"/><div className="h-3 rounded bg-slate-100"/></div></div>)}</div>:!data?.items.length?<div className="rounded-xl border border-[#dce4df] bg-white px-5 py-14 text-center"><PackageSearch size={40} className="mx-auto mb-4 text-[#8ca496]"/><h2 className="font-inter text-xl font-semibold">No matching furniture yet</h2><p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-slate-500">{filtered.length?'Try removing a filter or searching for something else.':'The store has no published products matching this category right now. Explore another category.'}</p><Link href="/customer/categories" className="mt-5 inline-block rounded-lg bg-[#214f40] px-5 py-3 text-sm font-semibold text-white">Explore categories</Link>{filtered.length>0&&<button onClick={reset} className="mx-auto mt-4 block text-sm font-semibold text-[#315b49]">Clear filters</button>}</div>:<><div className="grid grid-cols-2 items-stretch gap-3 sm:gap-5 xl:grid-cols-3">{data.items.map(product=><MarketplaceProductCard key={product.id} product={product}/>)}</div>{data.pages>1&&<nav aria-label="Product pages" className="mt-8 flex items-center justify-center gap-4 text-sm"><button disabled={page<=1} onClick={()=>update({page:String(page-1)})} className="rounded-lg border bg-white p-3 disabled:opacity-40" aria-label="Previous page"><ChevronLeft size={17}/></button><span>Page {page} of {data.pages}</span><button disabled={page>=data.pages} onClick={()=>update({page:String(page+1)})} className="rounded-lg border bg-white p-3 disabled:opacity-40" aria-label="Next page"><ChevronRight size={17}/></button></nav>}</>}
+ </main></div></div>{mobileFilters&&<div className="fixed inset-0 z-[9999] flex justify-end bg-black/40" onClick={()=>setMobileFilters(false)}><section role="dialog" aria-modal="true" aria-label="Product filters" className="flex h-full w-full max-w-sm flex-col bg-white shadow-xl" onClick={e=>e.stopPropagation()}><div className="flex items-center justify-between border-b p-4"><span className="text-lg font-semibold">Refine your search</span><button autoFocus onClick={()=>setMobileFilters(false)} aria-label="Close filters" className="rounded-lg p-2"><X size={22}/></button></div><div className="min-h-0 flex-1 overflow-y-auto p-5">{filterBody}</div><div className="border-t p-4"><button onClick={()=>setMobileFilters(false)} className="w-full rounded-xl bg-[#214f40] px-4 py-3 text-sm font-semibold text-white">Show results</button></div></section></div>}</div>;
 }
-
-export default function ProductsPage() {
-  return (
-    <Suspense fallback={<div className="h-96 flex items-center justify-center"><span className="text-sm text-wood-500 font-bold loading-pulse">CURATING CATALOG...</span></div>}>
-      <ProductsContent />
-    </Suspense>
-  );
-}
+export default function ProductsPage(){return <Suspense fallback={<p role="status" className="p-10 text-center text-sm text-slate-500">Loading furniture…</p>}><ProductResults/></Suspense>;}

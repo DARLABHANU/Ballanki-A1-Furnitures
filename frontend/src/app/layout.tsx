@@ -3,6 +3,7 @@ import { Playfair_Display, Inter, Outfit } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { Sparkles, Clock, Hammer } from "lucide-react";
 import "./globals.css";
+import GoogleAuthProvider from "@/components/GoogleAuthProvider";
 import AuthInitializer from "@/components/AuthInitializer";
 import ImpersonationBanner from "@/components/ImpersonationBanner";
 import SessionGate from "@/components/SessionGate";
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
       <body className="bg-white font-inter text-wood-900 antialiased" suppressHydrationWarning>
+        <GoogleAuthProvider>
         <ImpersonationBanner />
         {!MAINTENANCE_MODE && <AuthInitializer />}
         <Toaster
@@ -150,6 +152,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         )}
         {!MAINTENANCE_MODE && <DeliveryLocationInitializer />}
         <BottomNav />
+        </GoogleAuthProvider>
       </body>
     </html>
   );

@@ -49,7 +49,7 @@ export default function ProductCard({ product }: Props) {
     e.preventDefault();
     e.stopPropagation();
     // In actual implementation, we might popup a modal or redirect
-    window.location.href = `/customer/products/${product.id}?bargain=true`;
+    window.location.href = `/customer/products/${product.id}?negotiate=1`;
   };
 
   const isMadeToOrder = product.fulfillment_type === 'MADE_TO_ORDER' || product.fulfillment_type === 'CUSTOM_ORDER';

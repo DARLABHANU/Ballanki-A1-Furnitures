@@ -47,7 +47,8 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
   const router = useRouter();
   const { logout, user, isAuthenticated } = useAuthStore();
   const [mobileOpen, setMobileOpen] = useState(false);
-  if (pathname.startsWith("/customer/products")) return <><Navbar discovery />{children}<Footer /></>;
+  if (pathname === "/customer/categories") return <>{children}</>;
+  if (pathname.startsWith("/customer/products")) return <><Navbar discovery hideSearch={pathname === "/customer/products"} />{children}<Footer /></>;
   if (/^\/customer\/orders\/[^/]+\/?$/.test(pathname)) return <>{children}</>;
   const sidebarContent = (
     <div className="flex flex-col h-full bg-[#0D0D0D] text-wood-100 p-4 font-garamond justify-between">

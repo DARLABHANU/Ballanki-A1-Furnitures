@@ -1,163 +1,30 @@
 "use client";
-
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ChevronLeft, ShoppingBag, ChevronRight } from "lucide-react";
-import { productApi } from "@/lib/api";
-
-const DEFAULT_CATEGORIES = [
-  {
-    name: "Sofas",
-    sub: "Unmatched Comfort",
-    img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=200",
-    href: "/customer/products?category=living-room",
-    bg: "#F8F5F0",
-  },
-  {
-    name: "Dining",
-    sub: "Gather Around",
-    img: "https://images.unsplash.com/photo-1567016432779-094069958ea5?auto=format&fit=crop&q=80&w=200",
-    href: "/customer/products?category=bedroom",
-    bg: "#F8F5F0",
-  },
-  {
-    name: "Chairs",
-    sub: "Restful Retreats",
-    img: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80&w=200",
-    href: "/customer/products?category=dresses",
-    bg: "#F8F5F0",
-  },
-];
-
-export default function CategoriesPage() {
-  const router = useRouter();
-  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
-
-  useEffect(() => {
-    productApi.categories().then((res) => {
-      if (Array.isArray(res.data) && res.data.length > 0) {
-        const mapped = res.data.map((cat: any) => ({
-          name: cat.name,
-          sub: cat.description || (cat.slug === "Sofas" ? "Unmatched Comfort" : cat.slug === "Dining" ? "Gather Around" : "Restful Retreats"),
-          img: cat.image_url || (cat.slug === "Sofas" ? "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=200" : cat.slug === "Dining" ? "https://images.unsplash.com/photo-1567016432779-094069958ea5?auto=format&fit=crop&q=80&w=200" : "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80&w=200"),
-          href: `/customer/products?category=${cat.slug}`,
-          bg: "#F8F5F0",
-        }));
-        setCategories(mapped);
-      }
-    }).catch(() => {});
-  }, []);
-
-  return (
-    <div className="space-y-6 text-[#1A1A1A] font-garamond">
-
-      {/* ══════════════════════════════════════════════
-          DESKTOP: page heading (Navbar comes from layout)
-         ══════════════════════════════════════════════ */}
-      <div className="hidden md:block max-w-4xl mx-auto px-6 pt-8 pb-2">
-        <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#EFEBE3] border border-[#E2DAC8] px-2.5 py-1 rounded-md uppercase inline-block mb-2">
-          BROWSE
-        </span>
-        <h1 className="font-cormorant text-3xl font-bold text-[#1A1A1A]">Shop by Category</h1>
-        <p className="font-garamond text-sm text-[#666666] mt-1">
-          Handpicked collections curated just for you
-        </p>
-        <div className="w-12 h-0.5 bg-[#0D0D0D] mt-3" />
-      </div>
-
-      {/* Main content */}
-      <div className="max-w-4xl mx-auto px-4 md:px-6 py-4 md:py-6 space-y-4">
-
-        {/* ── Hero Banner ── */}
-        <section
-          className="rounded-2xl overflow-hidden relative flex items-center justify-between min-h-[118px] md:min-h-[150px]"
-          style={{
-            background: "linear-gradient(125deg, #1A1A1A 0%, #2A1C10 55%, #0D0D0D 100%)",
-          }}
-        >
-          {/* Decorative leaves – left */}
-          <div className="absolute left-0 top-0 bottom-0 w-20 pointer-events-none overflow-hidden opacity-40">
-            <svg viewBox="0 0 80 130" fill="none" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <path d="M-10 65 Q25 5 60 -5 Q42 35 38 65 Q42 95 60 135 Q25 125 -10 65Z" fill="#5CB85C" />
-              <path d="M-10 65 L38 65" stroke="#4CAF50" strokeWidth="0.8" strokeDasharray="3,4" />
-              <path d="M10 30 Q35 15 55 10" stroke="#4CAF50" strokeWidth="0.7" strokeDasharray="2,3" />
-              <path d="M10 100 Q35 115 55 120" stroke="#4CAF50" strokeWidth="0.7" strokeDasharray="2,3" />
-            </svg>
-          </div>
-
-          {/* Text */}
-          <div className="relative z-10 pl-6 py-5 flex-1">
-            <h2 className="font-cormorant text-[22px] md:text-[28px] font-bold text-white leading-[1.2]">
-              Handpicked Collections<br />
-              <span className="text-[#C4B299]">Just for You</span>{" "}
-              <span className="text-[20px]">✨</span>
-            </h2>
-          </div>
-
-          {/* Jewellery image */}
-          <div className="relative z-10 flex-shrink-0 w-[130px] md:w-[160px] h-[118px] md:h-[150px] flex items-end justify-end overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=200"
-              alt="Sofa Collections"
-              className="w-full h-full object-contain object-right-bottom"
-              style={{ filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.3))" }}
-            />
-          </div>
-        </section>
-
-        {/* ── Category Cards ── */}
-        {categories.map((cat, i) => (
-          <Link
-            key={cat.name}
-            href={cat.href}
-            className="block rounded-2xl overflow-hidden border border-[#E2DAC8] shadow-xs hover:shadow-md active:scale-[0.99] transition-all duration-300 group"
-            style={{ background: cat.bg }}
-          >
-            <div className="flex items-center justify-between px-5 md:px-7 py-4 md:py-5">
-              {/* Left: text */}
-              <div className="space-y-1 flex-1">
-                <h3 className="font-cormorant text-[24px] md:text-[28px] font-bold text-[#1A1A1A] leading-none group-hover:text-[#2A1C10] transition-colors">
-                  {cat.name}
-                </h3>
-                <p className="font-garamond text-sm text-[#666666]">{cat.sub}</p>
-                {/* Desktop explore link */}
-                <div className="hidden md:flex items-center gap-1 font-garamond text-xs font-semibold text-[#2A1C10] mt-2 group-hover:underline">
-                  Explore Now
-                  <ChevronRight size={13} />
-                </div>
-              </div>
-
-              {/* Right: product image */}
-              <div
-                className="flex-shrink-0 flex items-center justify-end overflow-hidden"
-                style={{ width: i === 0 ? 120 : i === 1 ? 130 : 110, height: i === 0 ? 120 : i === 1 ? 110 : 130 }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={cat.img}
-                  alt={cat.name}
-                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                  style={{ filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.1))" }}
-                />
-              </div>
-            </div>
-          </Link>
-        ))}
-
-        {/* ── View All Products CTA (desktop only) ── */}
-        <div className="hidden md:flex justify-center pt-4">
-          <Link
-            href="/customer/products"
-            className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white font-garamond text-sm font-bold px-8 py-3.5 rounded-xl transition-all shadow-sm"
-          >
-            View All Products
-            <ChevronRight size={16} />
-          </Link>
-        </div>
-
-      </div>
+import {Suspense,useEffect,useRef} from 'react';
+import Link from 'next/link';
+import {useSearchParams} from 'next/navigation';
+import {ArrowLeft,ChevronRight,MessageCircle} from 'lucide-react';
+import {furnitureCategories,findFurnitureCategory,categoryBrowserHref,categoryProductsHref} from '@/lib/furnitureCategories';
+function CategoryBrowser(){
+ const params=useSearchParams();
+ const selected=findFurnitureCategory(params.get('category'));
+ const activeLink=useRef<HTMLAnchorElement>(null),content=useRef<HTMLElement>(null);
+ const items=selected.related.map(slug=>findFurnitureCategory(slug));
+ useEffect(()=>{activeLink.current?.scrollIntoView({block:'nearest',inline:'nearest'});if(content.current)content.current.scrollTop=0;},[selected.slug]);
+ return <div className="flex h-dvh min-h-0 flex-col overflow-hidden bg-white font-inter text-[#123337] lg:h-dvh">
+  <header className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-[#e8edeb] bg-[#f7f9f8] px-4 sm:h-20 sm:px-6"><div className="flex min-w-0 items-center gap-3"><Link href="/" aria-label="Back to home" className="grid h-10 w-9 shrink-0 place-items-center rounded-lg hover:bg-[#eaf1ed]"><ArrowLeft size={25}/></Link><h1 className="font-inter text-xl font-semibold tracking-tight sm:text-2xl">Categories</h1></div><Link href="/customer/products" className="shrink-0 text-xs font-semibold text-[#315b49] hover:underline sm:text-sm">Browse all</Link></header>
+  <div className="flex min-h-0 flex-1 overflow-hidden">
+   <nav aria-label="Furniture categories" className="w-[104px] shrink-0 overflow-y-auto scrollbar-none overscroll-contain bg-[#eaf2ed] pb-4 sm:w-28">
+    {furnitureCategories.map(category=>{const active=category.slug===selected.slug;return <Link key={category.slug||'all'} ref={active?activeLink:undefined} href={categoryBrowserHref(category.slug)} replace scroll={false} aria-current={active?'page':undefined} className={`relative flex min-h-[100px] flex-col items-center justify-center gap-2 px-2 py-3 text-center text-[10px] leading-4 transition-colors sm:min-h-[112px] sm:text-xs ${active?'rounded-l-2xl bg-white font-semibold text-[#214f40]':'font-medium text-[#50675c] hover:bg-white/50'}`}>{active&&<span className="absolute bottom-6 left-0 top-6 w-[3px] rounded-r-full bg-[#214f40]"/>}<img src={category.image} alt="" width={48} height={48} loading="lazy" className="h-11 w-11 rounded-xl object-cover sm:h-12 sm:w-12"/><span className="max-w-full break-words">{category.name}</span>{!active&&<span className="absolute bottom-0 left-3 right-3 h-px bg-[#d5e3da]"/>}</Link>;})}
+   </nav>
+   <main ref={content} aria-label={`${selected.name} options`} className="min-w-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5 sm:px-6 sm:py-7 lg:px-8">
+    <div className="mb-6 flex items-center gap-4"><h2 className="shrink-0 font-inter text-sm font-semibold sm:text-lg">{selected.name}</h2><span className="h-px flex-1 bg-[#e6ebe8]"/></div>
+    <div className="grid grid-cols-2 items-start gap-x-3 gap-y-7 sm:grid-cols-3 sm:gap-x-5 md:grid-cols-4 lg:max-w-5xl lg:grid-cols-5 xl:grid-cols-6">
+     {items.map(category=><Link key={category.slug} href={categoryProductsHref(category.slug)} className="group flex min-w-0 flex-col items-center gap-3 text-center"><span className="flex h-[72px] w-[72px] items-center justify-center overflow-hidden rounded-full bg-[#f3f5f4] transition-transform group-hover:scale-105 sm:h-20 sm:w-20 lg:h-24 lg:w-24"><img src={category.image} width={96} height={96} alt="" loading="lazy" className="h-full w-full object-cover"/></span><span className="max-w-[100px] text-[11px] font-semibold leading-4 sm:text-xs sm:leading-5">{category.name}</span></Link>)}
+     <Link href={categoryProductsHref(selected.slug)} aria-label={selected.slug?`View all ${selected.name.toLowerCase()}`:'View all furniture'} className="group flex min-w-0 flex-col items-center gap-3 text-center"><span className="grid h-[72px] w-[72px] place-items-center rounded-full bg-[#f3f5f4] text-[#315b49] transition-colors group-hover:bg-[#eaf2ed] sm:h-20 sm:w-20 lg:h-24 lg:w-24"><ChevronRight size={32} strokeWidth={1.7}/></span><span className="text-[11px] font-semibold leading-4 sm:text-xs sm:leading-5">View all</span></Link>
     </div>
-  );
+    <div className="mt-8 border-t border-[#e6ebe8] pt-5 sm:mt-10"><Link href="/contact" className="inline-flex max-w-full items-center gap-3 rounded-lg border border-[#dce7df] bg-[#f3f7f4] px-3 py-3 text-xs font-medium shadow-sm sm:px-4"><MessageCircle size={18} className="shrink-0 text-[#315b49]"/><span className="leading-5">Need help choosing furniture?<span className="block font-semibold sm:ml-1 sm:inline">Contact the store</span></span><ChevronRight size={17} className="shrink-0"/></Link></div>
+   </main>
+  </div>
+ </div>;
 }
+export default function CategoriesPage(){return <Suspense fallback={<div className="min-h-dvh bg-white p-6 text-sm text-slate-500" role="status">Loading furniture categories…</div>}><CategoryBrowser/></Suspense>;}

@@ -1,0 +1,19 @@
+"use client";
+import Link from 'next/link';
+import {useState} from 'react';
+import {Heart,Loader2,MessageCircle,Package} from 'lucide-react';
+import toast from 'react-hot-toast';
+import {Product} from '@/types';
+import {formatPrice,getProductImage,getApiError} from '@/lib/utils';
+import {useAuthStore} from '@/store/authStore';
+import {useWishlistStore} from '@/store/wishlistStore';
+export default function MarketplaceProductCard({product}:{product:Product}){
+ const {isAuthenticated}=useAuthStore(),{toggleWishlist,isWishlisted}=useWishlistStore();const [busy,setBusy]=useState(false);const saved=isWishlisted(product.id);
+ const save=async()=>{if(busy)return;if(!isAuthenticated){toast.error('Please sign in to save your favourites.');return;}setBusy(true);try{await toggleWishlist(product.id);}catch(e){toast.error(getApiError(e));}finally{setBusy(false);}};
+ const date=product.created_at&&!Number.isNaN(Date.parse(product.created_at))?new Date(product.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',timeZone:'UTC'}):'';
+ return <article className="group flex min-w-0 flex-col overflow-hidden rounded-lg border border-[#dce2df] bg-white shadow-[0_2px_10px_rgba(0,0,0,0.12)] transition-shadow hover:shadow-[0_6px_18px_rgba(0,0,0,0.18)]">
+  <div className="relative aspect-square overflow-hidden bg-[#f5f6f7]"><Link href={`/customer/products/${product.id}`} aria-label={`View ${product.name}`} className="block h-full"><img src={getProductImage(product.images)} alt={product.name} loading="lazy" className="h-full w-full object-contain transition-transform group-hover:scale-[1.03]" onError={e=>{if(!e.currentTarget.dataset.fallback){e.currentTarget.dataset.fallback='true';e.currentTarget.src='/placeholder-product.svg';}}}/></Link><button type="button" onClick={()=>void save()} disabled={busy} aria-label={saved?`Remove ${product.name} from wishlist`:`Save ${product.name} to wishlist`} aria-pressed={saved} className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-white text-[#214f40] shadow-sm disabled:opacity-50 sm:h-9 sm:w-9">{busy?<Loader2 size={17} className="animate-spin"/>:<Heart size={18} fill={saved?'currentColor':'none'}/>}</button>{product.is_featured&&<span className="absolute bottom-2 left-2 rounded bg-[#eaf1ed] px-2 py-1 text-[8px] font-semibold text-[#214f40] sm:text-[10px]">FEATURED</span>}</div>
+  <Link href={`/customer/products/${product.id}`} className="flex flex-1 flex-col p-3 sm:p-4"><p className="text-lg font-bold tracking-tight sm:text-xl">{formatPrice(product.price)}</p>{!!product.compare_price&&product.compare_price>product.price&&<p className="mt-0.5 text-xs text-slate-400 line-through">{formatPrice(product.compare_price)}</p>}<h2 className="mt-1.5 line-clamp-2 font-inter text-xs font-medium leading-5 text-[#50666a] sm:text-sm">{product.name}</h2><p className="mt-2 truncate text-[10px] text-slate-500 sm:text-xs">{product.subcategory||product.category?.name||product.wood_type||'Furniture'}</p><div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-4 text-[9px] text-slate-500 sm:text-[11px]"><span className={product.stock_quantity>0?'text-[#315b49]':''}>{product.stock_quantity>0?`${product.stock_quantity} in stock`:product.allow_pre_order?'Made to order':'Out of stock'}</span>{date&&<time dateTime={product.created_at}>{date}</time>}</div></Link>
+  <div className="grid grid-cols-2 border-t border-[#e8edef] text-[10px] font-medium sm:text-xs"><Link href={`/customer/products/${product.id}`} className="flex min-h-11 items-center justify-center gap-1.5 border-r border-[#e8edef] hover:bg-slate-50"><Package size={13}/>Details</Link><Link href={`/customer/products/${product.id}?negotiate=1`} className="flex min-h-11 items-center justify-center gap-1.5 hover:bg-slate-50"><MessageCircle size={13}/>Chat</Link></div>
+ </article>;
+}

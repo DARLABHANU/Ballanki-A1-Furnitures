@@ -9,7 +9,7 @@ import { useAuthStore } from "@/store/authStore";
 
 // Removed /customer so the bottom nav shows up throughout the shopping experience on mobile.
 // Hide on Admin/internal dashboards to preserve their separate sidebars.
-const HIDDEN_PREFIXES = ["/auth", "/admin", "/promoter", "/support"];
+const HIDDEN_PREFIXES = ["/customer/categories", "/auth", "/admin", "/promoter", "/support"];
 
 const navItems = [
   {
@@ -20,9 +20,9 @@ const navItems = [
   },
   {
     label: "Categories",
-    href: "/customer/products",
+    href: "/customer/categories",
     icon: LayoutGrid,
-    match: (path: string) => path.startsWith("/customer/products"),
+    match: (path: string) => path.startsWith("/customer/categories") || path.startsWith("/customer/products"),
   },
   {
     label: "Wishlist",

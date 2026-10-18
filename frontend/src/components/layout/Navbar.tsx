@@ -18,7 +18,7 @@ import { authApi } from "@/lib/api";
 
 import NotificationBell from "@/components/NotificationBell";
 
-export default function Navbar({ discovery = false }: { discovery?: boolean }) {
+export default function Navbar({ discovery = false, hideSearch = false }: { discovery?: boolean; hideSearch?: boolean }) {
   const router = useRouter();
   const pathname = usePathname();
   const { user, isAuthenticated, logout, role } = useAuthStore();
@@ -138,7 +138,7 @@ export default function Navbar({ discovery = false }: { discovery?: boolean }) {
             </button>}
 
             {/* Mobile Search Bar */}
-            <form onSubmit={handleSearchSubmit} className="pb-3">
+            <form onSubmit={handleSearchSubmit} className={hideSearch ? "hidden" : "pb-3"}>
               <div className="flex items-center w-full bg-white border border-wood-200 rounded-lg overflow-hidden focus-within:border-wood-900 transition-all shadow-xs">
                 <Search size={15} className="ml-4 text-wood-500 flex-shrink-0" />
                 <input
@@ -169,7 +169,7 @@ export default function Navbar({ discovery = false }: { discovery?: boolean }) {
             </Link>
 
             {/* Desktop Search */}
-            <form onSubmit={handleSearchSubmit} className="flex items-center flex-1 max-w-xl mx-4">
+            <form onSubmit={handleSearchSubmit} className={hideSearch ? "hidden" : "flex items-center flex-1 max-w-xl mx-4"}>
               <div className="flex items-center w-full bg-white border border-wood-200 rounded-lg overflow-hidden shadow-xs focus-within:border-wood-900 focus-within:ring-1 focus-within:ring-wood-900 transition-all">
                 <input
                   type="text"
