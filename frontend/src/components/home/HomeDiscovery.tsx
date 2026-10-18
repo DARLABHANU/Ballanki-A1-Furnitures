@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Armchair, BedDouble, ChevronLeft, ChevronRight, Home, LampDesk, LayoutGrid, Sofa, Table2, Tv, Warehouse, MessageCircle, PackageCheck, CalendarDays } from "lucide-react";
 import { productApi } from "@/lib/api";
 import { Product } from "@/types";
+import { formatPrice, getProductImage } from "@/lib/utils";
 type Category = { name: string; slug: string };
 const furnitureCategories: Category[] = [
   { name: "Chairs", slug: "chair" }, { name: "Dining", slug: "dining" },
@@ -29,7 +30,7 @@ function categoryIcon(name: string) {
 }
 
 
-export default function HomeDiscovery(_props: { products: Product[]; loading: boolean }) {
+export default function HomeDiscovery({ products, loading }: { products: Product[]; loading: boolean }) {
   const [categories, setCategories] = useState<Category[]>(furnitureCategories);
   const [reducedMotion, setReducedMotion] = useState(false);
   const categoryRail = useRef<HTMLDivElement>(null);
@@ -68,6 +69,10 @@ export default function HomeDiscovery(_props: { products: Product[]; loading: bo
           </div>
         </div>
       </nav>
+    <section aria-labelledby="favourite-heading" className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <div className="mb-4 flex items-end justify-between gap-3"><div><p className="mb-2 text-[9px] uppercase tracking-[0.2em] text-[#77816b]">A closer look</p><h2 id="favourite-heading" className="font-playfair text-2xl sm:text-3xl">Find your next favourite.</h2></div><Link href="/customer/products" className="inline-flex min-h-11 shrink-0 items-center gap-2 text-xs font-semibold">View all<ArrowRight size={14}/></Link></div>
+      {loading?<p role="status" className="py-6 text-sm text-slate-500">Loading furniture…</p>:products.length>0?<div tabIndex={0} aria-label="Furniture favourites, swipe to explore" className="flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-3 sm:gap-5">{products.map(product=><Link key={product.id} href={`/customer/products/${product.id}`} className="group flex w-[85%] shrink-0 snap-start overflow-hidden rounded-2xl border border-[#dce3d7] bg-[#203f34] text-white sm:w-[60%] lg:w-[calc((100%_-_40px)/3)]"><div className="flex min-w-0 flex-1 flex-col justify-center p-4 sm:p-5"><span className="mb-2 text-[9px] uppercase tracking-widest text-[#d4dfc7]">Explore our furniture</span><h3 className="line-clamp-2 font-playfair text-xl leading-tight">{product.name}</h3><p className="mt-2 text-sm font-semibold">{formatPrice(product.price)}</p><span className="mt-4 inline-flex items-center gap-2 text-[11px]">View product<ArrowRight size={13}/></span></div><div className="m-3 aspect-[0.85] w-[43%] shrink-0 overflow-hidden rounded-xl bg-[#f1eee5]"><img src={getProductImage(product.images)} alt={product.name} loading="lazy" className="h-full w-full object-contain p-2 transition-transform group-hover:scale-105"/></div></Link>)}</div>:<p className="rounded-xl border border-[#dce3d7] bg-white p-5 text-sm text-slate-600">No products available to display right now. <Link href="/customer/products" className="underline">Browse furniture</Link></p>}
+    </section>
     <section aria-label="Welcome to Ballanki" className="mx-auto max-w-[1440px] px-4 pb-7 pt-5 sm:px-6 sm:pb-10 lg:px-8 lg:pt-8">
       <div className="grid overflow-hidden rounded-[24px] border border-[#e6e5dc] bg-[#f1eee5] lg:min-h-[520px] lg:grid-cols-[0.92fr_1.08fr] lg:rounded-[32px]">
         <div className="flex flex-col items-start px-6 pb-7 pt-7 sm:px-10 sm:py-10 lg:justify-center lg:px-12 xl:px-16">
