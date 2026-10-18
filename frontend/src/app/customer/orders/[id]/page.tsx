@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ChevronLeft, Loader2, Package, CreditCard, RotateCcw, XCircle } from "lucide-react";
+import PaymentShell from "@/components/checkout/PaymentShell";
+import { CheckCircle2, Clock3, Download, MapPin, ArrowUpRight, Loader2, Package, CreditCard, RotateCcw, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { orderApi, paymentApi } from "@/lib/api";
 import { Order } from "@/types";
@@ -14,7 +15,7 @@ import { useAuthStore } from "@/store/authStore";
 export default function OrderDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, isLoading: authLoading } = useAuthStore();
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
@@ -22,9 +23,12 @@ export default function OrderDetailPage() {
   const [isRefunding, setIsRefunding] = useState(false);
   const [paymentConfig,setPaymentConfig]=useState<{enabled:boolean;environment:string}|null>(null);
   const [paymentMessage,setPaymentMessage]=useState("");
+  const [downloading,setDownloading]=useState(false);
+  const downloadInvoice=async()=>{setDownloading(true);try{const {data}=await orderApi.invoice(id);const url=URL.createObjectURL(data);const link=document.createElement("a");link.href=url;link.download=`invoice-${order?.order_number||id}.pdf`;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}catch{toast.error("Invoice could not be downloaded. Please retry.");}finally{setDownloading(false);}};
   useEffect(()=>{paymentApi.config().then(({data})=>setPaymentConfig(data)).catch(()=>{});},[]);
 
   useEffect(() => {
+    if (authLoading) return;
     if (!isAuthenticated) {
       router.push("/auth/login");
       return;
@@ -33,7 +37,7 @@ export default function OrderDetailPage() {
       .then((r) => setOrder(r.data))
       .catch(() => router.push("/customer/orders"))
       .finally(() => setIsLoading(false));
-  }, [id, isAuthenticated]);
+  }, [id, isAuthenticated, authLoading, router]);
 
   const handleRefundOrder = async () => {
     const reason = window.prompt("Please enter a reason for the return request:");
@@ -74,173 +78,25 @@ export default function OrderDetailPage() {
   useEffect(()=>{if(!isAuthenticated||!order?.payment_active_id)return;let stopped=false;const check=()=>paymentApi.status(id).then(({data})=>{if(!stopped){setOrder(data);setPaymentMessage(data.payment_status==="paid"?"Payment verified.":data.payment_status==="partially_paid"?"Advance payment verified.":"Payment pending. You can check its status below.");}}).catch(()=>{if(!stopped)setPaymentMessage("Verification is temporarily unavailable. Check payment status again.");});void check();const timer=window.setInterval(()=>{if(!document.hidden)void check();},10000);return()=>{stopped=true;window.clearInterval(timer);};},[id,isAuthenticated,order?.payment_active_id]);
   const handlePayNow=async()=>{setIsProcessingPayment(true);try{const result=await openRazorpayCheckout(id,{name:user?.full_name,email:user?.email,contact:user?.phone||undefined});if(result.order)setOrder(result.order);else {const {data}=await paymentApi.status(id);setOrder(data);}setPaymentMessage(result.dismissed?"Checkout closed. You can resume payment here.":"Payment response verified. Captured amounts are shown below.");}catch(e:any){toast.error(e.response?.data?.error||"Could not start payment. Check its status and retry.");}finally{setIsProcessingPayment(false);}};
 
-  if (isLoading) {
-    return (
-      <div className="h-96 flex items-center justify-center bg-white">
-        <Loader2 className="animate-spin text-[#0D0D0D]" size={32} />
-      </div>
-    );
-  }
 
+  if (isLoading || authLoading) return <PaymentShell back="/customer/orders" backLabel="All orders"><p role="status" className="py-24 text-center">Loading order details…</p></PaymentShell>;
   if (!order) return null;
-
-  return (
-    <div className="min-h-screen bg-white text-[#1A1A1A] font-garamond">
-      <div className="mx-auto max-w-6xl px-4 pt-4 text-sm space-y-2">{(order.payment_environment==="sandbox"||paymentConfig?.environment==="sandbox")&&<p className="rounded-lg bg-amber-50 p-3">Razorpay sandbox test payment — no real funds collected.</p>}{paymentMessage&&<p role="status" className="rounded-lg border p-3">{paymentMessage}</p>}<p>Verified paid: {formatPrice(order.paid_amount||0)} · Outstanding: {formatPrice(order.outstanding_amount??Math.max(0,order.total_amount-(order.paid_amount||0)))}</p>{order.payment_method==="razorpay"&&<button disabled={isProcessingPayment} onClick={refreshPayment} className="underline disabled:opacity-50">Check payment status</button>}</div>
-      {/* ── Mobile Header ── */}
-      <div className="md:hidden sticky top-0 z-40 bg-white border-b border-[#E2DAC8] shadow-xs">
-        <div className="flex items-center justify-between px-4 py-3.5">
-          <button
-            onClick={() => router.back()}
-            className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-[#EFEBE3] transition-colors"
-            aria-label="Go back"
-          >
-            <ChevronLeft size={22} className="text-[#1A1A1A]" />
-          </button>
-          <h1 className="font-cormorant text-[20px] font-bold tracking-wide text-[#1A1A1A]">
-            Order Details
-          </h1>
-          <div className="w-9 h-9 flex items-center justify-center text-xs font-bold text-[#0D0D0D]">
-            #{order.order_number.slice(-4)}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Desktop Header ── */}
-      <div className="hidden md:block max-w-4xl mx-auto px-6 pt-6 pb-2">
-        <button
-          onClick={() => router.back()}
-          className="inline-flex items-center gap-1 text-xs font-bold text-[#0D0D0D] hover:underline mb-3"
-        >
-          <ChevronLeft size={16} /> Back to My Orders
-        </button>
-        <div className="flex justify-between items-start border-b border-[#EFEBE3] pb-3 mb-4">
-          <div>
-            <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#EFEBE3] border border-[#E2DAC8] px-2.5 py-1 rounded-md uppercase inline-block mb-1">
-              ORDER SUMMARY
-            </span>
-            <h1 className="font-cormorant text-3xl font-bold text-[#1A1A1A]">Order #{order.order_number}</h1>
-            <p className="text-xs text-[#808080] mt-0.5">Placed on {formatDate(order.created_at)}</p>
-          </div>
-          <span className={`text-xs font-bold px-3 py-1 rounded-md uppercase ${ORDER_STATUS_COLORS[order.status]}`}>
-            {ORDER_STATUS_LABELS[order.status]}
-          </span>
-        </div>
-      </div>
-
-      {/* ── Main Content Area ── */}
-      <div className="max-w-4xl mx-auto px-4 md:px-6 py-4 md:py-6 space-y-6">
-
-        {/* Order Tracker Card */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
-          <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-2 flex items-center gap-2">
-            <Package size={18} className="text-[#0D0D0D]" /> Order Tracking
-          </h2>
-          <OrderTracker status={order.status} history={order.status_history} />
-        </div>
-
-        {/* Items & Payment Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-          {/* Items List Card */}
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
-            <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-2">
-              Items Ordered ({order.items.length})
-            </h2>
-            <div className="space-y-3 divide-y divide-[#F2EFE9]">
-              {order.amount_due_now!==undefined&&<div className="mb-4 rounded-xl bg-amber-50 p-4 text-sm space-y-2"><p>Initial payment required: {formatPrice(order.amount_due_now)} · Payment status: {order.payment_status}</p>{order.has_preorder&&<><p>20% pre-book advance: {formatPrice(order.advance_amount||0)}</p><p>Balance after initial payment: {formatPrice(order.balance_amount||0)}</p></>}<p>{order.payment_environment==="sandbox"?"Sandbox payments are simulated; no real money is collected.":paymentConfig?.enabled?"Payments are confirmed only after server verification with Razorpay.":"Online payments are currently unavailable."}</p>{order.items.map(i=><p key={i.id}>{i.product_name}: {i.ready_stock_quantity??i.quantity} ready · {i.preorder_quantity||0} pre-booked{i.expected_delivery_date?` · Admin expected delivery: ${new Date(i.expected_delivery_date).toLocaleDateString('en-IN',{timeZone:'UTC'})}`:' · Delivery date awaiting admin confirmation'}</p>)}</div>}
-              {order.items.map((item) => (
-                <div key={item.id} className="pt-3 first:pt-0 flex items-center gap-3">
-                  <div className="w-16 h-16 rounded-xl overflow-hidden bg-white border border-[#E2DAC8] flex-shrink-0">
-                    {item.product_image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={item.product_image} alt={item.product_name} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[#808080]">
-                        <Package size={18} />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-garamond text-sm font-bold text-[#1A1A1A] truncate">{item.product_name}</p>
-                    <p className="text-xs text-[#808080]">Qty: {item.quantity}</p>
-                    <p className="font-garamond text-xs font-bold text-[#0D0D0D] mt-0.5">{formatPrice(item.total_price)}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Payment & Shipping Summary */}
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
-            <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-2 flex items-center gap-2">
-              <CreditCard size={18} className="text-[#0D0D0D]" /> Payment Breakdown
-            </h2>
-
-            <div className="space-y-2 text-xs text-[#666666]">
-              <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span className="font-bold text-[#1A1A1A]">{formatPrice(order.subtotal)}</span>
-              </div>
-              {order.discount_amount > 0 && (
-                <div className="flex justify-between text-[#2E7D32]">
-                  <span>Discount</span>
-                  <span className="font-bold">-{formatPrice(order.discount_amount)}</span>
-                </div>
-              )}
-              <div className="flex justify-between">
-                <span>Shipping Transit</span>
-                <span className="font-bold text-[#1A1A1A]">{order.shipping_amount === 0 ? "FREE" : formatPrice(order.shipping_amount)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Tax</span>
-                <span className="font-bold text-[#1A1A1A]">{formatPrice(order.tax_amount)}</span>
-              </div>
-
-              <div className="flex justify-between text-base font-bold text-[#1A1A1A] border-t border-[#EFEBE3] pt-3">
-                <span>Total Amount</span>
-                <span className="font-cormorant text-xl font-extrabold text-[#0D0D0D]">{formatPrice(order.total_amount)}</span>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="pt-3 border-t border-[#EFEBE3] space-y-2">
-              {paymentConfig?.enabled && order.payment_status !== "paid" && !["cancelled","refunded"].includes(order.status) && (
-                <button
-                  onClick={handlePayNow}
-                  disabled={isProcessingPayment}
-                  className="w-full bg-[#0D0D0D] text-white py-3 rounded-xl font-bold text-xs shadow-xs"
-                >
-                  {isProcessingPayment ? "Processing..." : (order.payment_status === "partially_paid"?"PAY REMAINING BALANCE VIA RAZORPAY":"PAY VIA RAZORPAY")}
-                </button>
-              )}
-
-              {order.status === "pending" && (
-                <button
-                  onClick={handleCancelOrder}
-                  disabled={isCancelling}
-                  className="w-full border border-red-200 text-red-600 hover:bg-red-50 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5"
-                >
-                  <XCircle size={14} />
-                  <span>{isCancelling ? "Cancelling..." : "Cancel Order"}</span>
-                </button>
-              )}
-
-              {order.status === "delivered" && (
-                <button
-                  onClick={handleRefundOrder}
-                  disabled={isRefunding}
-                  className="w-full border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#EFEBE3] py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5"
-                >
-                  <RotateCcw size={14} />
-                  <span>{isRefunding ? "Submitting..." : "Request Return / Refund (7 Days)"}</span>
-                </button>
-              )}
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  );
+  const paid=order.paid_amount||0;
+  const outstanding=order.outstanding_amount??Math.max(0,order.total_amount-paid);
+  const received=paid>0;
+  const closed=['cancelled','refunded'].includes(order.status);
+  const due=received?outstanding:Math.min(outstanding,order.amount_due_now??outstanding);
+  const a=order.shipping_address;
+  const heading=closed?`Order ${order.status}`:order.payment_status==='paid'?'Payment received. Thank you!':received?'Your advance is confirmed.':'Your order is saved.';
+  return <PaymentShell back="/customer/orders" backLabel="All orders"><section className={`mb-6 rounded-2xl border p-5 sm:p-8 ${received&&!closed?'border-emerald-200 bg-[#eaf4ed]':'border-slate-200 bg-white'}`}><div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between"><div><div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-full ${received&&!closed?'bg-emerald-800 text-white':'bg-amber-50 text-amber-700'}`}>{received&&!closed?<CheckCircle2 size={25}/>:<Clock3 size={25}/>}</div><p className="mb-2 text-xs font-semibold uppercase tracking-[.17em] text-slate-500">Order {order.order_number}</p><h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{heading}</h1><p className="mt-3 max-w-lg text-sm leading-6 text-slate-600">{closed?'Your current order and payment details are shown below.':order.payment_status==='paid'?'You can track preparation and delivery here. Keep your invoice for your records.':received?'Your pre-booking advance has been verified. Pay the remaining balance from this page.':'Payment has not been confirmed. Complete payment below, or check its status if you have already paid.'}</p><p className="mt-3 text-xs text-slate-500">Placed {formatDate(order.created_at)}</p></div><button onClick={downloadInvoice} disabled={downloading} className="flex shrink-0 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold disabled:opacity-50"><Download size={17}/>{downloading?'Preparing PDF…':'Download invoice'}</button></div></section>
+ {(order.payment_environment==='sandbox'||(!received&&paymentConfig?.environment==='sandbox'))&&<p className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">Test order · No real funds collected. This invoice is for testing.</p>}{paymentMessage&&<p role="status" className="mb-5 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">{paymentMessage}</p>}
+ <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px]"><div className="space-y-5"><section className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 sm:p-7"><div className="mb-5 flex items-center justify-between gap-3"><h2 className="text-lg font-semibold">Order progress</h2><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium capitalize">{ORDER_STATUS_LABELS[order.status]||order.status}</span></div><OrderTracker status={order.status} history={order.status_history}/>{order.tracking_number&&<p className="mt-4 break-all text-sm">Tracking: {order.tracking_number}</p>}{order.current_location&&<p className="mt-2 text-sm text-slate-500">Current location: {order.current_location}</p>}</section>
+ <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7"><h2 className="mb-5 text-lg font-semibold">Your furniture</h2><div className="divide-y divide-slate-100">{order.items.map((item,index)=><div key={String(item.id||index)} className="flex gap-4 py-4 first:pt-0 last:pb-0">{item.product_image?<img src={item.product_image} alt="" className="h-20 w-20 shrink-0 rounded-xl bg-slate-50 object-contain"/>:<div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-slate-50"><Package className="text-slate-300"/></div>}<div className="min-w-0 flex-1"><h3 className="break-words text-sm font-semibold">{item.product_name}</h3><p className="mt-1 text-xs text-slate-500">Qty {item.quantity} × {formatPrice(item.unit_price)}</p>{!!item.preorder_quantity&&<p className="mt-2 text-xs font-medium text-emerald-800">{item.preorder_quantity} pre-booked · {item.ready_stock_quantity||0} from ready stock</p>}<p className="mt-2 text-xs leading-5 text-slate-500">{item.expected_delivery_date?`Expected delivery: ${formatDate(item.expected_delivery_date)}`:'Expected delivery: awaiting store confirmation'}</p><p className="mt-2 text-sm font-semibold">{formatPrice(item.total_price)}</p></div></div>)}</div></section>
+ {a&&<section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7"><h2 className="mb-4 flex items-center gap-2 text-lg font-semibold"><MapPin size={19} className="text-emerald-700"/>Delivery address</h2><address className="break-words text-sm not-italic leading-6 text-slate-600"><strong className="text-slate-800">{a.full_name}</strong><br/>{a.line1}{a.line2&&<>, {a.line2}</>}<br/>{a.city}, {a.state} {a.pincode}<br/>{a.phone}</address></section>}</div>
+ <aside className="space-y-5 lg:sticky lg:top-6"><section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6"><h2 className="mb-5 text-lg font-semibold">Payment summary</h2><dl className="space-y-3 text-sm"><div className="flex justify-between"><dt className="text-slate-500">Subtotal</dt><dd>{formatPrice(order.subtotal)}</dd></div>{!!order.discount_amount&&<div className="flex justify-between text-emerald-700"><dt>Discount</dt><dd>−{formatPrice(order.discount_amount)}</dd></div>}<div className="flex justify-between"><dt className="text-slate-500">Delivery</dt><dd>{formatPrice(order.shipping_amount)}</dd></div>{!!order.tax_amount&&<div className="flex justify-between"><dt>Tax</dt><dd>{formatPrice(order.tax_amount)}</dd></div>}<div className="flex justify-between border-t border-slate-100 pt-3 font-semibold"><dt>Order total</dt><dd>{formatPrice(order.total_amount)}</dd></div><div className="flex justify-between text-emerald-700"><dt>Verified paid</dt><dd>{formatPrice(paid)}</dd></div><div className="flex justify-between"><dt className="text-slate-500">Outstanding</dt><dd>{formatPrice(outstanding)}</dd></div></dl>
+ <div className="mt-5 rounded-xl bg-[#edf4ef] p-4"><p className="text-xs font-medium uppercase tracking-wide text-emerald-800">{closed?'Payment status':due>0?'Amount to pay':'Payment complete'}</p><p className="mt-1 text-2xl font-bold text-[#214f40]">{closed?order.payment_status.replaceAll('_',' '):formatPrice(due)}</p>{!received&&order.has_preorder&&<p className="mt-2 text-xs leading-5 text-slate-600">Includes the pre-booking advance and charges due now. Remaining after this payment: {formatPrice(Math.max(0,outstanding-due))}.</p>}</div>
+ {!closed&&due>0&&<>{paymentConfig?.enabled?<button onClick={handlePayNow} disabled={isProcessingPayment} className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#214f40] px-4 py-4 text-sm font-semibold text-white disabled:opacity-50"><CreditCard size={17}/>{isProcessingPayment?'Checking payment…':received?'Pay remaining balance':'Complete payment'}</button>:<p className="mt-4 text-sm text-amber-800">Online payment is currently unavailable. Contact the store for assistance.</p>}{order.payment_method==='razorpay'&&<button onClick={refreshPayment} disabled={isProcessingPayment} className="mt-3 w-full rounded-xl border border-slate-200 p-3 text-sm font-medium disabled:opacity-50">Check payment status</button>}</>}
+ <p className="mt-4 text-xs leading-5 text-slate-500">Only captured, verified payments appear as paid. If money was debited, check payment status before trying again.</p></section>
+ <section className="rounded-2xl border border-slate-200 bg-white p-5"><a href="/customer/support" className="flex items-center justify-between text-sm font-semibold">Need help with this order?<ArrowUpRight size={17}/></a><p className="mt-2 text-xs leading-5 text-slate-500">Share order number {order.order_number} with the store.</p>{order.status==='pending'&&!received&&!order.payment_active_id&&<button onClick={handleCancelOrder} disabled={isCancelling} className="mt-4 text-sm text-red-700 disabled:opacity-50">{isCancelling?'Cancelling…':'Cancel unpaid order'}</button>}{order.status==='delivered'&&<button onClick={handleRefundOrder} disabled={isRefunding} className="mt-4 text-sm font-medium text-emerald-800 disabled:opacity-50">{isRefunding?'Submitting…':'Request a return'}</button>}</section><a href="/customer/products" className="block py-2 text-center text-sm font-semibold text-emerald-800">Continue shopping →</a></aside></div></PaymentShell>;
 }
+

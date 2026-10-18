@@ -162,6 +162,7 @@ export interface OrderItem {
 }
 
 export interface Order {
+  shipping_address?: Partial<Address>;
   id: string | number;
   order_number: string;
   subtotal: number;

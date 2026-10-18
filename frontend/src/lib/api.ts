@@ -60,6 +60,7 @@ export const cartApi = {
 };
 
 export const orderApi = {
+  invoice: (id: string | number) => api.get(`/orders/${id}/invoice`, { responseType: "blob" }),
   list: (params?: object) => api.get("/orders", { params }),
   get: (id: string | number) => api.get(`/orders/${id}`),
   create: (data: object) => api.post("/orders", data),

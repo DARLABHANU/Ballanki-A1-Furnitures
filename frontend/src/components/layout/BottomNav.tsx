@@ -56,7 +56,7 @@ export default function BottomNav() {
   const { wishlistIds } = useWishlistStore();
 
   // Hide ONLY on internal staff portals
-  if (/^\/customer\/products\/[^/]+\/?$/.test(pathname) || HIDDEN_PREFIXES.some((p) => pathname.startsWith(p))) return null;
+  if (/^\/customer\/products\/[^/]+\/?$/.test(pathname) || /^\/customer\/orders\/[^/]+\/?$/.test(pathname) || HIDDEN_PREFIXES.some((p) => pathname.startsWith(p))) return null;
 
   const cartCount = cart?.item_count || 0;
   const wishlistCount = wishlistIds.length || 0;

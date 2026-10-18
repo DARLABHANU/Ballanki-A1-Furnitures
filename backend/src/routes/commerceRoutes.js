@@ -86,6 +86,12 @@ router.post('/orders',wrap(async(req,res)=>{
  res.status(201).json(orderView(created));
 }));
 const accessible=async req=>{const order=await Order.findById(id(req.params.id)).populate('customer');if(!order)fail(404,'Order not found');const owner=String(order.customer._id)===String(req.user._id);const merchant=req.user.role==='merchant'&&order.items.some(i=>i.merchant_id===String(req.user._id));if(!owner&&!merchant&&!['admin','support'].includes(req.user.role))fail(403,'You cannot access this order');return order;};
+router.get('/orders/:id/invoice',wrap(async(req,res)=>{
+ const order=await accessible(req);if(!['admin','support'].includes(req.user.role)&&String(order.customer._id)!==String(req.user._id))fail(403,'Only the customer or store can download this invoice');
+ const pdf=await require('../lib/invoice')(order);
+ const filename='invoice-'+String(order.order_number).replace(/[^a-zA-Z0-9_-]/g,'')+'.pdf';
+ res.set({'Content-Type':'application/pdf','Content-Disposition':'attachment; filename="'+filename+'"','Cache-Control':'private, no-store'}).send(pdf);
+}));
 router.get('/orders/:id',wrap(async(req,res)=>{const o=await accessible(req);const v=orderView(o);if(req.user.role==='merchant')v.items=v.items.filter(i=>i.merchant_id===String(req.user._id));res.json(v);}));
 const cancelOrder=async order=>{
  const updated=await Order.findOneAndUpdate({_id:order._id,status:{$in:['pending','confirmed']},payment_status:'pending',paid_amount:{$in:[0,null]},payment_active_id:null,$or:[{payment_lock_until:null},{payment_lock_until:{$lte:new Date()}}]},{$set:{status:'cancelled'},$push:{status_history:{status:'cancelled',timestamp:new Date(),note:'Unpaid order cancelled'}}},{new:true});
