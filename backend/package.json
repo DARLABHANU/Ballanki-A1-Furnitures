@@ -9,7 +9,8 @@
     "test:negotiation": "node tests/negotiation-integration.js",
     "test:google": "node tests/google-auth-integration.js",
     "test:email": "node tests/email-integration.js",
-    "test:gmail": "node tests/gmail-provider.js"
+    "test:gmail": "node tests/gmail-provider.js",
+    "test:phonepe": "node tests/phonepe-integration.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

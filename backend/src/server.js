@@ -9,7 +9,7 @@ async function start(){
   if(!exists)await User.create({email:process.env.ADMIN_EMAIL,hashed_password:await bcrypt.hash(process.env.ADMIN_PASSWORD,12),full_name:'Local Administrator',role:'admin',is_verified:true});
  }
  require('./lib/emailQueue').startWorker();require('./lib/paymentService').startWorker();
- const server=app.listen(Number(process.env.PORT)||8000,process.env.HOST||'127.0.0.1',()=>console.log('Backend ready at http://localhost:'+(process.env.PORT||8000)+' — database '+mongoose.connection.name+' connected; payments pending'));
+ const server=app.listen(Number(process.env.PORT)||8000,process.env.HOST||'127.0.0.1',()=>console.log('Backend ready at http://localhost:'+(process.env.PORT||8000)+' — database '+mongoose.connection.name+' connected; payment mode '+require('./lib/phonepe').mode()));
  server.on('error',error=>{console.error('Cannot start server:',error.message);mongoose.disconnect().finally(()=>process.exit(1));});
  const stop=()=>{require('./lib/emailQueue').stopWorker();require('./lib/paymentService').stopWorker();server.close(()=>mongoose.disconnect().finally(()=>process.exit(0)));};process.on('SIGINT',stop);process.on('SIGTERM',stop);
 }
