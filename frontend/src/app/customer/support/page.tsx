@@ -89,7 +89,7 @@ export default function CustomerSupportPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "open":
-        return "bg-[#EFEBE3] text-[#2E7D32] border-[#E2DAC8]";
+        return "bg-[#edf4ef] text-[#2E7D32] border-[#dce5df]";
       case "in_progress":
         return "bg-amber-50 text-amber-700 border-amber-200";
       case "resolved":
@@ -110,11 +110,11 @@ export default function CustomerSupportPage() {
     <div className="min-h-screen bg-white text-[#1A1A1A] font-garamond">
 
       {/* ── Mobile Top Bar ── */}
-      <div className="md:hidden sticky top-0 z-40 bg-white border-b border-[#E2DAC8] shadow-xs">
+      <div className="md:hidden sticky top-0 z-40 bg-white border-b border-[#dce5df] shadow-xs">
         <div className="flex items-center justify-between px-4 py-3.5">
           <button
             onClick={() => router.back()}
-            className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-[#EFEBE3] transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-[#edf4ef] transition-colors"
             aria-label="Go back"
           >
             <ChevronLeft size={22} className="text-[#1A1A1A]" />
@@ -124,7 +124,7 @@ export default function CustomerSupportPage() {
           </h1>
           <button
             onClick={() => setShowCreateForm(!showCreateForm)}
-            className="w-9 h-9 flex items-center justify-center rounded-xl bg-[#0D0D0D] text-white shadow-xs"
+            className="w-9 h-9 flex items-center justify-center rounded-xl bg-[#214f40] text-white shadow-xs"
             aria-label="New ticket"
           >
             <Plus size={18} />
@@ -134,9 +134,9 @@ export default function CustomerSupportPage() {
 
       {/* ── Desktop Header ── */}
       <div className="hidden md:block max-w-5xl mx-auto px-6 pt-6 pb-2">
-        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-[#EFEBE3] pb-4 mb-4 gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-[#edf4ef] pb-4 mb-4 gap-4">
           <div>
-            <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#EFEBE3] border border-[#E2DAC8] px-2.5 py-1 rounded-md uppercase inline-block mb-1">
+            <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#edf4ef] border border-[#dce5df] px-2.5 py-1 rounded-md uppercase inline-block mb-1">
               HELP &amp; RESOLUTION CENTRE
             </span>
             <h1 className="font-cormorant text-3xl font-bold text-[#1A1A1A]">Customer Support</h1>
@@ -146,7 +146,7 @@ export default function CustomerSupportPage() {
           </div>
           <button
             onClick={() => setShowCreateForm(!showCreateForm)}
-            className="inline-flex items-center justify-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white text-xs font-bold px-5 py-3 rounded-xl transition-all shadow-xs"
+            className="inline-flex items-center justify-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white text-xs font-bold px-5 py-3 rounded-xl transition-all shadow-xs"
           >
             {showCreateForm ? <MessageSquare size={14} /> : <Plus size={14} />}
             <span>{showCreateForm ? "VIEW MY TICKETS" : "NEW SUPPORT REQUEST"}</span>
@@ -162,8 +162,8 @@ export default function CustomerSupportPage() {
           </div>
         ) : showCreateForm ? (
           /* Create Ticket Form */
-          <div className="max-w-2xl mx-auto bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-[#EFEBE3] pb-3">
+          <div className="max-w-2xl mx-auto bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-[#edf4ef] pb-3">
               <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A]">
                 Submit Support Ticket
               </h2>
@@ -186,7 +186,7 @@ export default function CustomerSupportPage() {
                   placeholder="Summarize your issue..."
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 />
               </div>
 
@@ -198,7 +198,7 @@ export default function CustomerSupportPage() {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                    className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   >
                     <option value="general_inquiry">General Inquiry</option>
                     <option value="order_help">Order Help</option>
@@ -214,7 +214,7 @@ export default function CustomerSupportPage() {
                   <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value)}
-                    className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                    className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   >
                     <option value="low">Low Priority</option>
                     <option value="medium">Medium Priority</option>
@@ -230,7 +230,7 @@ export default function CustomerSupportPage() {
                 <select
                   value={selectedOrderId}
                   onChange={(e) => setSelectedOrderId(e.target.value)}
-                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 >
                   <option value="">-- No Linked Order --</option>
                   {orders.map((order) => (
@@ -251,14 +251,14 @@ export default function CustomerSupportPage() {
                   placeholder="Provide all relevant details..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full bg-white border border-[#E2DAC8] rounded-xl p-3 text-xs font-garamond text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
+                  className="w-full bg-white border border-[#dce5df] rounded-xl p-3 text-xs font-garamond text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full flex items-center justify-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white font-bold text-xs py-3.5 rounded-xl transition-all shadow-xs disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white font-bold text-xs py-3.5 rounded-xl transition-all shadow-xs disabled:opacity-50"
               >
                 {submitting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                 <span>SUBMIT SUPPORT REQUEST</span>
@@ -269,7 +269,7 @@ export default function CustomerSupportPage() {
           /* Tickets List */
           <div className="space-y-4">
             {tickets.length === 0 ? (
-              <div className="bg-white border border-[#E2DAC8] rounded-3xl p-12 text-center shadow-xs space-y-4 max-w-lg mx-auto my-8">
+              <div className="bg-white border border-[#dce5df] rounded-3xl p-12 text-center shadow-xs space-y-4 max-w-lg mx-auto my-8">
                 <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto text-[#808080]">
                   <HelpCircle size={28} />
                 </div>
@@ -277,7 +277,7 @@ export default function CustomerSupportPage() {
                 <p className="text-xs text-[#808080]">You do not have any open or previous support tickets.</p>
                 <button
                   onClick={() => setShowCreateForm(true)}
-                  className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-3 rounded-xl text-xs font-bold transition-all shadow-xs"
+                  className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-3 rounded-xl text-xs font-bold transition-all shadow-xs"
                 >
                   <Plus size={14} />
                   <span>NEW SUPPORT REQUEST</span>
@@ -292,7 +292,7 @@ export default function CustomerSupportPage() {
                   <Link
                     key={t.id}
                     href={`/customer/support/${t.id}`}
-                    className="block bg-white border border-[#E2DAC8] hover:border-[#0D0D0D] rounded-2xl p-4 md:p-5 shadow-xs transition-all group"
+                    className="block bg-white border border-[#dce5df] hover:border-[#0D0D0D] rounded-2xl p-4 md:p-5 shadow-xs transition-all group"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="space-y-1">
@@ -300,7 +300,7 @@ export default function CustomerSupportPage() {
                           <span className="font-garamond text-xs font-bold text-[#0D0D0D]">
                             TICKET #{t.id}
                           </span>
-                          <span className="text-[10px] text-[#666666] font-bold bg-white border border-[#E2DAC8] px-2 py-0.5 rounded-md">
+                          <span className="text-[10px] text-[#666666] font-bold bg-white border border-[#dce5df] px-2 py-0.5 rounded-md">
                             {categoryLabels[t.category] || t.category}
                           </span>
                           <span className={`text-[10px] font-bold uppercase px-2 py-0.5 border rounded-md ${getStatusBadge(t.status)}`}>

@@ -51,7 +51,7 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
   if (pathname.startsWith("/customer/products")) return <><Navbar discovery hideSearch={pathname === "/customer/products"} />{children}<Footer /></>;
   if (/^\/customer\/orders\/[^/]+\/?$/.test(pathname)) return <>{children}</>;
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-[#0D0D0D] text-wood-100 p-4 font-garamond justify-between">
+    <div className="flex flex-col h-full bg-[#214f40] text-wood-100 p-4 font-garamond justify-between">
       
       <div className="space-y-4 overflow-y-auto pr-1">
         {/* Top Store Logo */}
@@ -135,14 +135,14 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
     <div className="dashboard-shell min-h-dvh bg-white text-[#1A1A1A] font-garamond flex flex-col lg:flex-row">
       
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:block w-60 flex-shrink-0 min-h-screen border-r border-wood-950 bg-[#0D0D0D]">
+      <aside className="hidden lg:block w-60 flex-shrink-0 min-h-screen border-r border-wood-950 bg-[#214f40]">
         {sidebarContent}
       </aside>
 
       {/* Mobile Drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs lg:hidden" onClick={() => setMobileOpen(false)}>
-          <div className="w-64 max-w-[85vw] overflow-y-auto bg-[#0D0D0D] h-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="w-64 max-w-[85vw] overflow-y-auto bg-[#214f40] h-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
             {sidebarContent}
           </div>
         </div>
@@ -152,7 +152,7 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
       <div className="flex-1 flex flex-col min-w-0">
         
         {/* Header Bar */}
-        <header className="bg-white border-b border-[#E2DAC8] px-3 sm:px-6 py-3 flex items-center justify-between gap-2 sm:gap-4 sticky top-0 z-30 shadow-2xs">
+        <header className="bg-white border-b border-[#dce5df] px-3 sm:px-6 py-3 flex items-center justify-between gap-2 sm:gap-4 sticky top-0 z-30 shadow-2xs">
           
           {/* Left: Mobile Menu Toggle + Search */}
           <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0 max-w-md">
@@ -165,7 +165,7 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
               <input
                 type="text"
                 placeholder="Search anything..."
-                className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-1.5 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-full pl-9 pr-4 py-1.5 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
               />
             </div>
           </div>
@@ -176,8 +176,8 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
             <NotificationBell />
 
             {/* Customer profile pill */}
-            <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-[#EFEBE3]">
-              <div className="w-8 h-8 rounded-full bg-[#0D0D0D] text-white font-bold text-xs flex items-center justify-center border border-[#E2DAC8]">
+            <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-[#edf4ef]">
+              <div className="w-8 h-8 rounded-full bg-[#214f40] text-white font-bold text-xs flex items-center justify-center border border-[#dce5df]">
                 {user?.full_name?.[0] || "C"}
               </div>
               <div className="hidden sm:block text-left">
@@ -193,7 +193,7 @@ export default function CustomerLayout({ children }: { children: React.ReactNode
             {/* Browse Shop button */}
             <button
               onClick={() => router.push("/")}
-              className="hidden md:inline-flex items-center gap-1.5 bg-[#0D0D0D] hover:bg-[#333333] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
+              className="hidden md:inline-flex items-center gap-1.5 bg-[#214f40] hover:bg-[#193e32] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
             >
               <span>Browse Shop</span>
               <ExternalLink size={13} />

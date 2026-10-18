@@ -204,8 +204,8 @@ export default function CustomerProfilePage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 text-[#1A1A1A] font-garamond py-4">
       {/* Header */}
-      <div className="border-b border-[#EFEBE3] pb-4">
-        <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#EFEBE3] border border-[#E2DAC8] px-2.5 py-1 rounded-md uppercase inline-block mb-1">
+      <div className="border-b border-[#edf4ef] pb-4">
+        <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#edf4ef] border border-[#dce5df] px-2.5 py-1 rounded-md uppercase inline-block mb-1">
           ACCOUNT SETTINGS
         </span>
         <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">
@@ -216,9 +216,9 @@ export default function CustomerProfilePage() {
 
       {/* User Card */}
       {user && (
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-            <div className="w-14 h-14 shrink-0 rounded-full bg-[#0D0D0D] text-white font-cormorant font-bold text-2xl flex items-center justify-center border-2 border-gold-400/40">
+            <div className="w-14 h-14 shrink-0 rounded-full bg-[#214f40] text-white font-cormorant font-bold text-2xl flex items-center justify-center border-2 border-gold-400/40">
               {user.full_name?.charAt(0).toUpperCase() || "C"}
             </div>
             <div className="min-w-0 break-words">
@@ -253,8 +253,8 @@ export default function CustomerProfilePage() {
             onClick={() => setTab(id as Tab)}
             className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-garamond text-xs font-bold transition-all border ${
               tab === id
-                ? "bg-[#0D0D0D] text-white border-[#0D0D0D] shadow-xs"
-                : "bg-white text-[#666666] border-[#E2DAC8] hover:border-[#0D0D0D]"
+                ? "bg-[#214f40] text-white border-[#0D0D0D] shadow-xs"
+                : "bg-white text-[#666666] border-[#dce5df] hover:border-[#0D0D0D]"
             }`}
           >
             <Icon size={14} />
@@ -264,24 +264,24 @@ export default function CustomerProfilePage() {
       </div>
 
       {/* Tab Panels */}
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs">
         {tab === "profile" && (
           <div className="space-y-4">
-            <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-2">Personal Information</h3>
+            <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-2">Personal Information</h3>
             <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4 font-garamond max-w-md">
               <div>
                 <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Full Name *</label>
-                <input {...profileForm.register("full_name")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
+                <input {...profileForm.register("full_name")} className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
               </div>
               <div>
                 <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Phone Number</label>
-                <input {...profileForm.register("phone")} type="tel" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="+91 98765 43210" />
+                <input {...profileForm.register("phone")} type="tel" className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="+91 98765 43210" />
               </div>
               <div>
                 <label className="text-xs font-bold text-[#808080] block mb-1">Email Address</label>
-                <input value={user?.email || ""} disabled className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] opacity-60 cursor-not-allowed" />
+                <input value={user?.email || ""} disabled className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] opacity-60 cursor-not-allowed" />
               </div>
-              <button type="submit" disabled={isSaving} className="bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl font-bold text-xs transition-all shadow-xs">
+              <button type="submit" disabled={isSaving} className="bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl font-bold text-xs transition-all shadow-xs">
                 {isSaving ? "Saving..." : "Save Changes"}
               </button>
             </form>
@@ -290,31 +290,31 @@ export default function CustomerProfilePage() {
 
         {tab === "payout" && (
           <div className="space-y-4">
-            <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-2">Payout Bank &amp; UPI Credentials</h3>
+            <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-2">Payout Bank &amp; UPI Credentials</h3>
             <form onSubmit={payoutForm.handleSubmit(onPayoutSubmit)} className="space-y-4 font-garamond max-w-lg">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Bank Name</label>
-                  <input {...payoutForm.register("payout_bank_name")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-semibold bg-white" placeholder="e.g. State Bank of India" />
+                  <input {...payoutForm.register("payout_bank_name")} className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-semibold bg-white" placeholder="e.g. State Bank of India" />
                 </div>
                 <div>
                   <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Account Holder Name</label>
-                  <input {...payoutForm.register("payout_account_holder_name")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-semibold bg-white" placeholder="Full name on bank account" />
+                  <input {...payoutForm.register("payout_account_holder_name")} className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-semibold bg-white" placeholder="Full name on bank account" />
                 </div>
                 <div>
                   <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Account Number</label>
-                  <input {...payoutForm.register("payout_account_number")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-mono bg-white" placeholder="Enter account number" />
+                  <input {...payoutForm.register("payout_account_number")} className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-mono bg-white" placeholder="Enter account number" />
                 </div>
                 <div>
                   <label className="text-xs font-bold text-[#1A1A1A] block mb-1">IFSC Code</label>
-                  <input {...payoutForm.register("payout_ifsc_code")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-mono uppercase bg-white" placeholder="e.g. SBIN0001234" />
+                  <input {...payoutForm.register("payout_ifsc_code")} className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-mono uppercase bg-white" placeholder="e.g. SBIN0001234" />
                 </div>
               </div>
               <div>
                 <label className="text-xs font-bold text-[#1A1A1A] block mb-1">UPI ID (VPA)</label>
-                <input {...payoutForm.register("payout_upi_id")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-mono bg-white" placeholder="e.g. name@upi" />
+                <input {...payoutForm.register("payout_upi_id")} className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-mono bg-white" placeholder="e.g. name@upi" />
               </div>
-              <button type="submit" disabled={isSaving} className="bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl font-bold text-xs transition-all shadow-xs">
+              <button type="submit" disabled={isSaving} className="bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl font-bold text-xs transition-all shadow-xs">
                 {isSaving ? "Saving..." : "Save Payout Credentials"}
               </button>
             </form>
@@ -323,21 +323,21 @@ export default function CustomerProfilePage() {
 
         {tab === "password" && (
           <div className="space-y-4">
-            <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-2">Change Security Password</h3>
+            <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-2">Change Security Password</h3>
             <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4 font-garamond max-w-md">
               <div>
                 <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Current Password *</label>
-                <input {...passwordForm.register("current_password")} type="password" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
+                <input {...passwordForm.register("current_password")} type="password" className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
               </div>
               <div>
                 <label className="text-xs font-bold text-[#1A1A1A] block mb-1">New Password *</label>
-                <input {...passwordForm.register("new_password")} type="password" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
+                <input {...passwordForm.register("new_password")} type="password" className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
               </div>
               <div>
                 <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Confirm New Password *</label>
-                <input {...passwordForm.register("confirm_password")} type="password" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
+                <input {...passwordForm.register("confirm_password")} type="password" className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
               </div>
-              <button type="submit" disabled={isSaving} className="bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl font-bold text-xs transition-all shadow-xs">
+              <button type="submit" disabled={isSaving} className="bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl font-bold text-xs transition-all shadow-xs">
                 {isSaving ? "Saving..." : "Update Password"}
               </button>
             </form>
@@ -346,18 +346,18 @@ export default function CustomerProfilePage() {
 
         {tab === "addresses" && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-[#EFEBE3] pb-2">
+            <div className="flex items-center justify-between border-b border-[#edf4ef] pb-2">
               <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A]">Saved Shipping Addresses</h3>
               <button
                 onClick={() => setShowAddressForm(!showAddressForm)}
-                className="inline-flex items-center gap-1 bg-[#0D0D0D] hover:bg-[#333333] text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs"
+                className="inline-flex items-center gap-1 bg-[#214f40] hover:bg-[#193e32] text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs"
               >
                 <Plus size={14} /> Add New
               </button>
             </div>
 
             {showAddressForm && (
-              <form onSubmit={addressForm.handleSubmit(onAddressSubmit)} className="space-y-3 bg-white p-4 rounded-2xl border border-[#E2DAC8] font-garamond max-w-lg">
+              <form onSubmit={addressForm.handleSubmit(onAddressSubmit)} className="space-y-3 bg-white p-4 rounded-2xl border border-[#dce5df] font-garamond max-w-lg">
                 <div>
                   <label className="text-xs font-bold block mb-1">Address Label</label>
                   <input {...addressForm.register("label")} placeholder="Home / Work" className="w-full border rounded-xl px-3 py-2 text-xs" />
@@ -388,7 +388,7 @@ export default function CustomerProfilePage() {
                   <label className="text-xs font-bold block mb-1">Pincode</label>
                   <input {...addressForm.register("pincode")} className="w-full border rounded-xl px-3 py-2 text-xs" />
                 </div>
-                <button type="submit" disabled={isSaving} className="bg-[#0D0D0D] text-white px-5 py-2.5 rounded-xl font-bold text-xs">
+                <button type="submit" disabled={isSaving} className="bg-[#214f40] text-white px-5 py-2.5 rounded-xl font-bold text-xs">
                   {isSaving ? "Saving..." : "Save Address"}
                 </button>
               </form>
@@ -396,9 +396,9 @@ export default function CustomerProfilePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {addresses.map((addr) => (
-                <div key={addr.id} className="p-4 border border-[#E2DAC8] rounded-2xl bg-white flex justify-between items-start font-garamond">
+                <div key={addr.id} className="p-4 border border-[#dce5df] rounded-2xl bg-white flex justify-between items-start font-garamond">
                   <div>
-                    <span className="text-[10px] font-bold bg-[#EFEBE3] text-[#2E7D32] px-2 py-0.5 rounded uppercase">{addr.label}</span>
+                    <span className="text-[10px] font-bold bg-[#edf4ef] text-[#2E7D32] px-2 py-0.5 rounded uppercase">{addr.label}</span>
                     <p className="font-bold text-xs mt-1">{addr.full_name}</p>
                     <p className="text-xs text-[#666666]">{addr.line1}, {addr.city}, {addr.state} - {addr.pincode}</p>
                     <p className="text-xs text-[#666666]">{addr.phone}</p>

@@ -8,9 +8,9 @@ export default function RefundPolicyPage() {
     <div className="flex flex-col min-h-screen bg-white font-garamond text-[#1A1A1A]">
       <Navbar />
       <main className="flex-1 py-12 px-4">
-        <div className="max-w-4xl mx-auto bg-white border border-[#E2DAC8] p-4 sm:p-8 md:p-12 rounded-3xl shadow-xs space-y-8">
-          <div className="text-center space-y-2 border-b border-[#EFEBE3] pb-6">
-            <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#EFEBE3] border border-[#E2DAC8] px-2.5 py-1 rounded-md uppercase inline-block">
+        <div className="max-w-4xl mx-auto bg-white border border-[#dce5df] p-4 sm:p-8 md:p-12 rounded-3xl shadow-xs space-y-8">
+          <div className="text-center space-y-2 border-b border-[#edf4ef] pb-6">
+            <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#edf4ef] border border-[#dce5df] px-2.5 py-1 rounded-md uppercase inline-block">
               LEGAL DOCUMENTATION
             </span>
             <h1 className="font-cormorant text-3xl md:text-4xl font-bold text-[#1A1A1A]">Cancellation &amp; Refund Policy</h1>

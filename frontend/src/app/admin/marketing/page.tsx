@@ -22,8 +22,8 @@ export default function MarketingToolsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Left: Email Broadcast Card (2 cols) */}
-        <div className="lg:col-span-2 bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
-          <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">
+        <div className="lg:col-span-2 bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
+          <div className="flex items-center gap-2 border-b border-[#edf4ef] pb-3">
             <Mail className="text-[#0D0D0D]" size={20} />
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">Customer Email Broadcast</h3>
           </div>
@@ -35,7 +35,7 @@ export default function MarketingToolsPage() {
                 type="text"
                 value={broadcastSubject}
                 onChange={(e) => setBroadcastSubject(e.target.value)}
-                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required
               />
             </div>
@@ -46,7 +46,7 @@ export default function MarketingToolsPage() {
                 rows={5}
                 value={broadcastMessage}
                 onChange={(e) => setBroadcastMessage(e.target.value)}
-                className="w-full bg-white border border-[#E2DAC8] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required
               />
             </div>
@@ -54,7 +54,7 @@ export default function MarketingToolsPage() {
             <div className="flex justify-end pt-2">
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs"
+                className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs"
               >
                 <Send size={14} />
                 <span>Send Broadcast</span>
@@ -64,14 +64,14 @@ export default function MarketingToolsPage() {
         </div>
 
         {/* Right: Quick Campaigns Card (1 col) */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
-          <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">
+        <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
+          <div className="flex items-center gap-2 border-b border-[#edf4ef] pb-3">
             <Share2 className="text-[#0D0D0D]" size={20} />
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">Social Campaigns</h3>
           </div>
 
           <div className="space-y-4 text-xs">
-            <div className="p-4 bg-white border border-[#E2DAC8] rounded-2xl space-y-2">
+            <div className="p-4 bg-white border border-[#dce5df] rounded-2xl space-y-2">
               <div className="flex items-center gap-2 text-[#0D0D0D] font-bold">
                 <MessageSquare size={16} />
                 <span>WhatsApp Promoter Blast</span>
@@ -79,13 +79,13 @@ export default function MarketingToolsPage() {
               <p className="text-[#666666] text-[11px]">Send instant promo codes and product links to top promoter WhatsApp groups.</p>
               <button
                 onClick={() => toast("Open the promoter portal to copy an existing coupon link.")}
-                className="w-full bg-[#0D0D0D] text-white py-2 rounded-xl text-xs font-bold hover:bg-[#333333] transition-colors"
+                className="w-full bg-[#214f40] text-white py-2 rounded-xl text-xs font-bold hover:bg-[#193e32] transition-colors"
               >
                 Generate WhatsApp Blast
               </button>
             </div>
 
-            <div className="p-4 bg-white border border-[#E2DAC8] rounded-2xl space-y-2">
+            <div className="p-4 bg-white border border-[#dce5df] rounded-2xl space-y-2">
               <div className="flex items-center gap-2 text-[#0D0D0D] font-bold">
                 <Megaphone size={16} />
                 <span>Banner Campaign</span>
@@ -93,7 +93,7 @@ export default function MarketingToolsPage() {
               <p className="text-[#666666] text-[11px]">Activate top marquee sale banner across customer storefront pages.</p>
               <button
                 onClick={() => toast("Banner editing is not available in this local release.")}
-                className="w-full border border-[#0D0D0D] text-[#0D0D0D] py-2 rounded-xl text-xs font-bold hover:bg-[#0D0D0D] hover:text-white transition-colors"
+                className="w-full border border-[#0D0D0D] text-[#0D0D0D] py-2 rounded-xl text-xs font-bold hover:bg-[#214f40] hover:text-white transition-colors"
               >
                 Update Store Banners
               </button>

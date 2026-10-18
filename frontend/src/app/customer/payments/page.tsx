@@ -50,9 +50,9 @@ export default function PaymentHistoryPage() {
 
       {/* ── Desktop Header ── */}
       <div className="hidden md:block max-w-6xl mx-auto px-6 pt-6 pb-2">
-        <div className="flex justify-between items-end border-b border-[#EFEBE3] pb-3 mb-4">
+        <div className="flex justify-between items-end border-b border-[#edf4ef] pb-3 mb-4">
           <div>
-            <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#EFEBE3] border border-[#E2DAC8] px-2.5 py-1 rounded-md uppercase inline-block mb-1">
+            <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#edf4ef] border border-[#dce5df] px-2.5 py-1 rounded-md uppercase inline-block mb-1">
               PAYMENT LEDGER
             </span>
             <h1 className="font-cormorant text-3xl font-bold text-[#1A1A1A]">Payment History</h1>
@@ -60,7 +60,7 @@ export default function PaymentHistoryPage() {
           </div>
           <button
             onClick={loadPayments}
-            className="inline-flex items-center gap-1.5 bg-white border border-[#E2DAC8] hover:border-[#0D0D0D] text-[#1A1A1A] px-4 py-2 rounded-xl text-xs font-bold transition-all"
+            className="inline-flex items-center gap-1.5 bg-white border border-[#dce5df] hover:border-[#0D0D0D] text-[#1A1A1A] px-4 py-2 rounded-xl text-xs font-bold transition-all"
           >
             <RefreshCw size={13} /> REFRESH
           </button>
@@ -70,7 +70,7 @@ export default function PaymentHistoryPage() {
       {/* ── Main Content Area ── */}
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-4 md:py-6">
         {payments.length === 0 ? (
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-12 text-center shadow-xs space-y-4 max-w-lg mx-auto my-8">
+          <div className="bg-white border border-[#dce5df] rounded-3xl p-12 text-center shadow-xs space-y-4 max-w-lg mx-auto my-8">
             <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto text-[#808080]">
               <CreditCard size={28} />
             </div>
@@ -78,7 +78,7 @@ export default function PaymentHistoryPage() {
             <p className="text-xs text-[#808080]">You haven't made any transactions on the marketplace yet.</p>
             <button
               onClick={() => router.push("/customer/products")}
-              className="inline-flex items-center justify-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-3 rounded-xl text-xs font-bold transition-all shadow-xs"
+              className="inline-flex items-center justify-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-3 rounded-xl text-xs font-bold transition-all shadow-xs"
             >
               START SHOPPING
             </button>
@@ -91,25 +91,25 @@ export default function PaymentHistoryPage() {
                 const paymentStatus = p.payment_status || "paid";
                 const isPaid = paymentStatus === "paid";
                 return (
-                  <div key={p.id} className="bg-white border border-[#E2DAC8] rounded-2xl p-4 shadow-xs space-y-2.5">
+                  <div key={p.id} className="bg-white border border-[#dce5df] rounded-2xl p-4 shadow-xs space-y-2.5">
                     <div className="flex items-center justify-between">
                       <span className="font-garamond text-xs font-bold text-[#1A1A1A]">#{p.order_number}</span>
                       <span
                         className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase ${
-                          isPaid ? "bg-[#EFEBE3] text-[#2E7D32] border border-[#E2DAC8]" : "bg-amber-50 text-amber-700 border border-amber-200"
+                          isPaid ? "bg-[#edf4ef] text-[#2E7D32] border border-[#dce5df]" : "bg-amber-50 text-amber-700 border border-amber-200"
                         }`}
                       >
                         {paymentStatus}
                       </span>
                     </div>
-                    <div className="flex justify-between items-baseline pt-1 border-t border-[#F2EFE9]">
+                    <div className="flex justify-between items-baseline pt-1 border-t border-[#e7ece9]">
                       <div>
                         <p className="text-[11px] text-[#808080]">Date: {formatDate(p.created_at)}</p>
                         <p className="text-xs text-[#666666] uppercase mt-0.5">{p.payment_method || "Online Razorpay / UPI"}</p>
                       </div>
                       <span className="font-cormorant text-lg font-bold text-[#0D0D0D]">{formatPrice(p.total_amount)}</span>
                     </div>
-                    <div className="pt-2 border-t border-[#F2EFE9]">
+                    <div className="pt-2 border-t border-[#e7ece9]">
                       <Link
                         href={`/customer/orders/${p.id}`}
                         className="inline-flex items-center gap-1 text-xs font-bold text-[#0D0D0D] hover:underline"
@@ -123,10 +123,10 @@ export default function PaymentHistoryPage() {
             </div>
 
             {/* Desktop Table View */}
-            <div className="hidden md:block bg-white border border-[#E2DAC8] rounded-2xl overflow-hidden shadow-xs">
+            <div className="hidden md:block bg-white border border-[#dce5df] rounded-2xl overflow-hidden shadow-xs">
               <table className="w-full text-left border-collapse font-garamond">
                 <thead>
-                  <tr className="bg-white border-b border-[#E2DAC8] text-xs font-bold text-[#1A1A1A]">
+                  <tr className="bg-white border-b border-[#dce5df] text-xs font-bold text-[#1A1A1A]">
                     <th className="py-3.5 px-4">Order Ref</th>
                     <th className="py-3.5 px-4">Date</th>
                     <th className="py-3.5 px-4">Payment Method</th>
@@ -134,7 +134,7 @@ export default function PaymentHistoryPage() {
                     <th className="py-3.5 px-4 text-right">Net Amount</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#F2EFE9] text-xs">
+                <tbody className="divide-y divide-[#e7ece9] text-xs">
                   {payments.map((p) => {
                     const paymentStatus = p.payment_status || "paid";
                     const isPaid = paymentStatus === "paid";
@@ -150,7 +150,7 @@ export default function PaymentHistoryPage() {
                         <td className="py-3.5 px-4">
                           <span
                             className={`text-[10px] font-bold px-2.5 py-0.5 rounded-md uppercase ${
-                              isPaid ? "bg-[#EFEBE3] text-[#2E7D32] border border-[#E2DAC8]" : "bg-amber-50 text-amber-700 border border-amber-200"
+                              isPaid ? "bg-[#edf4ef] text-[#2E7D32] border border-[#dce5df]" : "bg-amber-50 text-amber-700 border border-amber-200"
                             }`}
                           >
                             {paymentStatus}

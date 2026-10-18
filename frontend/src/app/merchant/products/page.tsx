@@ -332,13 +332,13 @@ export default function MerchantProductsPage() {
     return (
       <div className="space-y-6 text-[#1A1A1A] font-garamond">
         <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Products Management</h1>
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-16 text-center max-w-xl mx-auto shadow-xs">
+        <div className="bg-white border border-[#dce5df] rounded-3xl p-16 text-center max-w-xl mx-auto shadow-xs">
           <Store size={48} className="text-[#0D0D0D] mx-auto mb-4" />
           <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] mb-2">Merchant Profile Required</h2>
           <p className="text-xs text-[#808080] mb-6 leading-relaxed">
             You must create your store profile details (such as store name, description, GSTIN, and bank account settings) before you can manage or add products to the catalog.
           </p>
-          <button onClick={() => router.push("/merchant/profile")} className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs">
+          <button onClick={() => router.push("/merchant/profile")} className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs">
             CREATE MERCHANT PROFILE NOW →
           </button>
         </div>
@@ -352,10 +352,10 @@ export default function MerchantProductsPage() {
         <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Products Management</h1>
       </div>
 
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-6">
 
         {/* Top 4 Metrics Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-6 border-b border-[#EFEBE3]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-6 border-b border-[#edf4ef]">
           <div>
             <span className="text-xs font-medium text-[#666666] block mb-1">Total Products</span>
             <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{total}</span>
@@ -380,16 +380,16 @@ export default function MerchantProductsPage() {
             <input
               type="text"
               placeholder="Search products..."
-              className="w-full bg-white border border-[#E2DAC8] rounded-full px-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#dce5df] rounded-full px-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
             />
           </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-            <button onClick={() => setShowBulkModal(true)} className="inline-flex items-center gap-1.5 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#0D0D0D] hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs">
+            <button onClick={() => setShowBulkModal(true)} className="inline-flex items-center gap-1.5 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#214f40] hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs">
               <Package size={15} />
               <span>Bulk CSV Upload</span>
             </button>
-            <button onClick={openCreate} className="inline-flex items-center gap-1.5 bg-[#0D0D0D] hover:bg-[#333333] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs">
+            <button onClick={openCreate} className="inline-flex items-center gap-1.5 bg-[#214f40] hover:bg-[#193e32] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs">
               <Plus size={15} />
               <span>Add Product</span>
             </button>
@@ -399,8 +399,8 @@ export default function MerchantProductsPage() {
         {/* Product form modal */}
         {showForm && (
           <div className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center p-4 overflow-y-auto">
-            <div className="bg-white w-full max-w-2xl my-8 rounded-3xl shadow-lg overflow-hidden border border-[#E2DAC8]">
-              <div className="flex items-center justify-between p-6 border-b border-[#EFEBE3] bg-white">
+            <div className="bg-white w-full max-w-2xl my-8 rounded-3xl shadow-lg overflow-hidden border border-[#dce5df]">
+              <div className="flex items-center justify-between p-6 border-b border-[#edf4ef] bg-white">
                 <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A]">
                   {editing ? "Edit Product" : "Add New Product"}
                 </h2>
@@ -413,7 +413,7 @@ export default function MerchantProductsPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                   <div className="sm:col-span-2">
                     <label className="font-bold text-[#1A1A1A] block mb-1">Product Name *</label>
-                    <input {...register("name")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
+                    <input {...register("name")} className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
                     {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
                   </div>
 
@@ -421,7 +421,7 @@ export default function MerchantProductsPage() {
                     <label className="font-bold text-[#1A1A1A] block mb-1">Main Category *</label>
                     <select
                       {...register("main_category")}
-                      className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                      className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                     >
                       {Object.keys(CATEGORY_TAXONOMY).map((mainCat) => (
                         <option key={mainCat} value={mainCat}>
@@ -437,7 +437,7 @@ export default function MerchantProductsPage() {
                       const currentMain = watch("main_category") || "Living Room";
                       const suboptions = CATEGORY_TAXONOMY[currentMain] || [];
                       return (
-                        <select {...register("subcategory")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]">
+                        <select {...register("subcategory")} className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]">
                           <option value="">Select Subcategory</option>
                           {suboptions.map((sub) => (
                             <option key={sub} value={sub}>
@@ -451,55 +451,55 @@ export default function MerchantProductsPage() {
 
                   <div>
                     <label className="font-bold text-[#1A1A1A] block mb-1">Merchant Product Price (₹) *</label>
-                    <input {...register("price")} type="number" step="0.01" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="e.g. 1700" />
+                    <input {...register("price")} type="number" step="0.01" className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="e.g. 1700" />
                     {errors.price && <p className="text-red-500 text-xs mt-1">{errors.price.message}</p>}
                   </div>
                   <div>
                     <label className="font-bold text-[#1A1A1A] block mb-1">Compare Price / M.R.P (₹)</label>
-                    <input {...register("compare_price")} type="number" step="0.01" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="e.g. 2499" />
+                    <input {...register("compare_price")} type="number" step="0.01" className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="e.g. 2499" />
                   </div>
 
                   <div>
                     <label className="font-bold text-[#1A1A1A] block mb-1">Stock Qty *</label>
-                    <input {...register("stock_quantity")} type="number" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
+                    <input {...register("stock_quantity")} type="number" className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
                   </div>
                   <div>
                     <label className="font-bold text-[#1A1A1A] block mb-1">Low Stock Alert</label>
-                    <input {...register("low_stock_threshold")} type="number" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
+                    <input {...register("low_stock_threshold")} type="number" className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
                   </div>
 
                   <div>
                     <label className="font-bold text-[#1A1A1A] block mb-1">SKU</label>
-                    <input {...register("sku")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="e.g. KS-001" />
+                    <input {...register("sku")} className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="e.g. KS-001" />
                   </div>
                   <div>
                     <label className="font-bold text-[#1A1A1A] block mb-1">Weight (g)</label>
-                    <input {...register("weight_grams")} type="number" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
+                    <input {...register("weight_grams")} type="number" className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
                   </div>
 
                   <div className="sm:col-span-2">
                     <label className="font-bold text-[#1A1A1A] block mb-1">Short Description</label>
-                    <input {...register("short_description")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="Brief product summary" />
+                    <input {...register("short_description")} className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="Brief product summary" />
                   </div>
                   <div className="sm:col-span-2">
                     <label className="font-bold text-[#1A1A1A] block mb-1">Full Description</label>
-                    <textarea {...register("description")} rows={3} className="w-full bg-white border border-[#E2DAC8] rounded-xl p-4 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none" />
+                    <textarea {...register("description")} rows={3} className="w-full bg-white border border-[#dce5df] rounded-xl p-4 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none" />
                   </div>
                   <div className="sm:col-span-2">
                     <label className="font-bold text-[#1A1A1A] block mb-1">Tags (comma separated)</label>
-                    <input {...register("tags")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="e.g. Modern, Wood, Handcrafted" />
+                    <input {...register("tags")} className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="e.g. Modern, Wood, Handcrafted" />
                   </div>
                   <div>
                     <label className="font-bold text-[#1A1A1A] block mb-1">Material</label>
-                    <input {...register("material")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="e.g. Solid Wood, Metal" />
+                    <input {...register("material")} className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="e.g. Solid Wood, Metal" />
                   </div>
                   <div>
                     <label className="font-bold text-[#1A1A1A] block mb-1">Wood Type</label>
-                    <input {...register("wood_type")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="e.g. Teak, Mahogany" />
+                    <input {...register("wood_type")} className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="e.g. Teak, Mahogany" />
                   </div>
                   <div>
                     <label className="font-bold text-[#1A1A1A] block mb-1">Fulfillment Type</label>
-                    <select {...register("fulfillment_type")} className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]">
+                    <select {...register("fulfillment_type")} className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]">
                       <option value="READY_STOCK">Ready Stock</option>
                       <option value="MADE_TO_ORDER">Made To Order</option>
                       <option value="CUSTOM_ORDER">Custom Order</option>
@@ -513,11 +513,11 @@ export default function MerchantProductsPage() {
                   </div>
                   <div>
                     <label className="font-bold text-[#1A1A1A] block mb-1">Est. Making Days</label>
-                    <input {...register("manufacturing_duration_days")} type="number" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
+                    <input {...register("manufacturing_duration_days")} type="number" className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
                   </div>
                   <div>
                     <label className="font-bold text-[#1A1A1A] block mb-1">Est. Shipping Days</label>
-                    <input {...register("shipping_duration_days")} type="number" className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
+                    <input {...register("shipping_duration_days")} type="number" className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
                   </div>
 
                   <div className="sm:col-span-2">
@@ -527,14 +527,14 @@ export default function MerchantProductsPage() {
                       accept="image/*"
                       onChange={handleFileUpload}
                       disabled={isUploading || (watch("images")?.split(",")?.filter(Boolean)?.length || 0) >= 5}
-                      className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2 text-xs font-semibold text-[#1A1A1A] focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#0D0D0D] file:text-white hover:file:bg-[#333333]"
+                      className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2 text-xs font-semibold text-[#1A1A1A] focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#214f40] file:text-white hover:file:bg-[#333333]"
                     />
                     {isUploading && <p className="text-xs text-[#808080] mt-1 flex items-center gap-1"><Loader2 size={12} className="animate-spin" /> Uploading image...</p>}
 
                     {/* Display uploaded images thumbnails */}
                     <div className="flex flex-wrap gap-3 mt-3">
                       {watch("images")?.split(",").map(s => s.trim()).filter(Boolean).map((imgUrl, idx) => (
-                        <div key={idx} className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#E2DAC8] shadow-xs">
+                        <div key={idx} className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#dce5df] shadow-xs">
                           <img src={imgUrl} alt={`Uploaded ${idx}`} className="w-full h-full object-cover" />
                           <button
                             type="button"
@@ -564,12 +564,12 @@ export default function MerchantProductsPage() {
                   </div>
                 </div>
 
-                <div className="flex gap-3 pt-4 border-t border-[#EFEBE3]">
-                  <button type="submit" disabled={isSaving} className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs">
+                <div className="flex gap-3 pt-4 border-t border-[#edf4ef]">
+                  <button type="submit" disabled={isSaving} className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs">
                     {isSaving && <Loader2 size={12} className="animate-spin" />}
                     {editing ? "Update Product" : "Create Product"}
                   </button>
-                  <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2.5 border border-[#E2DAC8] text-[#666666] rounded-xl text-xs font-bold hover:bg-white transition-all">Cancel</button>
+                  <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2.5 border border-[#dce5df] text-[#666666] rounded-xl text-xs font-bold hover:bg-white transition-all">Cancel</button>
                 </div>
               </form>
             </div>
@@ -582,18 +582,18 @@ export default function MerchantProductsPage() {
             <Loader2 className="animate-spin text-[#0D0D0D]" size={28} />
           </div>
         ) : products.length === 0 ? (
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-16 text-center shadow-xs">
-            <Package size={48} className="text-[#E2DAC8] mx-auto mb-4" />
+          <div className="bg-white border border-[#dce5df] rounded-3xl p-16 text-center shadow-xs">
+            <Package size={48} className="text-[#dce5df] mx-auto mb-4" />
             <h2 className="font-cormorant text-2xl font-bold text-[#1A1A1A] mb-2">No products yet</h2>
             <p className="text-xs text-[#808080] mb-6">Add your first product to start selling</p>
-            <button onClick={openCreate} className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs">Add First Product</button>
+            <button onClick={openCreate} className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs">Add First Product</button>
           </div>
         ) : (
           <div className="overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
+                  <tr className="border-b border-[#edf4ef] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
                     <th className="pb-3 px-3">Product</th>
                     <th className="pb-3 px-3">Price</th>
                     <th className="pb-3 px-3">Stock</th>
@@ -601,23 +601,23 @@ export default function MerchantProductsPage() {
                     <th className="pb-3 px-3">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#EFEBE3]">
+                <tbody className="divide-y divide-[#edf4ef]">
                   {products.map((product) => (
                     <tr key={product.id} className="hover:bg-white/60 transition-colors">
                       <td className="py-3.5 px-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-white flex-shrink-0 overflow-hidden rounded-lg border border-[#E2DAC8]">
+                          <div className="w-10 h-10 bg-white flex-shrink-0 overflow-hidden rounded-lg border border-[#dce5df]">
                             {product.images?.[0] ? (
                               <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
                             ) : (
-                              <Package size={16} className="m-auto mt-3 text-[#E2DAC8]" />
+                              <Package size={16} className="m-auto mt-3 text-[#dce5df]" />
                             )}
                           </div>
                           <div>
                             <p className="font-bold text-xs text-[#1A1A1A]">{product.name}</p>
                             <div className="flex gap-2 items-center mt-0.5">
                               {product.category && (
-                                <span className="text-[10px] font-bold bg-[#EFEBE3] text-[#2E7D32] px-1.5 py-0.5 rounded-md">
+                                <span className="text-[10px] font-bold bg-[#edf4ef] text-[#2E7D32] px-1.5 py-0.5 rounded-md">
                                   {product.category.name.toUpperCase()}
                                 </span>
                               )}
@@ -643,7 +643,7 @@ export default function MerchantProductsPage() {
                       </td>
                       <td className="py-3.5 px-3">
                         <span className={`text-[10px] font-bold px-2.5 py-1 rounded-md inline-block ${!product.is_approved ? "bg-amber-50 text-amber-600 border border-amber-200" : (product.is_active
-                          ? "bg-[#EFEBE3] text-[#2E7D32]" : "bg-gray-100 text-gray-600")}`}>
+                          ? "bg-[#edf4ef] text-[#2E7D32]" : "bg-gray-100 text-gray-600")}`}>
                           {!product.is_approved ? "Pending Approval" : (product.is_active ? "Active" : "Hidden")}
                         </span>
                       </td>
@@ -652,7 +652,7 @@ export default function MerchantProductsPage() {
                           <button
                             onClick={() => openEdit(product)}
                             title="Edit Details"
-                            className="bg-white hover:bg-[#E2DAC8] text-[#1A1A1A] border border-[#E2DAC8] text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all shadow-xs"
+                            className="bg-white hover:bg-[#dce5df] text-[#1A1A1A] border border-[#dce5df] text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all shadow-xs"
                           >
                             <Pencil size={11} /> Edit
                           </button>
@@ -671,7 +671,7 @@ export default function MerchantProductsPage() {
                 </tbody>
               </table>
             </div>
-            <div className="p-4 border-t border-[#EFEBE3] flex items-center justify-between">
+            <div className="p-4 border-t border-[#edf4ef] flex items-center justify-between">
               <p className="text-xs text-[#808080]">Showing {products.length} of {total} products</p>
               <div className="flex gap-2">
                 <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
@@ -687,8 +687,8 @@ export default function MerchantProductsPage() {
       {/* Bulk CSV Upload Modal */}
       {showBulkModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-md my-8 rounded-3xl shadow-lg overflow-hidden border border-[#E2DAC8]">
-            <div className="flex items-center justify-between p-6 border-b border-[#EFEBE3] bg-white">
+          <div className="bg-white w-full max-w-md my-8 rounded-3xl shadow-lg overflow-hidden border border-[#dce5df]">
+            <div className="flex items-center justify-between p-6 border-b border-[#edf4ef] bg-white">
               <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A]">
                 ✦ Bulk CSV Catalog Upload
               </h2>
@@ -699,20 +699,20 @@ export default function MerchantProductsPage() {
 
             <form onSubmit={handleBulkUpload} className="p-6 space-y-5">
               <p className="text-xs text-[#666666] leading-relaxed">
-                Upload your products in bulk using a standard <code className="bg-white px-1 py-0.5 rounded border border-[#E2DAC8] text-[#0D0D0D] font-mono">.csv</code> spreadsheet. The spreadsheet columns must include <strong className="text-[#1A1A1A]">name</strong> and <strong className="text-[#1A1A1A]">base_price</strong>.
+                Upload your products in bulk using a standard <code className="bg-white px-1 py-0.5 rounded border border-[#dce5df] text-[#0D0D0D] font-mono">.csv</code> spreadsheet. The spreadsheet columns must include <strong className="text-[#1A1A1A]">name</strong> and <strong className="text-[#1A1A1A]">base_price</strong>.
               </p>
 
               <div>
                 <button
                   type="button"
                   onClick={downloadTemplate}
-                  className="text-xs font-bold text-[#0D0D0D] bg-white border border-[#E2DAC8] px-4 py-2.5 rounded-xl w-full text-center hover:bg-[#E2DAC8]/50 transition-all shadow-2xs"
+                  className="text-xs font-bold text-[#0D0D0D] bg-white border border-[#dce5df] px-4 py-2.5 rounded-xl w-full text-center hover:bg-[#dce5df]/50 transition-all shadow-2xs"
                 >
                   📥 Download Sample Template (.CSV)
                 </button>
               </div>
 
-              <div className="border border-dashed border-[#E2DAC8] p-6 rounded-2xl text-center bg-white hover:border-[#0D0D0D] transition-colors">
+              <div className="border border-dashed border-[#dce5df] p-6 rounded-2xl text-center bg-white hover:border-[#0D0D0D] transition-colors">
                 <input
                   type="file"
                   accept=".csv"
@@ -734,7 +734,7 @@ export default function MerchantProductsPage() {
               <button
                 type="submit"
                 disabled={isBulkUploading || !csvFile}
-                className="w-full inline-flex items-center justify-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
+                className="w-full inline-flex items-center justify-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
               >
                 {isBulkUploading ? (
                   <><Loader2 size={14} className="animate-spin" /> Importing Catalog...</>

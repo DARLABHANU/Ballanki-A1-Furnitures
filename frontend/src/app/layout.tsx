@@ -81,23 +81,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
 
         {MAINTENANCE_MODE ? (
-          <div className="min-h-screen flex flex-col items-center justify-between p-6 md:p-12 relative overflow-hidden bg-gradient-to-b from-[#3d0b0b] to-[#260505] text-[#FAF6EE] selection:bg-[#8B6B46] selection:text-[#4A0F0F]">
+          <div className="min-h-screen flex flex-col items-center justify-between p-6 md:p-12 relative overflow-hidden bg-gradient-to-b from-[#193e32] to-[#0c2528] text-[#f7f9f8] selection:bg-[#527565] selection:text-[#193e32]">
             {/* Elegant Background Patterns */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,151,62,0.12),transparent_70%)] pointer-events-none" />
             <div className="absolute inset-0 opacity-[0.02] mix-blend-overlay pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/royal-feather.png')]" />
 
             {/* Top Border / Accent */}
-            <div className="w-full max-w-6xl mx-auto flex items-center justify-between border-b border-[#8B6B46]/20 pb-6 relative z-10">
-              <span className="font-cinzel text-xs tracking-[0.25em] text-[#8B6B46]/80 font-medium uppercase">Est. 2026</span>
-              <span className="font-cinzel text-xs tracking-[0.25em] text-[#8B6B46]/80 font-medium uppercase">Luxury Collections</span>
+            <div className="w-full max-w-6xl mx-auto flex items-center justify-between border-b border-[#527565]/20 pb-6 relative z-10">
+              <span className="font-cinzel text-xs tracking-[0.25em] text-[#527565]/80 font-medium uppercase">Est. 2026</span>
+              <span className="font-cinzel text-xs tracking-[0.25em] text-[#527565]/80 font-medium uppercase">Luxury Collections</span>
             </div>
 
             {/* Main Content Container */}
             <div className="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto text-center relative z-10 my-12 animate-fade-up">
               {/* Premium Luxury Gold Crest / Logo Wrapper */}
               <div className="relative mb-8 group">
-                <div className="absolute -inset-4 rounded-full bg-gradient-to-r from-[#8B6B46] to-[#FAF6EE] opacity-20 blur-lg group-hover:opacity-40 transition duration-1000" />
-                <div className="relative bg-[#4A0F0F]/60 border border-[#8B6B46]/40 p-6 rounded-full inline-flex items-center justify-center w-24 h-24 shadow-2xl backdrop-blur-md">
+                <div className="absolute -inset-4 rounded-full bg-gradient-to-r from-[#527565] to-[#f7f9f8] opacity-20 blur-lg group-hover:opacity-40 transition duration-1000" />
+                <div className="relative bg-[#193e32]/60 border border-[#527565]/40 p-6 rounded-full inline-flex items-center justify-center w-24 h-24 shadow-2xl backdrop-blur-md">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/logo.png"
@@ -108,42 +108,42 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
 
               {/* Title & Brand */}
-              <h1 className="font-cormorant text-4xl md:text-5xl lg:text-6xl font-light tracking-[0.2em] text-[#FAF6EE] mb-4 drop-shadow-md">
+              <h1 className="font-cormorant text-4xl md:text-5xl lg:text-6xl font-light tracking-[0.2em] text-[#f7f9f8] mb-4 drop-shadow-md">
                 BALLANKI A1 FURNITURES
               </h1>
-              <div className="h-[1px] w-40 bg-gradient-to-r from-transparent via-[#8B6B46]/60 to-transparent mx-auto mb-8" />
+              <div className="h-[1px] w-40 bg-gradient-to-r from-transparent via-[#527565]/60 to-transparent mx-auto mb-8" />
 
               {/* Status Message */}
-              <h2 className="font-cinzel text-lg md:text-xl font-light tracking-[0.3em] text-[#8B6B46] mb-6 uppercase flex items-center justify-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#8B6B46] animate-pulse" />
+              <h2 className="font-cinzel text-lg md:text-xl font-light tracking-[0.3em] text-[#527565] mb-6 uppercase flex items-center justify-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#527565] animate-pulse" />
                 We'll Be Right Back
-                <Sparkles className="w-4 h-4 text-[#8B6B46] animate-pulse" />
+                <Sparkles className="w-4 h-4 text-[#527565] animate-pulse" />
               </h2>
-              <p className="font-garamond text-base md:text-lg text-[#FAF6EE]/80 font-light leading-relaxed mb-8 max-w-lg mx-auto">
+              <p className="font-garamond text-base md:text-lg text-[#f7f9f8]/80 font-light leading-relaxed mb-8 max-w-lg mx-auto">
                 Our online boutique is currently undergoing scheduled refinement and system upgrades. We are crafting an even more exquisite experience to showcase our fine furniture and premium home decor.
               </p>
 
               {/* Decorative Luxury Divider */}
               <div className="flex items-center justify-center gap-4 mb-8">
-                <div className="w-12 h-[1px] bg-[#8B6B46]/30" />
-                <div className="w-2 h-2 rotate-45 border border-[#8B6B46] bg-transparent" />
-                <div className="w-12 h-[1px] bg-[#8B6B46]/30" />
+                <div className="w-12 h-[1px] bg-[#527565]/30" />
+                <div className="w-2 h-2 rotate-45 border border-[#527565] bg-transparent" />
+                <div className="w-12 h-[1px] bg-[#527565]/30" />
               </div>
 
               {/* Notice / Secondary Message */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 border border-[#8B6B46]/10 bg-[#4A0F0F]/30 backdrop-blur-sm rounded-full text-xs tracking-wider text-[#8B6B46] font-medium uppercase">
+              <div className="inline-flex items-center gap-2 px-4 py-2 border border-[#527565]/10 bg-[#193e32]/30 backdrop-blur-sm rounded-full text-xs tracking-wider text-[#527565] font-medium uppercase">
                 <Clock className="w-3.5 h-3.5" />
                 Scheduled Brief Maintenance
               </div>
             </div>
 
             {/* Bottom Footer Details */}
-            <div className="w-full max-w-6xl mx-auto border-t border-[#8B6B46]/20 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 relative z-10 text-[10px] tracking-[0.15em] font-medium text-[#FAF6EE]/60 uppercase font-cinzel">
+            <div className="w-full max-w-6xl mx-auto border-t border-[#527565]/20 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 relative z-10 text-[10px] tracking-[0.15em] font-medium text-[#f7f9f8]/60 uppercase font-cinzel">
               <p>
                 &copy; {new Date().getFullYear()} Ballanki A1 Furnitures. All Rights Reserved.
               </p>
               <p className="normal-case font-garamond text-xs tracking-wide">
-                For urgent inquiries: <a href="mailto:support@ballankia1furnitures.com" className="text-[#8B6B46] underline hover:text-[#FAF6EE] transition-colors">support@ballankia1furnitures.com</a>
+                For urgent inquiries: <a href="mailto:support@ballankia1furnitures.com" className="text-[#527565] underline hover:text-[#f7f9f8] transition-colors">support@ballankia1furnitures.com</a>
               </p>
             </div>
           </div>

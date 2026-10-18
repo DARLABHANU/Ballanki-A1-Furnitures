@@ -52,9 +52,9 @@ function MerchantCouponsContent() {
     <div className="space-y-6 text-[#1A1A1A] font-garamond">
       <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Store Coupons</h1>
 
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-6">
         {/* Metrics */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 pb-6 border-b border-[#EFEBE3]">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 pb-6 border-b border-[#edf4ef]">
           <div>
             <span className="text-xs font-medium text-[#666666] block mb-1">Total Coupons</span>
             <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{totalCoupons}</span>
@@ -76,10 +76,10 @@ function MerchantCouponsContent() {
             <input type="text" placeholder="Search coupons..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]" />
+              className="w-full bg-white border border-[#dce5df] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]" />
           </div>
           <button onClick={() => toast.success("Create coupon feature coming soon!")}
-            className="inline-flex items-center gap-1.5 bg-[#0D0D0D] hover:bg-[#333333] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs">
+            className="inline-flex items-center gap-1.5 bg-[#214f40] hover:bg-[#193e32] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs">
             <Plus size={15} />
             <span>Create Coupon</span>
           </button>
@@ -89,7 +89,7 @@ function MerchantCouponsContent() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
+              <tr className="border-b border-[#edf4ef] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
                 <th className="pb-3 px-3">Code</th>
                 <th className="pb-3 px-3">Description</th>
                 <th className="pb-3 px-3">Discount</th>
@@ -98,7 +98,7 @@ function MerchantCouponsContent() {
                 <th className="pb-3 px-3 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#EFEBE3]">
+            <tbody className="divide-y divide-[#edf4ef]">
               {isLoading ? (
                 <tr><td colSpan={6} className="py-8 text-center text-[#808080]">Loading coupons...</td></tr>
               ) : filteredCoupons.length === 0 ? (
@@ -113,7 +113,7 @@ function MerchantCouponsContent() {
                     <td className="py-3.5 px-3 font-extrabold text-[#1A1A1A]">{c.discount_type === 'percentage' ? `${c.discount_value}% Off` : `₹${c.discount_amount} Off`}</td>
                     <td className="py-3.5 px-3 font-bold text-[#1A1A1A]">{c.used_count || 0}</td>
                     <td className="py-3.5 px-3">
-                      <span className={`text-[10px] font-bold px-2.5 py-1 rounded-md inline-block ${c.is_active ? "bg-[#EFEBE3] text-[#2E7D32]" : "bg-red-50 text-red-700"}`}>
+                      <span className={`text-[10px] font-bold px-2.5 py-1 rounded-md inline-block ${c.is_active ? "bg-[#edf4ef] text-[#2E7D32]" : "bg-red-50 text-red-700"}`}>
                         {c.is_active ? "Active" : "Inactive"}
                       </span>
                     </td>

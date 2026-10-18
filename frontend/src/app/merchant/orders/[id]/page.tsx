@@ -100,7 +100,7 @@ export default function MerchantOrderDetailPage() {
   const getStatusBadge = (st: string) => {
     switch ((st || "").toLowerCase()) {
       case "delivered":
-        return "bg-[#EFEBE3] text-[#2E7D32] border-[#E2DAC8]";
+        return "bg-[#edf4ef] text-[#2E7D32] border-[#dce5df]";
       case "shipped":
       case "out_for_delivery":
         return "bg-[#E3F2FD] text-[#1565C0] border-[#BBDEFB]";
@@ -128,13 +128,13 @@ export default function MerchantOrderDetailPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.back()}
-            className="w-8 h-8 rounded-full border border-[#E2DAC8] bg-white flex items-center justify-center text-[#1A1A1A] hover:bg-white transition-colors"
+            className="w-8 h-8 rounded-full border border-[#dce5df] bg-white flex items-center justify-center text-[#1A1A1A] hover:bg-white transition-colors"
           >
             <ArrowLeft size={16} />
           </button>
           <h1 className="font-cormorant text-2xl font-bold">Order Not Found</h1>
         </div>
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-8 text-center text-[#808080]">
+        <div className="bg-white border border-[#dce5df] rounded-3xl p-8 text-center text-[#808080]">
           The requested order could not be found or you do not have permission to view it.
         </div>
       </div>
@@ -152,7 +152,7 @@ export default function MerchantOrderDetailPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.back()}
-            className="w-8 h-8 rounded-full border border-[#E2DAC8] bg-white flex items-center justify-center text-[#1A1A1A] hover:bg-white transition-colors"
+            className="w-8 h-8 rounded-full border border-[#dce5df] bg-white flex items-center justify-center text-[#1A1A1A] hover:bg-white transition-colors"
           >
             <ArrowLeft size={16} />
           </button>
@@ -172,7 +172,7 @@ export default function MerchantOrderDetailPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => window.print()}
-            className="inline-flex items-center gap-1.5 bg-white border border-[#E2DAC8] hover:bg-white text-[#1A1A1A] px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
+            className="inline-flex items-center gap-1.5 bg-white border border-[#dce5df] hover:bg-white text-[#1A1A1A] px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
           >
             <Printer size={14} />
             <span>Print Invoice</span>
@@ -187,8 +187,8 @@ export default function MerchantOrderDetailPage() {
         <div className="lg:col-span-2 space-y-6">
           
           {/* Card 1: Update Shipment & Tracking Details Form */}
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-5">
-            <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">
+          <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-5">
+            <div className="flex items-center gap-2 border-b border-[#edf4ef] pb-3">
               <Truck size={18} className="text-[#0D0D0D]" />
               <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A]">Update Tracking &amp; Shipment Details</h3>
             </div>
@@ -202,7 +202,7 @@ export default function MerchantOrderDetailPage() {
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                    className="w-full bg-white border border-[#dce5df] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                     required
                   >
                     {ORDER_STATUS_OPTIONS.map((opt) => (
@@ -221,7 +221,7 @@ export default function MerchantOrderDetailPage() {
                     value={trackingNumber}
                     onChange={(e) => setTrackingNumber(e.target.value)}
                     placeholder="e.g. BLUEDART987654321"
-                    className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                    className="w-full bg-white border border-[#dce5df] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   />
                 </div>
 
@@ -235,7 +235,7 @@ export default function MerchantOrderDetailPage() {
                   value={currentLocation}
                   onChange={(e) => setCurrentLocation(e.target.value)}
                   placeholder="e.g. BlueDart Express - Dispatched from Guntur Sorting Hub"
-                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#dce5df] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 />
               </div>
 
@@ -247,7 +247,7 @@ export default function MerchantOrderDetailPage() {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="e.g. Package handed over to BlueDart courier agent. Estimated delivery in 2 business days."
-                  className="w-full bg-white border border-[#E2DAC8] rounded-xl p-3 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#dce5df] rounded-xl p-3 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 />
               </div>
 
@@ -255,7 +255,7 @@ export default function MerchantOrderDetailPage() {
                 <button
                   type="submit"
                   disabled={isUpdating}
-                  className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
+                  className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
                 >
                   {isUpdating ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                   <span>Save &amp; Update Tracking</span>
@@ -265,8 +265,8 @@ export default function MerchantOrderDetailPage() {
           </div>
 
           {/* Card 2: Order Items */}
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-[#EFEBE3] pb-3">
+          <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-[#edf4ef] pb-3">
               <div className="flex items-center gap-2">
                 <Package size={18} className="text-[#0D0D0D]" />
                 <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A]">Order Items</h3>
@@ -274,7 +274,7 @@ export default function MerchantOrderDetailPage() {
               <span className="text-xs text-[#808080] font-semibold">{order.items?.length || 0} Products</span>
             </div>
 
-            <div className="divide-y divide-[#EFEBE3]">
+            <div className="divide-y divide-[#edf4ef]">
               {(order.items || []).map((item: any, idx: number) => (
                 <div key={idx} className="py-3.5 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
@@ -282,7 +282,7 @@ export default function MerchantOrderDetailPage() {
                     <img
                       src={item.product_image || (item.product?.images?.[0]) || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=200&auto=format&fit=crop"}
                       alt={item.product_name || "Product"}
-                      className="w-14 h-14 rounded-xl object-cover border border-[#E2DAC8] bg-white"
+                      className="w-14 h-14 rounded-xl object-cover border border-[#dce5df] bg-white"
                     />
                     <div>
                       <h4 className="font-bold text-xs text-[#1A1A1A] line-clamp-1">{item.product_name || item.product?.name || "Furniture Assembly"}</h4>
@@ -309,16 +309,16 @@ export default function MerchantOrderDetailPage() {
 
           {/* Card 3: Tracking History & Event Timeline */}
           {order.status_history && order.status_history.length > 0 && (
-            <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
-              <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">
+            <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-4">
+              <div className="flex items-center gap-2 border-b border-[#edf4ef] pb-3">
                 <Clock size={18} className="text-[#0D0D0D]" />
                 <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A]">Tracking &amp; Status History</h3>
               </div>
 
-              <div className="relative pl-6 space-y-4 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#E2DAC8]">
+              <div className="relative pl-6 space-y-4 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#dce5df]">
                 {order.status_history.map((hist: any, hIdx: number) => (
                   <div key={hIdx} className="relative">
-                    <div className="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-[#0D0D0D] border-2 border-white ring-2 ring-[#E2DAC8]" />
+                    <div className="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-[#214f40] border-2 border-white ring-2 ring-[#dce5df]" />
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-bold text-xs text-[#1A1A1A] capitalize">{hist.status}</span>
@@ -347,8 +347,8 @@ export default function MerchantOrderDetailPage() {
         <div className="space-y-6">
           
           {/* Customer & Delivery Address Card */}
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
-            <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-3">
+          <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-4">
+            <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-3">
               Customer &amp; Shipping
             </h3>
 
@@ -380,8 +380,8 @@ export default function MerchantOrderDetailPage() {
           </div>
 
           {/* Payment & Price Summary Card */}
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
-            <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-3">
+          <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-4">
+            <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-3">
               Payment Summary
             </h3>
 
@@ -408,7 +408,7 @@ export default function MerchantOrderDetailPage() {
                 </div>
               )}
 
-              <div className="pt-2 border-t border-[#EFEBE3] flex justify-between items-baseline">
+              <div className="pt-2 border-t border-[#edf4ef] flex justify-between items-baseline">
                 <span className="font-bold text-sm text-[#1A1A1A]">Total Amount</span>
                 <span className="font-cormorant text-xl font-extrabold text-[#0D0D0D]">{formatPrice(order.total_amount)}</span>
               </div>

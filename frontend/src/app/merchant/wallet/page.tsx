@@ -71,13 +71,13 @@ function MerchantWalletContent() {
           
           {/* Balance Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-[#0D0D0D] text-white rounded-3xl p-6 shadow-xs space-y-3">
+            <div className="bg-[#214f40] text-white rounded-3xl p-6 shadow-xs space-y-3">
               <span className="text-xs text-wood-200/80 block">Available Balance</span>
               <span className="font-cormorant text-3xl font-extrabold text-white block">{availableBalance}</span>
               <span className="text-[11px] text-wood-300 block">Ready for instant payout request</span>
             </div>
 
-            <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-3">
+            <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-3">
               <span className="text-xs text-[#666666] block">Total Withdrawn to Date</span>
               <span className="font-cormorant text-3xl font-extrabold text-[#1A1A1A] block">{totalWithdrawn}</span>
               <span className="text-[11px] text-[#2E7D32] font-semibold block flex items-center gap-1">
@@ -87,8 +87,8 @@ function MerchantWalletContent() {
           </div>
 
           {/* Request Form */}
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
-            <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-3">Request Payout</h3>
+          <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-4">
+            <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-3">Request Payout</h3>
 
             <form onSubmit={handleRequestWithdrawal} className="space-y-4 text-xs">
               <div>
@@ -98,7 +98,7 @@ function MerchantWalletContent() {
                   placeholder="e.g. 5000"
                   value={withdrawAmount}
                   onChange={(e) => setWithdrawAmount(e.target.value)}
-                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-sm text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-bold text-sm text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   required
                 />
                 <p className="text-[11px] text-[#808080] mt-1">Minimum withdrawal amount is ₹500</p>
@@ -108,7 +108,7 @@ function MerchantWalletContent() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs"
+                  className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs"
                 >
                   {isSubmitting && <Loader2 size={14} className="animate-spin" />}
                   <span>Submit Withdrawal Request</span>
@@ -121,20 +121,20 @@ function MerchantWalletContent() {
         </div>
 
         {/* Right: Withdrawal History (1 col) */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
-          <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-3">Recent Payouts</h3>
+        <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-4">
+          <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-3">Recent Payouts</h3>
 
           <div className="space-y-3">
             {withdrawals.length === 0 ? (
               <div className="text-center py-4 text-[#808080] text-xs">No recent payouts</div>
             ) : (
               withdrawals.map((w) => (
-                <div key={w.id} className="p-3 bg-white border border-[#E2DAC8] rounded-2xl flex items-center justify-between">
+                <div key={w.id} className="p-3 bg-white border border-[#dce5df] rounded-2xl flex items-center justify-between">
                   <div>
                     <span className="font-extrabold text-xs text-[#1A1A1A] block">{formatPrice(w.amount)}</span>
                     <span className="text-[10px] text-[#808080]">{formatDate(w.created_at)}</span>
                   </div>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${w.status === "completed" ? "bg-[#EFEBE3] text-[#2E7D32]" : "bg-[#FFF3E0] text-[#E65100]"}`}>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${w.status === "completed" ? "bg-[#edf4ef] text-[#2E7D32]" : "bg-[#FFF3E0] text-[#E65100]"}`}>
                     {w.status}
                   </span>
                 </div>

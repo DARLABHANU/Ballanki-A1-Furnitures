@@ -153,7 +153,7 @@ function MerchantOrdersContent() {
   const getStatusBadge = (statusStr: string) => {
     switch ((statusStr || "").toLowerCase()) {
       case "delivered":
-        return "bg-[#EFEBE3] text-[#2E7D32]";
+        return "bg-[#edf4ef] text-[#2E7D32]";
       case "shipped":
       case "out_for_delivery":
         return "bg-[#E3F2FD] text-[#1565C0]";
@@ -178,10 +178,10 @@ function MerchantOrdersContent() {
         </div>
       </div>
 
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-6">
         
         {/* ── 1. Top Metrics ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-6 border-b border-[#EFEBE3]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-6 border-b border-[#edf4ef]">
           <div>
             <span className="text-xs font-medium text-[#666666] block mb-1">Total Orders</span>
             <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{totalOrders}</span>
@@ -209,12 +209,12 @@ function MerchantOrdersContent() {
               placeholder="Search by Order #, Customer, AWB tracking..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#dce5df] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
             />
           </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-            <div className="relative border border-[#E2DAC8] rounded-xl px-3 py-2 bg-white">
+            <div className="relative border border-[#dce5df] rounded-xl px-3 py-2 bg-white">
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
@@ -231,7 +231,7 @@ function MerchantOrdersContent() {
 
             <button
               onClick={handleExportCSV}
-              className="inline-flex items-center gap-1.5 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#0D0D0D] hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
+              className="inline-flex items-center gap-1.5 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#214f40] hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
             >
               <Download size={14} />
               <span>Export CSV</span>
@@ -248,7 +248,7 @@ function MerchantOrdersContent() {
           ) : (
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
+                <tr className="border-b border-[#edf4ef] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
                   <th className="pb-3 px-3">Order ID</th>
                   <th className="pb-3 px-3">Customer</th>
                   <th className="pb-3 px-3">Amount</th>
@@ -258,7 +258,7 @@ function MerchantOrdersContent() {
                   <th className="pb-3 px-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#EFEBE3]">
+              <tbody className="divide-y divide-[#edf4ef]">
                 {displayList.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="py-8 text-center text-[#808080]">No orders found</td>
@@ -280,7 +280,7 @@ function MerchantOrdersContent() {
                       </td>
                       <td className="py-3.5 px-3 text-[#666666] font-semibold">
                         {item.tracking_number !== "Not assigned" ? (
-                          <span className="font-mono text-[11px] text-[#0D0D0D] bg-[#EFEBE3] px-2 py-0.5 rounded-md border border-wood-200">
+                          <span className="font-mono text-[11px] text-[#0D0D0D] bg-[#edf4ef] px-2 py-0.5 rounded-md border border-wood-200">
                             {item.tracking_number}
                           </span>
                         ) : (
@@ -292,7 +292,7 @@ function MerchantOrdersContent() {
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             onClick={() => handleOpenTrackingModal(item.raw)}
-                            className="inline-flex items-center gap-1 bg-[#0D0D0D] hover:bg-[#333333] text-white px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-colors"
+                            className="inline-flex items-center gap-1 bg-[#214f40] hover:bg-[#193e32] text-white px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-colors"
                             title="Update Tracking & Status"
                           >
                             <Truck size={13} />
@@ -317,20 +317,20 @@ function MerchantOrdersContent() {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between pt-4 border-t border-[#EFEBE3]">
+        <div className="flex items-center justify-between pt-4 border-t border-[#edf4ef]">
           <span className="text-[11px] text-[#808080] font-medium">Page {page} of {totalPages}</span>
           <div className="flex gap-2">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
+              className="p-1.5 rounded-lg border border-[#dce5df] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={page >= totalPages}
-              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
+              className="p-1.5 rounded-lg border border-[#dce5df] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
             >
               <ChevronRight size={16} />
             </button>
@@ -342,10 +342,10 @@ function MerchantOrdersContent() {
       {/* ── 4. Quick Update Tracking Modal ── */}
       {modalOpen && selectedOrder && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4" onClick={() => setModalOpen(false)}>
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 w-full max-w-lg shadow-2xl space-y-5" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white border border-[#dce5df] rounded-3xl p-6 w-full max-w-lg shadow-2xl space-y-5" onClick={(e) => e.stopPropagation()}>
             
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-[#EFEBE3] pb-3">
+            <div className="flex items-center justify-between border-b border-[#edf4ef] pb-3">
               <div>
                 <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">
                   Update Order {selectedOrder.order_number || `#ORD${selectedOrder.id}`}
@@ -365,7 +365,7 @@ function MerchantOrdersContent() {
                 <select
                   value={modalStatus}
                   onChange={(e) => setModalStatus(e.target.value)}
-                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#dce5df] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   required
                 >
                   {ORDER_STATUS_OPTIONS.map((opt) => (
@@ -383,7 +383,7 @@ function MerchantOrdersContent() {
                   value={modalTrackingNumber}
                   onChange={(e) => setModalTrackingNumber(e.target.value)}
                   placeholder="e.g. BLUEDART-98765432"
-                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#dce5df] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 />
               </div>
 
@@ -394,7 +394,7 @@ function MerchantOrdersContent() {
                   value={modalCurrentLocation}
                   onChange={(e) => setModalCurrentLocation(e.target.value)}
                   placeholder="e.g. BlueDart Express - Dispatched from Guntur Sorting Hub"
-                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#dce5df] rounded-xl px-3 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 />
               </div>
 
@@ -405,7 +405,7 @@ function MerchantOrdersContent() {
                   value={modalNotes}
                   onChange={(e) => setModalNotes(e.target.value)}
                   placeholder="e.g. Handed over package to logistics agent."
-                  className="w-full bg-white border border-[#E2DAC8] rounded-xl p-3 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#dce5df] rounded-xl p-3 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 />
               </div>
 
@@ -413,7 +413,7 @@ function MerchantOrdersContent() {
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold border border-[#E2DAC8] text-[#666666] hover:bg-white"
+                  className="px-4 py-2 rounded-xl text-xs font-bold border border-[#dce5df] text-[#666666] hover:bg-white"
                 >
                   Cancel
                 </button>
@@ -421,7 +421,7 @@ function MerchantOrdersContent() {
                 <button
                   type="submit"
                   disabled={isSubmittingTracking}
-                  className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
+                  className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
                 >
                   {isSubmittingTracking ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                   <span>Save Tracking</span>

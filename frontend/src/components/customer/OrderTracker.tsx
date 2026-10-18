@@ -28,9 +28,9 @@ export default function OrderTracker({ status, history }: Props) {
       {/* Step tracker */}
       <div className="relative">
         {/* Progress line */}
-        <div className="absolute top-5 left-5 right-5 h-0.5 bg-[#E2DAC8] hidden lg:block" />
+        <div className="absolute top-5 left-5 right-5 h-0.5 bg-[#dce5df] hidden lg:block" />
         <div
-          className="absolute top-5 left-5 h-0.5 bg-[#0D0D0D] hidden lg:block transition-all duration-700"
+          className="absolute top-5 left-5 h-0.5 bg-[#214f40] hidden lg:block transition-all duration-700"
           style={{ width: currentStep >= 0 ? `${(currentStep / (ORDER_STATUS_STEPS.length - 1)) * 100}%` : "0%" }}
         />
 
@@ -43,8 +43,8 @@ export default function OrderTracker({ status, history }: Props) {
               <div key={step} className="flex flex-col items-center text-center">
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all z-10 ${
-                    done ? "bg-[#0D0D0D] border-[#0D0D0D] text-white" : "bg-white border-[#E2DAC8] text-[#808080]"
-                  } ${active ? "ring-4 ring-[#EFEBE3]" : ""}`}
+                    done ? "bg-[#214f40] border-[#0D0D0D] text-white" : "bg-white border-[#dce5df] text-[#808080]"
+                  } ${active ? "ring-4 ring-[#edf4ef]" : ""}`}
                 >
                   <Icon size={16} />
                 </div>
@@ -59,14 +59,14 @@ export default function OrderTracker({ status, history }: Props) {
 
       {/* History timeline */}
       {history && history.length > 0 && (
-        <div className="border-t border-[#EFEBE3] pt-4">
+        <div className="border-t border-[#edf4ef] pt-4">
           <h4 className="font-garamond text-xs font-bold text-[#808080] tracking-wider mb-3 uppercase">ORDER TIMELINE</h4>
           <div className="space-y-3">
             {[...history].reverse().map((entry, i) => (
               <div key={i} className="flex gap-3">
                 <div className="flex flex-col items-center">
-                  <div className={`w-2.5 h-2.5 rounded-full mt-1 ${i === 0 ? "bg-[#0D0D0D]" : "bg-[#E2DAC8]"}`} />
-                  {i < history.length - 1 && <div className="w-px flex-1 bg-[#E2DAC8] mt-1" />}
+                  <div className={`w-2.5 h-2.5 rounded-full mt-1 ${i === 0 ? "bg-[#214f40]" : "bg-[#dce5df]"}`} />
+                  {i < history.length - 1 && <div className="w-px flex-1 bg-[#dce5df] mt-1" />}
                 </div>
                 <div className="pb-3">
                   <p className="font-garamond text-xs font-bold text-[#1A1A1A] capitalize">

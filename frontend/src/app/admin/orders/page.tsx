@@ -119,7 +119,7 @@ function AdminOrdersContent() {
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case "delivered":
-        return "bg-[#EFEBE3] text-[#2E7D32]";
+        return "bg-[#edf4ef] text-[#2E7D32]";
       case "shipped":
         return "bg-[#E3F2FD] text-[#1565C0]";
       case "processing":
@@ -137,10 +137,10 @@ function AdminOrdersContent() {
       {/* Title */}
       <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Orders Management</h1>
 
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
         
         {/* ── 1. Top Metrics ── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-6 border-b border-[#EFEBE3]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-6 border-b border-[#edf4ef]">
           <div>
             <span className="text-xs font-medium text-[#666666] block mb-1">Total Orders</span>
             <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{totalOrders.toLocaleString()}</span>
@@ -168,12 +168,12 @@ function AdminOrdersContent() {
               placeholder="Search orders..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#dce5df] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
             />
           </div>
 
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full lg:w-auto justify-start lg:justify-end">
-            <div className="relative border border-[#E2DAC8] rounded-xl px-3 py-2 bg-white">
+            <div className="relative border border-[#dce5df] rounded-xl px-3 py-2 bg-white">
               <select
                 value={filter}
                 onChange={(e) => { setFilter(e.target.value); setPage(1); }}
@@ -184,7 +184,7 @@ function AdminOrdersContent() {
             </div>
             <button
               onClick={() => toast.success("Exporting Orders CSV...")}
-              className="inline-flex items-center gap-1.5 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#0D0D0D] hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
+              className="inline-flex items-center gap-1.5 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#214f40] hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
             >
               <Download size={14} />
               <span>Export</span>
@@ -201,7 +201,7 @@ function AdminOrdersContent() {
           ) : (
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
+                <tr className="border-b border-[#edf4ef] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
                   <th className="pb-3 px-3">Order ID</th>
                   <th className="pb-3 px-3">Customer</th>
                   <th className="pb-3 px-3">Amount</th>
@@ -210,7 +210,7 @@ function AdminOrdersContent() {
                   <th className="pb-3 px-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#EFEBE3]">
+              <tbody className="divide-y divide-[#edf4ef]">
                 {displayList.length === 0 ? (
                   <tr><td colSpan={6} className="py-8 text-center text-[#808080]">No orders found.</td></tr>
                 ) : (
@@ -252,20 +252,20 @@ function AdminOrdersContent() {
         </div>
 
         {/* ── 4. Pagination Dock ── */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#EFEBE3]">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#edf4ef]">
           <span className="text-[11px] text-[#808080] font-medium">Page {page} of {totalPages}</span>
           <div className="flex gap-2">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
+              className="p-1.5 rounded-lg border border-[#dce5df] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={page >= totalPages}
-              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
+              className="p-1.5 rounded-lg border border-[#dce5df] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
             >
               <ChevronRight size={16} />
             </button>

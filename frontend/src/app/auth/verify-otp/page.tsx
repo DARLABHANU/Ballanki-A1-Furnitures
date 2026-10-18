@@ -136,7 +136,7 @@ function VerifyOtpContent() {
         >
           <ChevronLeft size={14} /> Back to Sign In
         </Link>
-        <div className="w-10 h-10 rounded-2xl bg-white border border-[#E2DAC8] flex items-center justify-center mb-3">
+        <div className="w-10 h-10 rounded-2xl bg-white border border-[#dce5df] flex items-center justify-center mb-3">
           <ShieldCheck size={20} className="text-[#0D0D0D]" />
         </div>
         <h2 className="font-cormorant text-3xl font-bold text-[#1A1A1A]">
@@ -163,7 +163,7 @@ function VerifyOtpContent() {
                 inputMode="numeric"
                 aria-label={`Code digit ${idx + 1}`}
                 autoComplete={idx === 0 ? "one-time-code" : "off"}
-                className="w-full min-w-0 h-12 text-center text-lg font-bold bg-white border border-[#E2DAC8] rounded-xl text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] focus:bg-white transition-all shadow-xs"
+                className="w-full min-w-0 h-12 text-center text-lg font-bold bg-white border border-[#dce5df] rounded-xl text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] focus:bg-white transition-all shadow-xs"
               />
             ))}
           </div>
@@ -172,7 +172,7 @@ function VerifyOtpContent() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full inline-flex items-center justify-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white py-3 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
+          className="w-full inline-flex items-center justify-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white py-3 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
         >
           {isLoading && <Loader2 size={16} className="animate-spin" />}
           <span>Verify Code</span>

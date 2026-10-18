@@ -128,10 +128,10 @@ function ProductsContent() {
       {/* Page Title */}
       <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Products Management</h1>
 
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
 
         {/* ── 1. Top Summary Metrics (4 Columns) ── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-6 border-b border-[#EFEBE3]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-6 border-b border-[#edf4ef]">
           <div>
             <span className="text-xs font-medium text-[#666666] block mb-1">Total Products</span>
             <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{totalProducts.toLocaleString()}</span>
@@ -161,13 +161,13 @@ function ProductsContent() {
               placeholder="Search products..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#dce5df] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
             />
           </div>
 
           {/* Category Filter + Add Product Button */}
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full lg:w-auto justify-start lg:justify-end">
-            <div className="relative border border-[#E2DAC8] rounded-xl px-3 py-2 bg-white">
+            <div className="relative border border-[#dce5df] rounded-xl px-3 py-2 bg-white">
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
@@ -184,7 +184,7 @@ function ProductsContent() {
 
             <button
               onClick={() => router.push("/admin/products/add")}
-              className="inline-flex items-center gap-1.5 bg-[#0D0D0D] hover:bg-[#333333] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
+              className="inline-flex items-center gap-1.5 bg-[#214f40] hover:bg-[#193e32] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
             >
               <Plus size={15} />
               <span>Add Product</span>
@@ -202,7 +202,7 @@ function ProductsContent() {
           ) : (
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
+                <tr className="border-b border-[#edf4ef] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
                   <th className="pb-3 px-3">Product</th>
                   <th className="pb-3 px-3">Category</th>
                   <th className="pb-3 px-3">Price</th>
@@ -211,7 +211,7 @@ function ProductsContent() {
                   <th className="pb-3 px-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#EFEBE3]">
+              <tbody className="divide-y divide-[#edf4ef]">
                 {displayList.map((item) => (
                   <tr key={item.id} className="hover:bg-white/60 transition-colors">
 
@@ -222,7 +222,7 @@ function ProductsContent() {
                         <img
                           src={item.image}
                           alt={item.name}
-                          className="w-10 h-10 rounded-lg object-cover border border-[#E2DAC8]"
+                          className="w-10 h-10 rounded-lg object-cover border border-[#dce5df]"
                         />
                         <span className="font-bold text-[#1A1A1A] text-xs">{item.name}</span>
                       </div>
@@ -239,7 +239,7 @@ function ProductsContent() {
                       <span className={`text-[10px] font-bold px-2.5 py-1 rounded-md inline-block ${!item.is_approved
                         ? "bg-amber-50 text-amber-600 border border-amber-200"
                         : item.is_active
-                          ? "bg-[#EFEBE3] text-[#2E7D32]"
+                          ? "bg-[#edf4ef] text-[#2E7D32]"
                           : "bg-red-50 text-red-700"
                         }`}>
                         {!item.is_approved ? "Pending Approval" : item.status}
@@ -303,20 +303,20 @@ function ProductsContent() {
         </div>
 
         {/* ── 4. Pagination Dock ── */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#EFEBE3]">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#edf4ef]">
           <span className="text-[11px] text-[#808080] font-medium">Page {page} of {totalPages}</span>
           <div className="flex gap-2">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
+              className="p-1.5 rounded-lg border border-[#dce5df] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={page >= totalPages}
-              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
+              className="p-1.5 rounded-lg border border-[#dce5df] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
             >
               <ChevronRight size={16} />
             </button>

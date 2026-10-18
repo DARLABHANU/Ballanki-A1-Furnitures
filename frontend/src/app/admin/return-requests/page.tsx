@@ -100,10 +100,10 @@ function ReturnRequestsContent() {
       {/* Title */}
       <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Disputes &amp; Return Support</h1>
 
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
         
         {/* ── 1. Metrics ── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-6 border-b border-[#EFEBE3]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-6 border-b border-[#edf4ef]">
           <div>
             <span className="text-xs font-medium text-[#666666] block mb-1">Total Disputes</span>
             <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{totalDisputes}</span>
@@ -131,7 +131,7 @@ function ReturnRequestsContent() {
               placeholder="Search disputes..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#dce5df] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
             />
           </div>
         </div>
@@ -145,7 +145,7 @@ function ReturnRequestsContent() {
           ) : (
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
+                <tr className="border-b border-[#edf4ef] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
                   <th className="pb-3 px-3">Order ID</th>
                   <th className="pb-3 px-3">Customer</th>
                   <th className="pb-3 px-3">Store Name</th>
@@ -155,7 +155,7 @@ function ReturnRequestsContent() {
                   <th className="pb-3 px-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#EFEBE3]">
+              <tbody className="divide-y divide-[#edf4ef]">
                 {displayList.length === 0 ? (
                   <tr><td colSpan={7} className="py-8 text-center text-[#808080]">No return requests found.</td></tr>
                 ) : (
@@ -165,14 +165,14 @@ function ReturnRequestsContent() {
                       <td className="py-3.5 px-3 font-semibold text-[#1A1A1A]">{item.customer_name}</td>
                       <td className="py-3.5 px-3 text-[#666666] font-bold">{item.store_name}</td>
                       <td className="py-3.5 px-3">
-                        <span className="text-[11px] text-[#666666] bg-[#EFEBE3] px-2 py-1 rounded line-clamp-1 max-w-[200px]" title={item.reason}>
+                        <span className="text-[11px] text-[#666666] bg-[#edf4ef] px-2 py-1 rounded line-clamp-1 max-w-[200px]" title={item.reason}>
                           {item.reason}
                         </span>
                       </td>
                       <td className="py-3.5 px-3 font-extrabold text-[#1A1A1A]">{item.amount}</td>
                       <td className="py-3.5 px-3">
                         <span className={`text-[10px] font-bold px-2.5 py-1 rounded-md inline-flex items-center gap-1 ${
-                          item.status === "Approved" ? "bg-[#EFEBE3] text-[#2E7D32]" : 
+                          item.status === "Approved" ? "bg-[#edf4ef] text-[#2E7D32]" : 
                           item.status === "Rejected" ? "bg-red-50 text-red-700" :
                           "bg-amber-100 text-amber-800"
                         }`}>
@@ -187,7 +187,7 @@ function ReturnRequestsContent() {
                               <button
                                 onClick={() => handleApproveReturn(item.id)}
                                 disabled={actionId === item.id}
-                                className="bg-[#0D0D0D] hover:bg-[#333333] text-white px-2 py-1 rounded text-[10px] font-bold transition-colors disabled:opacity-50"
+                                className="bg-[#214f40] hover:bg-[#193e32] text-white px-2 py-1 rounded text-[10px] font-bold transition-colors disabled:opacity-50"
                               >
                                 {actionId === item.id ? <Loader2 size={12} className="animate-spin" /> : "Approve"}
                               </button>
@@ -204,20 +204,20 @@ function ReturnRequestsContent() {
         </div>
 
         {/* ── 4. Pagination ── */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#EFEBE3]">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#edf4ef]">
           <span className="text-[11px] text-[#808080] font-medium">Page {page} of {totalPages}</span>
           <div className="flex gap-2">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
+              className="p-1.5 rounded-lg border border-[#dce5df] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={page >= totalPages}
-              className="p-1.5 rounded-lg border border-[#E2DAC8] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
+              className="p-1.5 rounded-lg border border-[#dce5df] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
             >
               <ChevronRight size={16} />
             </button>

@@ -111,14 +111,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* Bottom Section: Help Box + User Account / Logout */}
       <div className="pt-4 border-t border-wood-900/50 space-y-3">
-        <div className="bg-[#2A1C10] border border-wood-800/40 rounded-xl p-3.5 space-y-2">
+        <div className="bg-[#123337] border border-wood-800/40 rounded-xl p-3.5 space-y-2">
           <div>
             <h4 className="text-xs font-bold text-white">Need Help?</h4>
             <p className="text-[11px] text-wood-200/70">We are here to help you.</p>
           </div>
           <button
             onClick={() => router.push("/support/dashboard")}
-            className="w-full bg-wood-900 hover:bg-[#333333] text-wood-200 border border-wood-700/40 text-xs font-semibold py-2 px-3 rounded-lg flex items-center justify-center gap-2 transition-colors"
+            className="w-full bg-wood-900 hover:bg-[#193e32] text-wood-200 border border-wood-700/40 text-xs font-semibold py-2 px-3 rounded-lg flex items-center justify-center gap-2 transition-colors"
           >
             <span>Contact Support</span>
             <Headphones size={13} />
@@ -173,7 +173,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="flex-1 flex flex-col min-w-0">
 
         {/* Header Bar */}
-        <header className="bg-white border-b border-[#E2DAC8] px-3 sm:px-6 py-3 flex items-center justify-between gap-2 sm:gap-4 sticky top-0 z-30 shadow-2xs">
+        <header className="bg-white border-b border-[#dce5df] px-3 sm:px-6 py-3 flex items-center justify-between gap-2 sm:gap-4 sticky top-0 z-30 shadow-2xs">
 
           {/* Left: Mobile Menu Toggle + Search */}
           <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0 max-w-md">
@@ -186,7 +186,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <input
                 type="text"
                 placeholder="Search anything..."
-                className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-1.5 text-xs font-garamond text-wood-900 placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-full pl-9 pr-4 py-1.5 text-xs font-garamond text-wood-900 placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
               />
             </div>
           </div>
@@ -197,8 +197,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <NotificationBell />
 
             {/* Admin profile pill */}
-            <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-[#EFEBE3]">
-              <div className="w-8 h-8 rounded-full bg-wood-900 text-white font-bold text-xs flex items-center justify-center border border-[#E2DAC8]">
+            <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-[#edf4ef]">
+              <div className="w-8 h-8 rounded-full bg-wood-900 text-white font-bold text-xs flex items-center justify-center border border-[#dce5df]">
                 {user?.full_name?.[0] || "A"}
               </div>
               <div className="hidden sm:block text-left">
@@ -214,7 +214,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* View Store button */}
             <button
               onClick={() => router.push("/")}
-              className="hidden md:inline-flex items-center gap-1.5 bg-wood-900 hover:bg-[#333333] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
+              className="hidden md:inline-flex items-center gap-1.5 bg-wood-900 hover:bg-[#193e32] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
             >
               <span>View Store</span>
               <ExternalLink size={13} />
@@ -230,7 +230,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </main>
 
         {/* Mobile Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#E2DAC8] lg:hidden z-40 pb-safe">
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#dce5df] lg:hidden z-40 pb-safe">
           <div className="flex items-center justify-around px-2 py-2">
             {[
               { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },

@@ -64,7 +64,7 @@ export default function ProductCard({ product }: Props) {
             alt={product.name}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Crect width='300' height='400' fill='%23F8F5F0'/%3E%3Ctext x='150' y='200' text-anchor='middle' font-family='sans-serif' font-size='14' fill='%23B3B3B3'%3ENo Image%3C/text%3E%3C/svg%3E`;
+              (e.target as HTMLImageElement).src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Crect width='300' height='400' fill='%23f5f7f6'/%3E%3Ctext x='150' y='200' text-anchor='middle' font-family='sans-serif' font-size='14' fill='%23B3B3B3'%3ENo Image%3C/text%3E%3C/svg%3E`;
             }}
           />
 

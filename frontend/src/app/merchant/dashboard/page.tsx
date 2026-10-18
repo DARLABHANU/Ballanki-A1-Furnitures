@@ -71,7 +71,7 @@ function MerchantDashboardContent() {
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case "delivered":
-        return "bg-[#EFEBE3] text-[#2E7D32]";
+        return "bg-[#edf4ef] text-[#2E7D32]";
       case "shipped":
         return "bg-[#E3F2FD] text-[#1565C0]";
       case "processing":
@@ -102,7 +102,7 @@ function MerchantDashboardContent() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
         {/* Card 1: Total Sales */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-5 shadow-xs flex items-center justify-between">
+        <div className="bg-white border border-[#dce5df] rounded-3xl p-5 shadow-xs flex items-center justify-between">
           <div>
             <span className="text-xs font-medium text-[#666666] block mb-1">Total Sales</span>
             <span className="font-cormorant text-2xl font-extrabold text-[#1A1A1A]">
@@ -112,13 +112,13 @@ function MerchantDashboardContent() {
               <TrendingUp size={10} /> 18.5% <span className="text-[#808080] font-normal">vs last month</span>
             </span>
           </div>
-          <div className="w-10 h-10 rounded-2xl bg-[#EFEBE3] text-[#2E7D32] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-[#edf4ef] text-[#2E7D32] flex items-center justify-center">
             <ShoppingBag size={20} />
           </div>
         </div>
 
         {/* Card 2: Total Orders */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-5 shadow-xs flex items-center justify-between">
+        <div className="bg-white border border-[#dce5df] rounded-3xl p-5 shadow-xs flex items-center justify-between">
           <div>
             <span className="text-xs font-medium text-[#666666] block mb-1">Total Orders</span>
             <span className="font-cormorant text-2xl font-extrabold text-[#1A1A1A]">
@@ -134,7 +134,7 @@ function MerchantDashboardContent() {
         </div>
 
         {/* Card 3: Total Earnings */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-5 shadow-xs flex items-center justify-between">
+        <div className="bg-white border border-[#dce5df] rounded-3xl p-5 shadow-xs flex items-center justify-between">
           <div>
             <span className="text-xs font-medium text-[#666666] block mb-1">Total Earnings</span>
             <span className="font-cormorant text-2xl font-extrabold text-[#1A1A1A]">
@@ -150,7 +150,7 @@ function MerchantDashboardContent() {
         </div>
 
         {/* Card 4: Available Balance */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-5 shadow-xs space-y-3">
+        <div className="bg-white border border-[#dce5df] rounded-3xl p-5 shadow-xs space-y-3">
           <div className="flex items-center justify-between">
             <div>
               <span className="text-xs font-medium text-[#666666] block mb-1">Available Balance</span>
@@ -165,7 +165,7 @@ function MerchantDashboardContent() {
 
           <button
             onClick={handleWithdraw}
-            className="w-full bg-[#EFEBE3] hover:bg-[#D4EDDA] text-[#2E7D32] text-xs font-bold py-1.5 rounded-xl transition-colors"
+            className="w-full bg-[#edf4ef] hover:bg-[#D4EDDA] text-[#2E7D32] text-xs font-bold py-1.5 rounded-xl transition-colors"
           >
             Withdraw Now
           </button>
@@ -180,8 +180,8 @@ function MerchantDashboardContent() {
         <div className="lg:col-span-5 space-y-6">
           
           {/* Sales Overview Chart */}
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-[#EFEBE3] pb-3">
+          <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-[#edf4ef] pb-3">
               <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A]">Sales Overview</h3>
               <span className="text-xs text-[#808080] font-semibold">This Month ˅</span>
             </div>
@@ -231,8 +231,8 @@ function MerchantDashboardContent() {
             const completedCount = [hasLogo, hasBank, hasBanner, hasProducts, isApproved].filter(Boolean).length;
             
             return (
-              <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
-                <div className="flex items-center justify-between border-b border-[#EFEBE3] pb-3">
+              <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-4">
+                <div className="flex items-center justify-between border-b border-[#edf4ef] pb-3">
                   <div>
                     <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A]">Store Checklist</h3>
                     <p className="text-[11px] text-[#808080]">Complete these to boost your store</p>
@@ -244,7 +244,7 @@ function MerchantDashboardContent() {
                 <div className="overflow-x-auto pb-2 -mx-2 px-2 sm:mx-0 sm:px-0">
                   <div className="flex sm:grid sm:grid-cols-3 lg:grid-cols-5 gap-2 text-[11px] min-w-max sm:min-w-0">
                     
-                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#E2DAC8]">
+                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#dce5df]">
                       {hasLogo ? <CheckSquare size={14} className="text-[#2E7D32] flex-shrink-0" /> : <Square size={14} className="text-[#808080] flex-shrink-0" />}
                       <div>
                         <span className="font-bold text-[#1A1A1A] block truncate">Store Profile</span>
@@ -252,7 +252,7 @@ function MerchantDashboardContent() {
                       </div>
                     </div>
 
-                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#E2DAC8]">
+                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#dce5df]">
                       {hasProducts ? <CheckSquare size={14} className="text-[#2E7D32] flex-shrink-0" /> : <Square size={14} className="text-[#808080] flex-shrink-0" />}
                       <div>
                         <span className="font-bold text-[#1A1A1A] block truncate">Add Products</span>
@@ -260,7 +260,7 @@ function MerchantDashboardContent() {
                       </div>
                     </div>
 
-                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#E2DAC8]">
+                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#dce5df]">
                       {hasBank ? <CheckSquare size={14} className="text-[#2E7D32] flex-shrink-0" /> : <Square size={14} className="text-[#808080] flex-shrink-0" />}
                       <div>
                         <span className="font-bold text-[#1A1A1A] block truncate">Bank Details</span>
@@ -268,7 +268,7 @@ function MerchantDashboardContent() {
                       </div>
                     </div>
 
-                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#E2DAC8]">
+                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#dce5df]">
                       {hasBanner ? <CheckSquare size={14} className="text-[#2E7D32] flex-shrink-0" /> : <Square size={14} className="text-[#808080] flex-shrink-0" />}
                       <div>
                         <span className="font-bold text-[#1A1A1A] block truncate">Store Banner</span>
@@ -276,7 +276,7 @@ function MerchantDashboardContent() {
                       </div>
                     </div>
 
-                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#E2DAC8]">
+                    <div className="w-36 sm:w-auto flex-shrink-0 flex items-center gap-1.5 p-2 bg-white rounded-xl border border-[#dce5df]">
                       {isApproved ? <CheckSquare size={14} className="text-[#2E7D32] flex-shrink-0" /> : <Square size={14} className="text-[#808080] flex-shrink-0" />}
                       <div>
                         <span className="font-bold text-[#1A1A1A] block truncate">Verify Account</span>
@@ -293,8 +293,8 @@ function MerchantDashboardContent() {
         </div>
 
         {/* Column 2: Recent Orders (4 Cols) */}
-        <div className="lg:col-span-4 bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between border-b border-[#EFEBE3] pb-3">
+        <div className="lg:col-span-4 bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-[#edf4ef] pb-3">
             <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A]">Recent Orders</h3>
             <button
               onClick={() => router.push("/merchant/orders")}
@@ -312,10 +312,10 @@ function MerchantDashboardContent() {
                 <div
                   key={ord.id}
                   onClick={() => router.push(`/merchant/orders?id=${ord.id}`)}
-                  className="flex items-center justify-between p-2.5 rounded-2xl hover:bg-white transition-colors cursor-pointer border border-[#EFEBE3]"
+                  className="flex items-center justify-between p-2.5 rounded-2xl hover:bg-white transition-colors cursor-pointer border border-[#edf4ef]"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center border border-[#E2DAC8] text-[#808080]">
+                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center border border-[#dce5df] text-[#808080]">
                       <Package size={20} />
                     </div>
                     <div>
@@ -340,23 +340,23 @@ function MerchantDashboardContent() {
         </div>
 
         {/* Column 3: Grow Your Business Promo Banner (3 Cols) */}
-        <div className="lg:col-span-3 bg-[#FFF9F2] border border-[#F3E7D3] rounded-3xl p-6 shadow-xs flex flex-col justify-between space-y-6">
+        <div className="lg:col-span-3 bg-[#f7f9f8] border border-[#edf4ef] rounded-3xl p-6 shadow-xs flex flex-col justify-between space-y-6">
           <div className="space-y-2">
-            <h3 className="font-cormorant text-xl font-bold text-[#4A321E]">Grow Your Business</h3>
-            <p className="text-xs text-[#7A624E] leading-relaxed">
+            <h3 className="font-cormorant text-xl font-bold text-[#214f40]">Grow Your Business</h3>
+            <p className="text-xs text-[#527565] leading-relaxed">
               Get more visibility and increase your sales across Ballanki A1 Furnitures marketplace.
             </p>
           </div>
 
           <button
             onClick={handlePromote}
-            className="w-full bg-[#4A321E] hover:bg-[#362314] text-white py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs"
+            className="w-full bg-[#214f40] hover:bg-[#123337] text-white py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs"
           >
             Promote Store
           </button>
 
           {/* Miniature 3D Store Graphic */}
-          <div className="w-full h-36 bg-gradient-to-b from-[#FFF0E0] to-[#FFE4CE] rounded-2xl overflow-hidden relative flex items-center justify-center border border-[#F0D5BE]">
+          <div className="w-full h-36 bg-gradient-to-b from-[#edf4ef] to-[#dce5df] rounded-2xl overflow-hidden relative flex items-center justify-center border border-[#bdcfc3]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?q=80&w=400&auto=format&fit=crop"

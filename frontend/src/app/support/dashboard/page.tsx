@@ -188,7 +188,7 @@ export default function SupportDashboardPage() {
   };
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-[#0D0D0D] text-wood-100 font-garamond">
+    <div className="flex flex-col h-full bg-[#214f40] text-wood-100 font-garamond">
       <div className="p-6 border-b border-wood-800/40">
         <p className="font-cormorant font-bold text-lg tracking-widest text-white">BALLANKI A1 FURNITURES</p>
         <p className="text-[10px] font-semibold tracking-widest text-wood-400 mt-0.5 uppercase">SUPPORT DASHBOARD</p>
@@ -198,7 +198,7 @@ export default function SupportDashboardPage() {
         <button
           onClick={() => { setTab("tickets"); setMobileOpen(false); }}
           className={`w-full flex items-center justify-between px-3.5 py-2.5 text-left text-xs font-bold transition-all rounded-xl ${
-            tab === "tickets" ? "bg-[#333333] text-white shadow-2xs" : "text-wood-200/80 hover:bg-[#333333]/50 hover:text-white"
+            tab === "tickets" ? "bg-[#333333] text-white shadow-2xs" : "text-wood-200/80 hover:bg-[#193e32]/50 hover:text-white"
           }`}
         >
           <span className="flex items-center gap-2.5">
@@ -214,7 +214,7 @@ export default function SupportDashboardPage() {
         <button
           onClick={() => { setTab("lookup"); setMobileOpen(false); }}
           className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-xs font-bold transition-all rounded-xl ${
-            tab === "lookup" ? "bg-[#333333] text-white shadow-2xs" : "text-wood-200/80 hover:bg-[#333333]/50 hover:text-white"
+            tab === "lookup" ? "bg-[#333333] text-white shadow-2xs" : "text-wood-200/80 hover:bg-[#193e32]/50 hover:text-white"
           }`}
         >
           <Search size={15} /> User Lookup
@@ -223,7 +223,7 @@ export default function SupportDashboardPage() {
         <button
           onClick={() => { setTab("audit"); setMobileOpen(false); }}
           className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-xs font-bold transition-all rounded-xl ${
-            tab === "audit" ? "bg-[#333333] text-white shadow-2xs" : "text-wood-200/80 hover:bg-[#333333]/50 hover:text-white"
+            tab === "audit" ? "bg-[#333333] text-white shadow-2xs" : "text-wood-200/80 hover:bg-[#193e32]/50 hover:text-white"
           }`}
         >
           <FileText size={15} /> Audit Logs
@@ -244,7 +244,7 @@ export default function SupportDashboardPage() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-white font-garamond text-[#1A1A1A]">
       {/* Mobile Top Bar */}
-      <header className="lg:hidden flex items-center justify-between p-4 bg-[#0D0D0D] border-b border-wood-800/40">
+      <header className="lg:hidden flex items-center justify-between p-4 bg-[#214f40] border-b border-wood-800/40">
         <div className="flex flex-col">
           <p className="font-cormorant font-bold text-base tracking-widest text-white">BALLANKI A1 FURNITURES</p>
           <p className="text-[9px] font-semibold tracking-widest text-wood-400 mt-0.5 uppercase">SUPPORT DASHBOARD</p>
@@ -255,7 +255,7 @@ export default function SupportDashboardPage() {
       </header>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex w-60 bg-[#0D0D0D] flex-col flex-shrink-0 min-h-screen border-r border-wood-800/40">
+      <aside className="hidden lg:flex w-60 bg-[#214f40] flex-col flex-shrink-0 min-h-screen border-r border-wood-800/40">
         {sidebarContent}
       </aside>
 
@@ -263,7 +263,7 @@ export default function SupportDashboardPage() {
       {mobileOpen && (
         <div className="fixed inset-0 z-50 flex lg:hidden">
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-          <aside className="relative flex flex-col w-64 max-w-xs bg-[#0D0D0D] shadow-2xl h-full z-10 animate-slide-in">
+          <aside className="relative flex flex-col w-64 max-w-xs bg-[#214f40] shadow-2xl h-full z-10 animate-slide-in">
             <div className="absolute top-4 right-4 z-20">
               <button onClick={() => setMobileOpen(false)} className="text-white p-1">
                 <X size={20} />
@@ -286,13 +286,13 @@ export default function SupportDashboardPage() {
             </div>
 
             {/* Filter Bar */}
-            <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs flex flex-wrap gap-4 items-center">
+            <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs flex flex-wrap gap-4 items-center">
               <div>
                 <label className="block text-xs font-bold text-[#1A1A1A] mb-1">Status</label>
                 <select
                   value={ticketStatusFilter}
                   onChange={(e) => setTicketStatusFilter(e.target.value)}
-                  className="bg-white border border-[#E2DAC8] text-xs font-semibold text-[#1A1A1A] px-3 py-2 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
+                  className="bg-white border border-[#dce5df] text-xs font-semibold text-[#1A1A1A] px-3 py-2 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
                 >
                   <option value="">All Statuses</option>
                   <option value="open">Open</option>
@@ -306,7 +306,7 @@ export default function SupportDashboardPage() {
                 <select
                   value={ticketPriorityFilter}
                   onChange={(e) => setTicketPriorityFilter(e.target.value)}
-                  className="bg-white border border-[#E2DAC8] text-xs font-semibold text-[#1A1A1A] px-3 py-2 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
+                  className="bg-white border border-[#dce5df] text-xs font-semibold text-[#1A1A1A] px-3 py-2 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
                 >
                   <option value="">All Priorities</option>
                   <option value="low">Low</option>
@@ -320,8 +320,8 @@ export default function SupportDashboardPage() {
             {/* Tickets Grid / Detail View */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Tickets List (1 col) */}
-              <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
-                <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-3">Active Queue</h3>
+              <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
+                <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-3">Active Queue</h3>
                 {isLoadingTickets ? (
                   <div className="py-12 text-center">
                     <Loader2 className="animate-spin text-[#0D0D0D] mx-auto" size={24} />
@@ -336,8 +336,8 @@ export default function SupportDashboardPage() {
                         onClick={() => handleSelectTicket(t)}
                         className={`p-4 border rounded-2xl cursor-pointer transition-all ${
                           selectedTicket?.id === t.id
-                            ? "bg-[#0D0D0D] text-white border-[#0D0D0D]"
-                            : "bg-white border-[#E2DAC8] hover:border-[#0D0D0D]"
+                            ? "bg-[#214f40] text-white border-[#0D0D0D]"
+                            : "bg-white border-[#dce5df] hover:border-[#0D0D0D]"
                         }`}
                       >
                         <div className="flex justify-between items-start mb-1">
@@ -357,11 +357,11 @@ export default function SupportDashboardPage() {
               </div>
 
               {/* Ticket Details & Chat (2 cols) */}
-              <div className="lg:col-span-2 bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs min-h-[500px] flex flex-col justify-between">
+              <div className="lg:col-span-2 bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs min-h-[500px] flex flex-col justify-between">
                 {selectedTicket ? (
                   <div className="space-y-6 flex-1 flex flex-col justify-between">
                     <div className="space-y-4">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#EFEBE3] pb-4 gap-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#edf4ef] pb-4 gap-2">
                         <div>
                           <span className="text-xs font-mono font-bold text-[#0D0D0D]">#{selectedTicket.ticket_number}</span>
                           <h2 className="font-cormorant text-2xl font-bold text-[#1A1A1A]">{selectedTicket.subject}</h2>
@@ -370,7 +370,7 @@ export default function SupportDashboardPage() {
                           <select
                             value={ticketStatusUpdate}
                             onChange={(e) => setTicketStatusUpdate(e.target.value)}
-                            className="bg-white border border-[#E2DAC8] text-xs font-semibold text-[#1A1A1A] px-3 py-1.5 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
+                            className="bg-white border border-[#dce5df] text-xs font-semibold text-[#1A1A1A] px-3 py-1.5 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
                           >
                             <option value="open">Open</option>
                             <option value="in_progress">In Progress</option>
@@ -380,8 +380,8 @@ export default function SupportDashboardPage() {
                       </div>
 
                       {/* Messages Flow */}
-                      <div className="space-y-3 max-h-[350px] overflow-y-auto p-4 bg-white border border-[#E2DAC8] rounded-2xl">
-                        <div className="bg-white p-4 rounded-xl border border-[#E2DAC8]">
+                      <div className="space-y-3 max-h-[350px] overflow-y-auto p-4 bg-white border border-[#dce5df] rounded-2xl">
+                        <div className="bg-white p-4 rounded-xl border border-[#dce5df]">
                           <p className="text-xs font-bold text-[#1A1A1A] mb-1">{selectedTicket.customer_name || selectedTicket.email}</p>
                           <p className="text-xs text-[#666666] leading-relaxed">{selectedTicket.description}</p>
                           <span className="text-[10px] text-[#808080] mt-2 block">{formatDateTime(selectedTicket.created_at)}</span>
@@ -392,8 +392,8 @@ export default function SupportDashboardPage() {
                             key={idx}
                             className={`p-4 rounded-xl border ${
                               m.sender_role === "support" || m.sender_role === "admin"
-                                ? "bg-[#0D0D0D] text-white border-[#0D0D0D] ml-8"
-                                : "bg-white text-[#1A1A1A] border-[#E2DAC8] mr-8"
+                                ? "bg-[#214f40] text-white border-[#0D0D0D] ml-8"
+                                : "bg-white text-[#1A1A1A] border-[#dce5df] mr-8"
                             }`}
                           >
                             <p className="text-xs font-bold mb-1">{m.sender_name || m.sender_role}</p>
@@ -406,19 +406,19 @@ export default function SupportDashboardPage() {
                     </div>
 
                     {/* Agent Reply Box */}
-                    <form onSubmit={handleSendTicketReply} className="space-y-3 pt-4 border-t border-[#EFEBE3]">
+                    <form onSubmit={handleSendTicketReply} className="space-y-3 pt-4 border-t border-[#edf4ef]">
                       <textarea
                         value={agentReplyMsg}
                         onChange={(e) => setAgentReplyMsg(e.target.value)}
                         placeholder="Type agent response message..."
                         rows={3}
-                        className="w-full bg-white border border-[#E2DAC8] rounded-xl p-3 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
+                        className="w-full bg-white border border-[#dce5df] rounded-xl p-3 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
                       />
                       <div className="flex justify-end">
                         <button
                           type="submit"
                           disabled={isSendingReply || !agentReplyMsg.trim()}
-                          className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
+                          className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
                         >
                           {isSendingReply ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                           <span>Submit Ticket Reply</span>
@@ -445,14 +445,14 @@ export default function SupportDashboardPage() {
             </div>
 
             {/* Search Controls */}
-            <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs">
+            <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs">
               <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4 items-end">
                 <div>
                   <label className="block text-xs font-bold text-[#1A1A1A] mb-1">Search By</label>
                   <select
                     value={searchType}
                     onChange={(e) => setSearchType(e.target.value as any)}
-                    className="bg-white border border-[#E2DAC8] text-xs font-semibold text-[#1A1A1A] px-4 py-2.5 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
+                    className="bg-white border border-[#dce5df] text-xs font-semibold text-[#1A1A1A] px-4 py-2.5 rounded-xl focus:outline-none focus:border-[#0D0D0D]"
                   >
                     <option value="email">Email Address</option>
                     <option value="account_number">Account Number</option>
@@ -467,7 +467,7 @@ export default function SupportDashboardPage() {
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                     placeholder="Enter customer email, account number, or name..."
-                    className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                    className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                     required
                   />
                 </div>
@@ -475,7 +475,7 @@ export default function SupportDashboardPage() {
                 <button
                   type="submit"
                   disabled={isSearching}
-                  className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
+                  className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
                 >
                   {isSearching ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
                   <span>Search User</span>
@@ -487,8 +487,8 @@ export default function SupportDashboardPage() {
             {results.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Results List (1 col) */}
-                <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
-                  <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-3">Matching Users</h3>
+                <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
+                  <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-3">Matching Users</h3>
                   <div className="space-y-3">
                     {results.map((u) => (
                       <div
@@ -496,8 +496,8 @@ export default function SupportDashboardPage() {
                         onClick={() => handleSelectUser(u)}
                         className={`p-4 border rounded-2xl cursor-pointer transition-all ${
                           selectedUser?.id === u.id
-                            ? "bg-[#0D0D0D] text-white border-[#0D0D0D]"
-                            : "bg-white border-[#E2DAC8] hover:border-[#0D0D0D]"
+                            ? "bg-[#214f40] text-white border-[#0D0D0D]"
+                            : "bg-white border-[#dce5df] hover:border-[#0D0D0D]"
                         }`}
                       >
                         <p className="font-bold text-xs">{u.full_name}</p>
@@ -509,16 +509,16 @@ export default function SupportDashboardPage() {
                 </div>
 
                 {/* User Details & Impersonation (2 cols) */}
-                <div className="md:col-span-2 bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
+                <div className="md:col-span-2 bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
                   {selectedUser ? (
                     <div className="space-y-6">
-                      <div className="border-b border-[#EFEBE3] pb-4">
+                      <div className="border-b border-[#edf4ef] pb-4">
                         <h2 className="font-cormorant text-2xl font-bold text-[#1A1A1A]">{selectedUser.full_name}</h2>
                         <p className="text-xs text-[#808080]">{selectedUser.email} • ID: #{selectedUser.id}</p>
                       </div>
 
                       {/* Impersonation Form */}
-                      <div className="bg-white border border-[#E2DAC8] p-4 rounded-2xl space-y-3">
+                      <div className="bg-white border border-[#dce5df] p-4 rounded-2xl space-y-3">
                         <h4 className="text-xs font-bold text-[#1A1A1A] flex items-center gap-1.5">
                           <UserCheck size={16} className="text-[#0D0D0D]" /> Support Impersonation Session
                         </h4>
@@ -531,13 +531,13 @@ export default function SupportDashboardPage() {
                             value={impersonateReason}
                             onChange={(e) => setImpersonateReason(e.target.value)}
                             placeholder="Reason for impersonation (e.g. Order #123 investigation)..."
-                            className="flex-1 bg-white border border-[#E2DAC8] rounded-xl px-4 py-2 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                            className="flex-1 bg-white border border-[#dce5df] rounded-xl px-4 py-2 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                           />
                           <button
                             type="button"
                             onClick={handleImpersonate}
                             disabled={isImpersonating || !impersonateReason.trim()}
-                            className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
+                            className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
                           >
                             {isImpersonating ? <Loader2 size={14} className="animate-spin" /> : <Eye size={14} />}
                             <span>Start Session</span>
@@ -555,7 +555,7 @@ export default function SupportDashboardPage() {
                         ) : (
                           <div className="space-y-2">
                             {userOrders.map((o) => (
-                              <div key={o.id} className="p-3 bg-white border border-[#E2DAC8] rounded-xl flex justify-between items-center text-xs">
+                              <div key={o.id} className="p-3 bg-white border border-[#dce5df] rounded-xl flex justify-between items-center text-xs">
                                 <div>
                                   <span className="font-bold text-[#1A1A1A]">Order #{o.id}</span>
                                   <span className="text-[#808080] block text-[10px]">{formatDate(o.created_at)}</span>
@@ -586,7 +586,7 @@ export default function SupportDashboardPage() {
               <p className="text-xs text-[#808080] mt-0.5">Immutable record of all agent support actions and impersonations</p>
             </div>
 
-            <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs">
+            <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs">
               {isLoadingAudit ? (
                 <div className="py-16 text-center"><Loader2 className="animate-spin text-[#0D0D0D] mx-auto" size={28} /></div>
               ) : auditLogs.length === 0 ? (
@@ -595,7 +595,7 @@ export default function SupportDashboardPage() {
                 <div className="min-w-0 max-w-full overflow-x-auto">
                   <table className="w-full text-left text-xs">
                     <thead>
-                      <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
+                      <tr className="border-b border-[#edf4ef] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
                         <th className="pb-3 px-3">Log ID</th>
                         <th className="pb-3 px-3">Agent</th>
                         <th className="pb-3 px-3">Target User</th>
@@ -604,7 +604,7 @@ export default function SupportDashboardPage() {
                         <th className="pb-3 px-3">Timestamp</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#EFEBE3]">
+                    <tbody className="divide-y divide-[#edf4ef]">
                       {auditLogs.map((log: any) => (
                         <tr key={log.id} className="hover:bg-white/60 transition-colors">
                           <td className="py-3 px-3 font-mono font-bold text-[#808080]">#{log.id}</td>

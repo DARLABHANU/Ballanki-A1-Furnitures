@@ -9,18 +9,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Legacy names share the storefront's forest-green palette.
         wood: {
-          50: "#FFF6EB",
-          100: "#FDECDE",
-          200: "#F5D6A8",
-          300: "#EBB978",
-          400: "#D99443",
-          500: "#C77A16",
-          600: "#bd740f",  // The requested theme color
-          700: "#965B0B",
-          800: "#7A480A",
-          900: "#4D2D06",  // Dark enough for high-contrast text on white
-          950: "#2B1803",
+          50: "#f7f9f8", 100: "#edf4ef", 200: "#dce5df", 300: "#bdcfc3",
+          400: "#78978a", 500: "#527565", 600: "#315b49", 700: "#214f40",
+          800: "#193e32", 900: "#123337", 950: "#0c2528",
         },
         charcoal: {
           50: "#F2F2F2",
@@ -35,19 +28,19 @@ const config: Config = {
           900: "#1A1A1A",
           950: "#0D0D0D",
         },
-        brand: "#bd740f", // Explicit brand variable
-        primary: "#bd740f",
-        secondary: "#965B0B",
-        accent: "#D99443",
-        background: "#FFFFFF",
-        // Keeping legacy class names but mapping them to new furniture theme to avoid breaking existing pages too hard
+        brand: "#214f40",
+        primary: "#214f40",
+        secondary: "#315b49",
+        accent: "#527565",
+        background: "#ffffff",
         gold: {
-          50: "#FFF6EB", 100: "#F5D6A8", 200: "#EBB978", 300: "#C77A16", 400: "#bd740f",
-          500: "#bd740f", 600: "#965B0B", 700: "#7A480A", 800: "#4D2D06", 900: "#2B1803",
+          50: "#f7f9f8", 100: "#edf4ef", 200: "#dce5df", 300: "#bdcfc3",
+          400: "#78978a", 500: "#527565", 600: "#315b49", 700: "#214f40",
+          800: "#193e32", 900: "#123337",
         },
-        brown: "#7A480A",
-        cream: "#FFFFFF",
-        muted: "#D99443",
+        brown: "#123337",
+        cream: "#ffffff",
+        muted: "#6b7d80",
       },
       fontFamily: {
         inter: ["var(--font-inter)", "sans-serif"],

@@ -99,10 +99,10 @@ function CouponsContent() {
       {/* Title */}
       <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Coupons &amp; Offers</h1>
 
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
         
         {/* ── 1. Metrics ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-6 border-b border-[#EFEBE3]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-6 border-b border-[#edf4ef]">
           <div>
             <span className="text-xs font-medium text-[#666666] block mb-1">Total Coupons</span>
             <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{totalCoupons}</span>
@@ -130,13 +130,13 @@ function CouponsContent() {
               placeholder="Search coupons..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#dce5df] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
             />
           </div>
 
           <button
             onClick={handleCreateCoupon}
-            className="inline-flex items-center gap-1.5 bg-[#0D0D0D] hover:bg-[#333333] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
+            className="inline-flex items-center gap-1.5 bg-[#214f40] hover:bg-[#193e32] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
           >
             <Plus size={15} />
             <span>Create Coupon</span>
@@ -152,7 +152,7 @@ function CouponsContent() {
           ) : (
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
+                <tr className="border-b border-[#edf4ef] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
                   <th className="pb-3 px-3">Code</th>
                   <th className="pb-3 px-3">Description</th>
                   <th className="pb-3 px-3">Discount</th>
@@ -163,7 +163,7 @@ function CouponsContent() {
                   <th className="pb-3 px-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#EFEBE3]">
+              <tbody className="divide-y divide-[#edf4ef]">
                 {displayList.map((item) => (
                   <tr key={item.id} className="hover:bg-white/60 transition-colors">
                     <td className="py-3.5 px-3">
@@ -178,7 +178,7 @@ function CouponsContent() {
                     <td className="py-3.5 px-3 font-bold text-[#1A1A1A]">{item.usage_count}</td>
                     <td className="py-3.5 px-3">
                       <span className={`text-[10px] font-bold px-2.5 py-1 rounded-md inline-block ${
-                        item.is_active ? "bg-[#EFEBE3] text-[#2E7D32]" : "bg-red-50 text-red-700"
+                        item.is_active ? "bg-[#edf4ef] text-[#2E7D32]" : "bg-red-50 text-red-700"
                       }`}>
                         {item.is_active ? "Active" : "Disabled"}
                       </span>
@@ -200,8 +200,8 @@ function CouponsContent() {
         </div>
 
         {/* ── 4. Pagination ── */}
-        <div className="flex items-center justify-center gap-1.5 pt-4 border-t border-[#EFEBE3]">
-          <button onClick={() => setPage(1)} className="w-7 h-7 rounded-lg bg-[#0D0D0D] text-white font-bold text-xs flex items-center justify-center shadow-xs">
+        <div className="flex items-center justify-center gap-1.5 pt-4 border-t border-[#edf4ef]">
+          <button onClick={() => setPage(1)} className="w-7 h-7 rounded-lg bg-[#214f40] text-white font-bold text-xs flex items-center justify-center shadow-xs">
             1
           </button>
           <button onClick={() => setPage(2)} className="w-7 h-7 rounded-lg text-[#666666] hover:bg-white text-xs font-semibold">

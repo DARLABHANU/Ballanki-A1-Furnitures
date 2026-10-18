@@ -50,7 +50,7 @@ export default function ForgotPasswordPage() {
           <ChevronLeft size={16} /> Back to Sign In
         </Link>
         <div className="text-center space-y-1">
-          <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#EFEBE3] border border-[#E2DAC8] px-2.5 py-1 rounded-md uppercase inline-block mb-1">
+          <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#edf4ef] border border-[#dce5df] px-2.5 py-1 rounded-md uppercase inline-block mb-1">
             ACCOUNT RECOVERY
           </span>
           <h2 className="font-cormorant text-2xl sm:text-3xl font-bold text-[#1A1A1A]">Forgot Password</h2>
@@ -71,7 +71,7 @@ export default function ForgotPasswordPage() {
               {...register("email")}
               type="email"
               placeholder="yourname@example.com"
-              className="w-full bg-white border border-[#E2DAC8] rounded-xl pl-10 pr-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#dce5df] rounded-xl pl-10 pr-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               autoComplete="email"
               required
             />
@@ -84,7 +84,7 @@ export default function ForgotPasswordPage() {
         <button 
           type="submit" 
           disabled={isLoading} 
-          className="w-full inline-flex items-center justify-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white py-3 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
+          className="w-full inline-flex items-center justify-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white py-3 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
         >
           {isLoading && <Loader2 size={14} className="animate-spin" />}
           SEND VERIFICATION CODE
@@ -92,7 +92,7 @@ export default function ForgotPasswordPage() {
       </form>
 
       {/* Security Badge */}
-      <div className="bg-[#EFEBE3] border border-[#E2DAC8] p-3 rounded-2xl flex items-center gap-2.5 w-full">
+      <div className="bg-[#edf4ef] border border-[#dce5df] p-3 rounded-2xl flex items-center gap-2.5 w-full">
         <ShieldCheck className="text-[#2E7D32] flex-shrink-0" size={16} />
         <p className="text-[11px] text-[#2E7D32] font-semibold leading-normal">
           Ballanki A1 Furnitures Security System. Verification codes expire in 10 minutes.

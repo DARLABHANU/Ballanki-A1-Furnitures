@@ -116,7 +116,7 @@ export default function PromoterDashboardPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "paid":
-        return "bg-[#EFEBE3] text-[#2E7D32]";
+        return "bg-[#edf4ef] text-[#2E7D32]";
       case "approved":
         return "bg-[#E3F2FD] text-[#1565C0]";
       case "pending":
@@ -148,14 +148,14 @@ export default function PromoterDashboardPage() {
           <a
             href="/promoter_affiliate_guide.pdf"
             download="Ballanki A1 Furnitures_Promoter_Affiliate_Guide.pdf"
-            className="inline-flex items-center gap-2 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#0D0D0D] hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
+            className="inline-flex items-center gap-2 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#214f40] hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
           >
             <FileText size={14} />
             <span>Download PDF Manual</span>
             <Download size={12} />
           </a>
           {user && (
-            <div className="bg-[#0D0D0D] text-white px-4 py-2 rounded-xl text-right shadow-2xs select-all">
+            <div className="bg-[#214f40] text-white px-4 py-2 rounded-xl text-right shadow-2xs select-all">
               <p className="text-[10px] text-wood-300 font-bold uppercase">PROMOTER ID</p>
               <p className="font-cormorant text-lg font-bold text-white leading-tight">#{user.id}</p>
             </div>
@@ -166,8 +166,8 @@ export default function PromoterDashboardPage() {
       {/* Analytics Grid */}
       {analytics && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-5 shadow-xs flex items-center gap-4">
-            <div className="w-10 h-10 bg-[#EFEBE3] text-[#2E7D32] rounded-2xl flex items-center justify-center">
+          <div className="bg-white border border-[#dce5df] rounded-3xl p-5 shadow-xs flex items-center gap-4">
+            <div className="w-10 h-10 bg-[#edf4ef] text-[#2E7D32] rounded-2xl flex items-center justify-center">
               <Gift size={20} />
             </div>
             <div>
@@ -177,7 +177,7 @@ export default function PromoterDashboardPage() {
             </div>
           </div>
 
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-5 shadow-xs flex items-center gap-4">
+          <div className="bg-white border border-[#dce5df] rounded-3xl p-5 shadow-xs flex items-center gap-4">
             <div className="w-10 h-10 bg-[#E3F2FD] text-[#1565C0] rounded-2xl flex items-center justify-center">
               <DollarSign size={20} />
             </div>
@@ -188,7 +188,7 @@ export default function PromoterDashboardPage() {
             </div>
           </div>
 
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-5 shadow-xs flex items-center gap-4">
+          <div className="bg-white border border-[#dce5df] rounded-3xl p-5 shadow-xs flex items-center gap-4">
             <div className="w-10 h-10 bg-[#FFF3E0] text-[#E65100] rounded-2xl flex items-center justify-center">
               <Loader2 size={20} className="animate-spin" />
             </div>
@@ -199,7 +199,7 @@ export default function PromoterDashboardPage() {
             </div>
           </div>
 
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-5 shadow-xs flex items-center gap-4">
+          <div className="bg-white border border-[#dce5df] rounded-3xl p-5 shadow-xs flex items-center gap-4">
             <div className="w-10 h-10 bg-[#F3E5F5] text-[#7B1FA2] rounded-2xl flex items-center justify-center">
               <Percent size={20} />
             </div>
@@ -213,8 +213,8 @@ export default function PromoterDashboardPage() {
       )}
 
       {/* Share Links Box */}
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
-        <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-3">Active Promo Codes &amp; Affiliate Links</h2>
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
+        <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-3">Active Promo Codes &amp; Affiliate Links</h2>
 
         {coupons.length === 0 ? (
           <div className="text-center py-10 text-[#808080]">
@@ -224,10 +224,10 @@ export default function PromoterDashboardPage() {
         ) : (
           <div className="grid md:grid-cols-2 gap-4">
             {coupons.map((c) => (
-              <div key={c.id} className="p-4 border border-[#E2DAC8] bg-white rounded-2xl space-y-4 flex flex-col justify-between">
+              <div key={c.id} className="p-4 border border-[#dce5df] bg-white rounded-2xl space-y-4 flex flex-col justify-between">
                 <div>
                   <div className="flex justify-between items-start">
-                    <span className="font-bold text-xs bg-[#0D0D0D] text-white px-2.5 py-1 rounded-lg tracking-wider">
+                    <span className="font-bold text-xs bg-[#214f40] text-white px-2.5 py-1 rounded-lg tracking-wider">
                       {c.code}
                     </span>
                     <span className="text-xs text-[#2E7D32] font-bold">
@@ -243,7 +243,7 @@ export default function PromoterDashboardPage() {
                 </div>
                 <button
                   onClick={() => handleCopy(c.code)}
-                  className="w-full inline-flex items-center justify-center gap-2 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#0D0D0D] hover:text-white py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
+                  className="w-full inline-flex items-center justify-center gap-2 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#214f40] hover:text-white py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
                 >
                   {copiedCode === c.code ? <Check size={14} className="text-wood-500 animate-scale" /> : <Copy size={14} />}
                   {copiedCode === c.code ? "COPIED!" : "COPY REFERRAL LINK"}
@@ -255,8 +255,8 @@ export default function PromoterDashboardPage() {
       </div>
 
       {/* Referrals & Commissions Ledger */}
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
-        <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-3">Commissions Referral Ledger</h2>
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
+        <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-3">Commissions Referral Ledger</h2>
 
         {commissions.length === 0 ? (
           <div className="text-center py-12 text-[#808080] text-xs">
@@ -266,7 +266,7 @@ export default function PromoterDashboardPage() {
           <div className="min-w-0 max-w-full overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
+                <tr className="border-b border-[#edf4ef] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
                   <th className="pb-3 px-3">Commission ID</th>
                   <th className="pb-3 px-3">Referenced Order</th>
                   <th className="pb-3 px-3">Earned Commission</th>
@@ -274,7 +274,7 @@ export default function PromoterDashboardPage() {
                   <th className="pb-3 px-3">Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#EFEBE3]">
+              <tbody className="divide-y divide-[#edf4ef]">
                 {commissions.map((c) => (
                   <tr key={c.id} className="hover:bg-white/60 transition-colors">
                     <td className="py-3 px-3 text-[#808080] font-bold">#{c.id}</td>
@@ -297,8 +297,8 @@ export default function PromoterDashboardPage() {
       </div>
 
       {/* Payout Settings Form */}
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
-        <div className="border-b border-[#EFEBE3] pb-3">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
+        <div className="border-b border-[#edf4ef] pb-3">
           <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">✦ Payout Settings</h3>
           <p className="text-xs text-[#808080] mt-0.5">
             Configure your preferred payout details below. Admin will use these credentials to settle your earned commissions.
@@ -311,7 +311,7 @@ export default function PromoterDashboardPage() {
               type="button"
               onClick={() => setPayoutMode("upi")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                payoutMode === "upi" ? "bg-[#0D0D0D] text-white" : "border border-[#E2DAC8] text-[#666666] hover:bg-white"
+                payoutMode === "upi" ? "bg-[#214f40] text-white" : "border border-[#dce5df] text-[#666666] hover:bg-white"
               }`}
             >
               UPI Payout
@@ -320,7 +320,7 @@ export default function PromoterDashboardPage() {
               type="button"
               onClick={() => setPayoutMode("bank")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                payoutMode === "bank" ? "bg-[#0D0D0D] text-white" : "border border-[#E2DAC8] text-[#666666] hover:bg-white"
+                payoutMode === "bank" ? "bg-[#214f40] text-white" : "border border-[#dce5df] text-[#666666] hover:bg-white"
               }`}
             >
               Bank Account
@@ -335,7 +335,7 @@ export default function PromoterDashboardPage() {
                 value={payoutUpiId}
                 onChange={(e) => setPayoutUpiId(e.target.value)}
                 placeholder="e.g. promotername@okaxis"
-                className="w-full max-w-md bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full max-w-md bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required={payoutMode === "upi"}
               />
             </div>
@@ -348,7 +348,7 @@ export default function PromoterDashboardPage() {
                   value={payoutBankName}
                   onChange={(e) => setPayoutBankName(e.target.value)}
                   placeholder="e.g. State Bank of India"
-                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   required={payoutMode === "bank"}
                 />
               </div>
@@ -359,7 +359,7 @@ export default function PromoterDashboardPage() {
                   value={payoutAccountHolderName}
                   onChange={(e) => setPayoutAccountHolderName(e.target.value)}
                   placeholder="e.g. John Doe"
-                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   required={payoutMode === "bank"}
                 />
               </div>
@@ -370,7 +370,7 @@ export default function PromoterDashboardPage() {
                   value={payoutAccountNumber}
                   onChange={(e) => setPayoutAccountNumber(e.target.value)}
                   placeholder="Bank account number"
-                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   required={payoutMode === "bank"}
                 />
               </div>
@@ -381,7 +381,7 @@ export default function PromoterDashboardPage() {
                   value={payoutIfscCode}
                   onChange={(e) => setPayoutIfscCode(e.target.value)}
                   placeholder="e.g. SBIN0001234"
-                  className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                  className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                   required={payoutMode === "bank"}
                 />
               </div>
@@ -391,7 +391,7 @@ export default function PromoterDashboardPage() {
           <button
             type="submit"
             disabled={isUpdatingPayout}
-            className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
+            className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50"
           >
             {isUpdatingPayout ? (
               <><Loader2 size={14} className="animate-spin" /> Saving...</>

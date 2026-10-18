@@ -28,8 +28,8 @@ export default function AdminSettingsPage() {
       <form onSubmit={handleSave} className="space-y-6">
         
         {/* Card 1: Default Pricing & Commission Rules */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
-          <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">
+        <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
+          <div className="flex items-center gap-2 border-b border-[#edf4ef] pb-3">
             <DollarSign className="text-[#0D0D0D]" size={20} />
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">Commission &amp; Pricing Formula Rules</h3>
           </div>
@@ -41,7 +41,7 @@ export default function AdminSettingsPage() {
                 type="number"
                 value={platformMargin}
                 onChange={(e) => setPlatformMargin(e.target.value)}
-                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               />
               <p className="text-[11px] text-[#808080] mt-1">Customer price is set by the store administrator.</p>
             </div>
@@ -52,7 +52,7 @@ export default function AdminSettingsPage() {
                 type="number"
                 value={promoterDiscount}
                 onChange={(e) => setPromoterDiscount(e.target.value)}
-                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               />
               <p className="text-[11px] text-[#808080] mt-1">Fixed discount given to customer using promoter coupon</p>
             </div>
@@ -63,7 +63,7 @@ export default function AdminSettingsPage() {
                 type="number"
                 value={promoterCommission}
                 onChange={(e) => setPromoterCommission(e.target.value)}
-                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#2E7D32] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-bold text-[#2E7D32] focus:outline-none focus:border-[#0D0D0D]"
               />
               <p className="text-[11px] text-[#808080] mt-1">Direct amount transferred to promoter balance upon purchase</p>
             </div>
@@ -74,7 +74,7 @@ export default function AdminSettingsPage() {
                 type="number"
                 value={platformProfit}
                 onChange={(e) => setPlatformProfit(e.target.value)}
-                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               />
               <p className="text-[11px] text-[#808080] mt-1">Platform retained profit share on promoter coupon usage</p>
             </div>
@@ -82,8 +82,8 @@ export default function AdminSettingsPage() {
         </div>
 
         {/* Card 2: Contact & Support Settings */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
-          <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">
+        <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
+          <div className="flex items-center gap-2 border-b border-[#edf4ef] pb-3">
             <Building className="text-[#0D0D0D]" size={20} />
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">Contact &amp; Store Information</h3>
           </div>
@@ -95,7 +95,7 @@ export default function AdminSettingsPage() {
                 type="email"
                 value={supportEmail}
                 onChange={(e) => setSupportEmail(e.target.value)}
-                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               />
             </div>
 
@@ -105,7 +105,7 @@ export default function AdminSettingsPage() {
                 type="text"
                 value={supportPhone}
                 onChange={(e) => setSupportPhone(e.target.value)}
-                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               />
             </div>
           </div>
@@ -115,7 +115,7 @@ export default function AdminSettingsPage() {
         <div className="flex justify-end pt-2">
           <button
             type="submit"
-            className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs"
+            className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs"
           >
             <Save size={15} />
             <span>Save Settings</span>

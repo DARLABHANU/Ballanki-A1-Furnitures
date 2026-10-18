@@ -46,8 +46,8 @@ export default function CustomerDashboard() {
   return (
     <div className="max-w-6xl mx-auto space-y-6 text-[#1A1A1A] font-garamond px-4 md:px-6 py-6">
       {/* Welcome Header */}
-      <div className="border-b border-[#EFEBE3] pb-4">
-        <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#EFEBE3] border border-[#E2DAC8] px-2.5 py-1 rounded-md uppercase inline-block mb-1">
+      <div className="border-b border-[#edf4ef] pb-4">
+        <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#edf4ef] border border-[#dce5df] px-2.5 py-1 rounded-md uppercase inline-block mb-1">
           MY ACCOUNT
         </span>
         <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">
@@ -64,10 +64,10 @@ export default function CustomerDashboard() {
           <Link
             key={label}
             href={href}
-            className="bg-white border border-[#E2DAC8] rounded-3xl p-5 shadow-xs flex items-center justify-between hover:border-[#0D0D0D] transition-all group"
+            className="bg-white border border-[#dce5df] rounded-3xl p-5 shadow-xs flex items-center justify-between hover:border-[#0D0D0D] transition-all group"
           >
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-white border border-[#E2DAC8] rounded-2xl flex items-center justify-center text-[#0D0D0D]">
+              <div className="w-10 h-10 bg-white border border-[#dce5df] rounded-2xl flex items-center justify-center text-[#0D0D0D]">
                 <Icon size={20} />
               </div>
               <div>
@@ -81,8 +81,8 @@ export default function CustomerDashboard() {
       </div>
 
       {/* Recent Orders Section */}
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
-        <div className="flex items-center justify-between border-b border-[#EFEBE3] pb-3">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-4">
+        <div className="flex items-center justify-between border-b border-[#edf4ef] pb-3">
           <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A]">Recent Orders</h2>
           <Link href="/customer/orders" className="text-xs text-[#0D0D0D] font-bold hover:underline">
             View All Orders
@@ -97,7 +97,7 @@ export default function CustomerDashboard() {
           <div className="min-w-0 max-w-full overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-[#EFEBE3] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
+                <tr className="border-b border-[#edf4ef] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
                   <th className="pb-3 px-3">Order Number</th>
                   <th className="pb-3 px-3">Date</th>
                   <th className="pb-3 px-3">Status</th>
@@ -105,13 +105,13 @@ export default function CustomerDashboard() {
                   <th className="pb-3 px-3">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#EFEBE3]">
+              <tbody className="divide-y divide-[#edf4ef]">
                 {recentOrders.map((order) => (
                   <tr key={order.id} className="hover:bg-white/60 transition-colors">
                     <td className="py-3 px-3 font-mono font-bold text-[#1A1A1A]">#{order.order_number}</td>
                     <td className="py-3 px-3 text-[#808080]">{formatDate(order.created_at)}</td>
                     <td className="py-3 px-3">
-                      <span className="bg-[#EFEBE3] text-[#2E7D32] text-[10px] font-bold px-2 py-0.5 rounded-md uppercase">
+                      <span className="bg-[#edf4ef] text-[#2E7D32] text-[10px] font-bold px-2 py-0.5 rounded-md uppercase">
                         {ORDER_STATUS_LABELS[order.status] || order.status}
                       </span>
                     </td>

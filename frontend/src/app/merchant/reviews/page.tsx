@@ -55,7 +55,7 @@ function MerchantReviewsContent() {
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
-      <Star key={i} size={13} className={i < rating ? "fill-[#B85C00] text-[#B85C00]" : "text-[#E2DAC8]"} />
+      <Star key={i} size={13} className={i < rating ? "fill-[#B85C00] text-[#B85C00]" : "text-[#dce5df]"} />
     ));
   };
 
@@ -63,9 +63,9 @@ function MerchantReviewsContent() {
     <div className="space-y-6 text-[#1A1A1A] font-garamond">
       <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Product Reviews</h1>
 
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-6">
         {/* Metrics */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-6 border-b border-[#EFEBE3]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-6 border-b border-[#edf4ef]">
           <div>
             <span className="text-xs font-medium text-[#666666] block mb-1">Total Reviews</span>
             <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{totalReviews}</span>
@@ -90,7 +90,7 @@ function MerchantReviewsContent() {
           <input type="text" placeholder="Search reviews..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-white border border-[#E2DAC8] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]" />
+            className="w-full bg-white border border-[#dce5df] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]" />
         </div>
 
         {/* Reviews List */}
@@ -101,7 +101,7 @@ function MerchantReviewsContent() {
             <div className="text-center py-6 text-xs text-[#808080]">No reviews found</div>
           ) : (
             filteredReviews.map((r) => (
-              <div key={r.id} className="p-4 bg-white border border-[#E2DAC8] rounded-2xl space-y-2">
+              <div key={r.id} className="p-4 bg-white border border-[#dce5df] rounded-2xl space-y-2">
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="font-bold text-xs text-[#1A1A1A]">{r.customer_name}</span>

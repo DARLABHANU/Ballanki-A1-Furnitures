@@ -26,8 +26,8 @@ export default function WebsiteSettingsPage() {
       <form onSubmit={handleSave} className="space-y-6">
 
         {/* Card 1: General Branding */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
-          <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">
+        <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
+          <div className="flex items-center gap-2 border-b border-[#edf4ef] pb-3">
             <Globe className="text-[#0D0D0D]" size={20} />
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">Brand &amp; General Information</h3>
           </div>
@@ -39,7 +39,7 @@ export default function WebsiteSettingsPage() {
                 type="text"
                 value={siteName}
                 onChange={(e) => setSiteName(e.target.value)}
-                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required
               />
             </div>
@@ -50,7 +50,7 @@ export default function WebsiteSettingsPage() {
                 type="text"
                 value={footerText}
                 onChange={(e) => setFooterText(e.target.value)}
-                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required
               />
             </div>
@@ -58,8 +58,8 @@ export default function WebsiteSettingsPage() {
         </div>
 
         {/* Card 2: SEO & Meta */}
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
-          <div className="flex items-center gap-2 border-b border-[#EFEBE3] pb-3">
+        <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
+          <div className="flex items-center gap-2 border-b border-[#edf4ef] pb-3">
             <ShieldCheck className="text-[#0D0D0D]" size={20} />
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">SEO &amp; Search Engine Metadata</h3>
           </div>
@@ -71,7 +71,7 @@ export default function WebsiteSettingsPage() {
                 type="text"
                 value={seoTitle}
                 onChange={(e) => setSeoTitle(e.target.value)}
-                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required
               />
             </div>
@@ -82,7 +82,7 @@ export default function WebsiteSettingsPage() {
                 rows={3}
                 value={seoMeta}
                 onChange={(e) => setSeoMeta(e.target.value)}
-                className="w-full bg-white border border-[#E2DAC8] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required
               />
             </div>
@@ -93,7 +93,7 @@ export default function WebsiteSettingsPage() {
         <div className="flex justify-end pt-2">
           <button
             type="submit"
-            className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs"
+            className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs"
           >
             <Save size={15} />
             <span>Save Website Settings</span>

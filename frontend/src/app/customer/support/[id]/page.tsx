@@ -71,7 +71,7 @@ export default function CustomerTicketDetailsPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "open":
-        return "bg-[#EFEBE3] text-[#2E7D32] border-[#E2DAC8]";
+        return "bg-[#edf4ef] text-[#2E7D32] border-[#dce5df]";
       case "in_progress":
         return "bg-amber-50 text-amber-700 border-amber-200";
       case "resolved":
@@ -102,11 +102,11 @@ export default function CustomerTicketDetailsPage() {
     <div className="min-h-screen bg-white text-[#1A1A1A] font-garamond">
 
       {/* ── Mobile Top Bar ── */}
-      <div className="md:hidden sticky top-0 z-40 bg-white border-b border-[#E2DAC8] shadow-xs">
+      <div className="md:hidden sticky top-0 z-40 bg-white border-b border-[#dce5df] shadow-xs">
         <div className="flex items-center justify-between px-4 py-3.5">
           <button
             onClick={() => router.back()}
-            className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-[#EFEBE3] transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-[#edf4ef] transition-colors"
             aria-label="Go back"
           >
             <ChevronLeft size={22} className="text-[#1A1A1A]" />
@@ -128,10 +128,10 @@ export default function CustomerTicketDetailsPage() {
         >
           <ChevronLeft size={16} /> Back to Support Desk
         </button>
-        <div className="flex justify-between items-start border-b border-[#EFEBE3] pb-3 mb-4">
+        <div className="flex justify-between items-start border-b border-[#edf4ef] pb-3 mb-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#EFEBE3] border border-[#E2DAC8] px-2.5 py-1 rounded-md uppercase inline-block">
+              <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#edf4ef] border border-[#dce5df] px-2.5 py-1 rounded-md uppercase inline-block">
                 {categoryLabels[ticket.category] || ticket.category}
               </span>
               <span className={`text-[10px] font-bold uppercase px-2 py-0.5 border rounded-md ${getStatusBadge(ticket.status)}`}>
@@ -146,8 +146,8 @@ export default function CustomerTicketDetailsPage() {
 
       {/* ── Chat Messages Container ── */}
       <div className="max-w-4xl mx-auto px-4 md:px-6 py-4 md:py-6 space-y-4">
-        <div className="bg-white border border-[#E2DAC8] rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
-          <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#EFEBE3] pb-2">
+        <div className="bg-white border border-[#dce5df] rounded-3xl p-5 md:p-6 shadow-xs space-y-4">
+          <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-2">
             Conversation Thread
           </h2>
 
@@ -162,8 +162,8 @@ export default function CustomerTicketDetailsPage() {
                   <div
                     className={`max-w-[85%] rounded-2xl p-4 space-y-1 ${
                       isMe
-                        ? "bg-[#0D0D0D] text-white rounded-br-none"
-                        : "bg-white border border-[#E2DAC8] text-[#1A1A1A] rounded-bl-none"
+                        ? "bg-[#214f40] text-white rounded-br-none"
+                        : "bg-white border border-[#dce5df] text-[#1A1A1A] rounded-bl-none"
                     }`}
                   >
                     <p className="text-xs font-bold text-wood-300">
@@ -182,19 +182,19 @@ export default function CustomerTicketDetailsPage() {
 
           {/* Reply Form */}
           {ticket.status !== "resolved" && (
-            <form onSubmit={handleSendReply} className="pt-3 border-t border-[#EFEBE3] flex gap-2">
+            <form onSubmit={handleSendReply} className="pt-3 border-t border-[#edf4ef] flex gap-2">
               <input
                 type="text"
                 value={replyMessage}
                 onChange={(e) => setReplyMessage(e.target.value)}
                 placeholder="Type your message..."
-                className="flex-1 bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 text-xs font-garamond text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="flex-1 bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 text-xs font-garamond text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 required
               />
               <button
                 type="submit"
                 disabled={submitting || !replyMessage.trim()}
-                className="bg-[#0D0D0D] hover:bg-[#333333] text-white px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all disabled:opacity-50"
+                className="bg-[#214f40] hover:bg-[#193e32] text-white px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all disabled:opacity-50"
               >
                 {submitting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                 <span>Send</span>

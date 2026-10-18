@@ -100,7 +100,7 @@ export default function DeliveryLocationModal() {
         <div className="bg-white rounded-t-3xl md:rounded-2xl shadow-2xl w-full md:max-w-md max-h-[90dvh] overflow-y-auto animate-in slide-in-from-bottom-4 md:slide-in-from-bottom-0 duration-300">
 
           {/* ── Header ── */}
-          <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[#EFEBE3]">
+          <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[#edf4ef]">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 bg-[#EBF5ED] rounded-xl flex items-center justify-center">
                 <MapPin size={18} className="text-[#0D0D0D]" />
@@ -116,7 +116,7 @@ export default function DeliveryLocationModal() {
             </div>
             <button
               onClick={closeModal}
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#EFEBE3] transition-colors text-[#808080]"
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#edf4ef] transition-colors text-[#808080]"
               aria-label="Close"
             >
               <X size={18} />
@@ -132,7 +132,7 @@ export default function DeliveryLocationModal() {
             {detectionError&&<p role="status" className="rounded-lg bg-amber-50 p-3 text-xs text-amber-900">{detectionError}</p>}
             {/* Current Location Display (if set) */}
             {location && !lookupResult && (
-              <div className="flex items-center gap-3 p-3 bg-[#F0F9F1] border border-[#E2DAC8] rounded-xl">
+              <div className="flex items-center gap-3 p-3 bg-[#F0F9F1] border border-[#dce5df] rounded-xl">
                 <Navigation size={16} className="text-[#2E7D32] flex-shrink-0" />
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold text-[#1A1A1A]">
@@ -164,7 +164,7 @@ export default function DeliveryLocationModal() {
                   value={pincode}
                   onChange={handlePincodeChange}
                   maxLength={6}
-                  className="w-full pl-10 pr-12 py-3.5 bg-white border border-[#E2DAC8] rounded-xl text-sm font-bold text-[#1A1A1A] font-garamond tracking-widest focus:outline-none focus:border-[#0D0D0D] focus:ring-2 focus:ring-[#0D0D0D]/10 transition-all placeholder:font-normal placeholder:tracking-normal placeholder:text-[#BDB5A6]"
+                  className="w-full pl-10 pr-12 py-3.5 bg-white border border-[#dce5df] rounded-xl text-sm font-bold text-[#1A1A1A] font-garamond tracking-widest focus:outline-none focus:border-[#0D0D0D] focus:ring-2 focus:ring-[#0D0D0D]/10 transition-all placeholder:font-normal placeholder:tracking-normal placeholder:text-[#94a69c]"
                   style={{ fontSize: "16px" }} /* Prevent iOS zoom */
                 />
                 {/* Loading / clear button */}
@@ -203,29 +203,29 @@ export default function DeliveryLocationModal() {
             {lookupResult && !lookupError && (
               <div className="space-y-3">
                 {/* Location Preview Card */}
-                <div className="p-4 bg-[#F0F9F1] border border-[#E2DAC8] rounded-xl space-y-2.5">
+                <div className="p-4 bg-[#F0F9F1] border border-[#dce5df] rounded-xl space-y-2.5">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2">
                       <CheckCircle size={16} className="text-[#2E7D32] flex-shrink-0" />
                       <span className="text-xs font-bold text-[#1A1A1A]">PIN code found</span>
                     </div>
-                    <span className="text-[10px] font-bold text-[#0D0D0D] bg-[#E2DAC8] px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-bold text-[#0D0D0D] bg-[#dce5df] px-2 py-0.5 rounded-full">
                       PIN {lookupResult.pincode}
                     </span>
                   </div>
 
                   {/* City + State */}
                   <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="bg-white rounded-lg p-2.5 border border-[#E2DAC8]">
+                    <div className="bg-white rounded-lg p-2.5 border border-[#dce5df]">
                       <p className="text-[#808080] text-[9px] uppercase font-bold tracking-wide">Post Office</p>
                       <p className="font-bold text-[#1A1A1A] mt-0.5 truncate">{lookupResult.city}</p>
                     </div>
-                    <div className="bg-white rounded-lg p-2.5 border border-[#E2DAC8]">
+                    <div className="bg-white rounded-lg p-2.5 border border-[#dce5df]">
                       <p className="text-[#808080] text-[9px] uppercase font-bold tracking-wide">District</p>
                       <p className="font-bold text-[#1A1A1A] mt-0.5 truncate">{lookupResult.district}</p>
                     </div>
                   </div>
-                  <div className="bg-white rounded-lg p-2.5 border border-[#E2DAC8]">
+                  <div className="bg-white rounded-lg p-2.5 border border-[#dce5df]">
                     <p className="text-[#808080] text-[9px] uppercase font-bold tracking-wide">State</p>
                     <p className="font-bold text-[#1A1A1A] mt-0.5">{lookupResult.state}</p>
                   </div>
@@ -235,7 +235,7 @@ export default function DeliveryLocationModal() {
                 {/* Confirm Button */}
                 <button
                   onClick={handleConfirm}
-                  className="w-full bg-[#0D0D0D] hover:bg-[#333333] active:scale-[0.99] text-white py-3.5 rounded-xl font-garamond font-bold text-sm transition-all shadow-sm flex items-center justify-center gap-2"
+                  className="w-full bg-[#214f40] hover:bg-[#193e32] active:scale-[0.99] text-white py-3.5 rounded-xl font-garamond font-bold text-sm transition-all shadow-sm flex items-center justify-center gap-2"
                 >
                   <MapPin size={15} />
                   Deliver to {lookupResult.district}, {lookupResult.state}
@@ -259,7 +259,7 @@ export default function DeliveryLocationModal() {
                     <button
                       key={s.pincode}
                       onClick={() => setPincode(s.pincode)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#EFEBE3] border border-[#E2DAC8] rounded-full text-[11px] font-bold text-[#1A1A1A] transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#edf4ef] border border-[#dce5df] rounded-full text-[11px] font-bold text-[#1A1A1A] transition-colors"
                     >
                       <MapPin size={11} className="text-[#0D0D0D]" />
                       {s.label}

@@ -35,9 +35,9 @@ export default function WishlistPage() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-white text-[#1A1A1A] font-garamond">
-        <div className="md:hidden sticky top-0 z-40 bg-white border-b border-[#E2DAC8] shadow-xs">
+        <div className="md:hidden sticky top-0 z-40 bg-white border-b border-[#dce5df] shadow-xs">
           <div className="flex items-center justify-between px-4 py-3.5">
-            <button onClick={() => router.back()} className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-[#EFEBE3] transition-colors" aria-label="Go back">
+            <button onClick={() => router.back()} className="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-[#edf4ef] transition-colors" aria-label="Go back">
               <ChevronLeft size={22} className="text-[#1A1A1A]" />
             </button>
             <h1 className="font-cormorant text-[20px] font-bold tracking-wide text-[#1A1A1A]">My Wishlist</h1>
@@ -45,7 +45,7 @@ export default function WishlistPage() {
           </div>
         </div>
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center space-y-5">
-          <div className="w-20 h-20 bg-white border border-[#E2DAC8] rounded-full flex items-center justify-center text-[#808080] shadow-xs">
+          <div className="w-20 h-20 bg-white border border-[#dce5df] rounded-full flex items-center justify-center text-[#808080] shadow-xs">
             <Heart size={32} />
           </div>
           <div className="space-y-2">
@@ -54,7 +54,7 @@ export default function WishlistPage() {
           </div>
           <Link
             href="/auth/login"
-            className="inline-flex items-center justify-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-7 py-3 rounded-xl text-xs font-bold transition-all shadow-xs"
+            className="inline-flex items-center justify-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-7 py-3 rounded-xl text-xs font-bold transition-all shadow-xs"
           >
             Sign In
           </Link>
@@ -93,8 +93,8 @@ export default function WishlistPage() {
           DESKTOP HEADER
          ══════════════════════════════════════════════ */}
       <div className="hidden md:block max-w-7xl mx-auto px-6 pt-6 pb-2">
-        <div className="border-b border-[#EFEBE3] pb-3 mb-4">
-          <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#EFEBE3] border border-[#E2DAC8] px-2.5 py-1 rounded-md uppercase inline-block mb-1">
+        <div className="border-b border-[#edf4ef] pb-3 mb-4">
+          <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#edf4ef] border border-[#dce5df] px-2.5 py-1 rounded-md uppercase inline-block mb-1">
             SAVED ITEMS
           </span>
           <h1 className="font-cormorant text-3xl font-bold text-[#1A1A1A]">My Wishlist</h1>
@@ -106,7 +106,7 @@ export default function WishlistPage() {
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-6">
 
         {displayItems.length === 0 ? (
-          <div className="bg-white border border-[#E2DAC8] rounded-3xl p-12 text-center shadow-xs space-y-4 max-w-lg mx-auto my-12">
+          <div className="bg-white border border-[#dce5df] rounded-3xl p-12 text-center shadow-xs space-y-4 max-w-lg mx-auto my-12">
             <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto text-[#808080]">
               <Heart size={28} />
             </div>
@@ -114,7 +114,7 @@ export default function WishlistPage() {
             <p className="text-xs text-wood-400">Explore our handcrafted master pieces and luxury furniture to save your favorite treasures here.</p>
             <button
               onClick={() => router.push("/customer/products")}
-              className="inline-flex items-center justify-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-3 rounded-xl text-xs font-bold transition-all shadow-xs"
+              className="inline-flex items-center justify-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-3 rounded-xl text-xs font-bold transition-all shadow-xs"
             >
               <span>EXPLORE NEW ARRIVALS</span>
               <ArrowRight size={14} />
@@ -126,11 +126,11 @@ export default function WishlistPage() {
                 MOBILE VIEW — Card Container with item rows
                ══════════════════════════════════════════════ */}
             <div className="md:hidden">
-              <div className="bg-white border border-[#E2DAC8]/70 rounded-2xl shadow-xs overflow-hidden divide-y divide-[#F2EFE9]">
+              <div className="bg-white border border-[#dce5df]/70 rounded-2xl shadow-xs overflow-hidden divide-y divide-[#e7ece9]">
                 {displayItems.map((item) => (
                   <div key={item.id} className="p-3.5 flex items-center gap-3.5 group">
                     {/* Thumbnail Image */}
-                    <div className="w-20 h-20 rounded-xl overflow-hidden bg-white border border-[#E2DAC8] flex-shrink-0">
+                    <div className="w-20 h-20 rounded-xl overflow-hidden bg-white border border-[#dce5df] flex-shrink-0">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={getProductImage(item.images)}
@@ -160,7 +160,7 @@ export default function WishlistPage() {
                       {/* Discount Pill Badge */}
                       {item.discount && (
                         <div>
-                          <span className="inline-block bg-[#FFF0E6] text-[#E05A2B] text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
+                          <span className="inline-block bg-[#edf4ef] text-[#315b49] text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
                             {item.discount}
                           </span>
                         </div>
@@ -186,7 +186,7 @@ export default function WishlistPage() {
                ══════════════════════════════════════════════ */}
             <div className="hidden md:grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-5">
               {wishlistItems.map((product) => (
-                <div key={product.id} className="bg-white border border-[#E2DAC8] rounded-2xl overflow-hidden shadow-xs p-4 flex flex-col justify-between space-y-3">
+                <div key={product.id} className="bg-white border border-[#dce5df] rounded-2xl overflow-hidden shadow-xs p-4 flex flex-col justify-between space-y-3">
                   <div className="relative aspect-square rounded-xl overflow-hidden bg-white">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={getProductImage(product.images)} alt={product.name} className="w-full h-full object-cover" />
@@ -213,7 +213,7 @@ export default function WishlistPage() {
                       void addItem(product.id, 1).catch(() => {});
                       toast.success("Added to cart!");
                     }}
-                    className="w-full bg-[#0D0D0D] text-white py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5"
+                    className="w-full bg-[#214f40] text-white py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5"
                   >
                     <ShoppingBag size={14} /> Add to Cart
                   </button>

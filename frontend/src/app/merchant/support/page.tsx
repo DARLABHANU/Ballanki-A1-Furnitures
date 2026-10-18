@@ -32,9 +32,9 @@ export default function MerchantSupportPage() {
       <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Help & Support</h1>
 
       {/* FAQ Section */}
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-5">
-        <div className="flex items-center gap-3 border-b border-[#EFEBE3] pb-4">
-          <div className="w-10 h-10 rounded-2xl bg-white border border-[#E2DAC8] flex items-center justify-center">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-5">
+        <div className="flex items-center gap-3 border-b border-[#edf4ef] pb-4">
+          <div className="w-10 h-10 rounded-2xl bg-white border border-[#dce5df] flex items-center justify-center">
             <HelpCircle size={18} className="text-[#0D0D0D]" />
           </div>
           <div>
@@ -45,7 +45,7 @@ export default function MerchantSupportPage() {
 
         <div className="space-y-2">
           {faqs.map((faq, idx) => (
-            <div key={idx} className="border border-[#E2DAC8] rounded-2xl overflow-hidden">
+            <div key={idx} className="border border-[#dce5df] rounded-2xl overflow-hidden">
               <button
                 onClick={() => setExpandedFaq(expandedFaq === idx ? null : idx)}
                 className="w-full flex items-center justify-between p-4 text-left hover:bg-white transition-colors"
@@ -64,9 +64,9 @@ export default function MerchantSupportPage() {
       </div>
 
       {/* Contact Support */}
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-5">
-        <div className="flex items-center gap-3 border-b border-[#EFEBE3] pb-4">
-          <div className="w-10 h-10 rounded-2xl bg-white border border-[#E2DAC8] flex items-center justify-center">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-5">
+        <div className="flex items-center gap-3 border-b border-[#edf4ef] pb-4">
+          <div className="w-10 h-10 rounded-2xl bg-white border border-[#dce5df] flex items-center justify-center">
             <MessageSquare size={18} className="text-[#0D0D0D]" />
           </div>
           <div>
@@ -79,17 +79,17 @@ export default function MerchantSupportPage() {
           <div>
             <label className="font-bold text-[#1A1A1A] block mb-1">Subject</label>
             <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)}
-              className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               placeholder="e.g. Payout delay, Product listing issue" />
           </div>
           <div>
             <label className="font-bold text-[#1A1A1A] block mb-1">Message</label>
             <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={4}
-              className="w-full bg-white border border-[#E2DAC8] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
+              className="w-full bg-white border border-[#dce5df] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
               placeholder="Describe your issue in detail..." />
           </div>
           <button onClick={handleSubmit} disabled={isSending}
-            className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs">
+            className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs">
             {isSending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
             <span>Submit Ticket</span>
           </button>

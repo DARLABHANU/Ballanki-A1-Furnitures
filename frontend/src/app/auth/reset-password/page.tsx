@@ -70,7 +70,7 @@ function ResetPasswordForm() {
         >
           <ChevronLeft size={14} /> Back to Sign In
         </Link>
-        <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#EFEBE3] border border-[#E2DAC8] px-2.5 py-1 rounded-md uppercase block w-fit mb-2">
+        <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#edf4ef] border border-[#dce5df] px-2.5 py-1 rounded-md uppercase block w-fit mb-2">
           SECURITY UPDATE
         </span>
         <h2 className="font-cormorant text-3xl font-bold text-[#1A1A1A]">Set New Password</h2>
@@ -90,7 +90,7 @@ function ResetPasswordForm() {
               {...register("password")}
               type={showPassword ? "text" : "password"}
               placeholder="Min. 8 characters"
-              className="w-full bg-white border border-[#E2DAC8] rounded-xl pr-10 pl-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#dce5df] rounded-xl pr-10 pl-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               autoComplete="new-password"
               required
             />
@@ -117,7 +117,7 @@ function ResetPasswordForm() {
               {...register("confirmPassword")}
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Repeat password"
-              className="w-full bg-white border border-[#E2DAC8] rounded-xl pr-10 pl-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#dce5df] rounded-xl pr-10 pl-4 py-2.5 text-xs font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               autoComplete="new-password"
               required
             />
@@ -137,7 +137,7 @@ function ResetPasswordForm() {
         <button 
           type="submit" 
           disabled={isLoading} 
-          className="w-full inline-flex items-center justify-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white py-3 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50 mt-2"
+          className="w-full inline-flex items-center justify-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white py-3 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50 mt-2"
         >
           {isLoading && <Loader2 size={14} className="animate-spin" />}
           RESET & SAVE PASSWORD

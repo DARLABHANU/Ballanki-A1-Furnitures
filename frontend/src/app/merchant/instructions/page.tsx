@@ -21,23 +21,23 @@ function ScreenshotBox({ src, alt, placeholderText }: { src: string; alt: string
 
   if (hasError) {
     return (
-      <div className="border border-dashed border-[#E2DAC8] bg-white p-8 text-center rounded-2xl">
+      <div className="border border-dashed border-[#dce5df] bg-white p-8 text-center rounded-2xl">
         <p className="font-bold text-xs text-[#0D0D0D] uppercase">{placeholderText}</p>
         <p className="text-xs text-[#808080] mt-1.5 italic">
-          (Save image as <span className="font-mono bg-white px-1.5 py-0.5 border border-[#E2DAC8] text-[#0D0D0D] text-[10px] rounded">public{src}</span>)
+          (Save image as <span className="font-mono bg-white px-1.5 py-0.5 border border-[#dce5df] text-[#0D0D0D] text-[10px] rounded">public{src}</span>)
         </p>
       </div>
     );
   }
 
   return (
-    <div className="border border-[#E2DAC8] overflow-hidden rounded-2xl shadow-xs bg-white relative min-h-[100px]">
+    <div className="border border-[#dce5df] overflow-hidden rounded-2xl shadow-xs bg-white relative min-h-[100px]">
       <img
         src={src}
         alt={alt}
         onLoad={() => setLoaded(true)}
         onError={() => setHasError(true)}
-        className={`w-full h-auto object-cover border-b border-[#EFEBE3] transition-opacity duration-300 ${
+        className={`w-full h-auto object-cover border-b border-[#edf4ef] transition-opacity duration-300 ${
           loaded ? "opacity-100" : "opacity-0 absolute"
         }`}
       />
@@ -71,7 +71,7 @@ export default function MerchantInstructionsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
         {/* Navigation Sidebar List */}
-        <div className="md:col-span-1 space-y-1 bg-white border border-[#E2DAC8] p-2 rounded-3xl shadow-xs">
+        <div className="md:col-span-1 space-y-1 bg-white border border-[#dce5df] p-2 rounded-3xl shadow-xs">
           {SECTIONS.map((tab) => {
             const Icon = tab.icon;
             return (
@@ -80,7 +80,7 @@ export default function MerchantInstructionsPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full flex items-center gap-2.5 px-4 py-3 text-left text-xs font-bold transition-all rounded-2xl ${
                   activeTab === tab.id 
-                    ? "bg-[#0D0D0D] text-white shadow-2xs" 
+                    ? "bg-[#214f40] text-white shadow-2xs" 
                     : "text-[#666666] hover:bg-white hover:text-[#1A1A1A]"
                 }`}
               >
@@ -92,10 +92,10 @@ export default function MerchantInstructionsPage() {
         </div>
 
         {/* Content Details Area */}
-        <div className="md:col-span-3 bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs min-h-[500px]">
+        <div className="md:col-span-3 bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs min-h-[500px]">
           {activeTab === "login" && (
             <div className="space-y-6">
-              <div className="border-b border-[#EFEBE3] pb-3">
+              <div className="border-b border-[#edf4ef] pb-3">
                 <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] flex items-center gap-2">
                   <Key size={18} className="text-[#0D0D0D]" /> Portal Access & Authentication
                 </h2>
@@ -104,7 +104,7 @@ export default function MerchantInstructionsPage() {
 
               <div className="space-y-3 text-xs leading-relaxed text-[#666666]">
                 <p>To access the merchant dashboard, log in with your assigned seller account credentials:</p>
-                <div className="bg-white p-4 border border-[#E2DAC8] rounded-2xl font-mono text-xs text-[#0D0D0D] space-y-1">
+                <div className="bg-white p-4 border border-[#dce5df] rounded-2xl font-mono text-xs text-[#0D0D0D] space-y-1">
                   <div><strong>Email:</strong> mitesir345@copawoke.com</div>
                   <div><strong>Password:</strong> Bhanuusr@786</div>
                 </div>
@@ -120,7 +120,7 @@ export default function MerchantInstructionsPage() {
 
           {activeTab === "dashboard" && (
             <div className="space-y-6">
-              <div className="border-b border-[#EFEBE3] pb-3">
+              <div className="border-b border-[#edf4ef] pb-3">
                 <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] flex items-center gap-2">
                   <LineChart size={18} className="text-[#0D0D0D]" /> Business Overview & Analytics
                 </h2>
@@ -134,7 +134,7 @@ export default function MerchantInstructionsPage() {
                   { label: "Total Earnings", desc: "Net revenue after platform margin deduction" },
                   { label: "Available Balance", desc: "Funds ready for withdrawal request" }
                 ].map((item, idx) => (
-                  <div key={idx} className="bg-white p-4 border border-[#E2DAC8] rounded-2xl">
+                  <div key={idx} className="bg-white p-4 border border-[#dce5df] rounded-2xl">
                     <span className="font-bold text-[#1A1A1A] block">{item.label}</span>
                     <span className="text-[#808080] text-[11px] mt-0.5 block">{item.desc}</span>
                   </div>
@@ -151,7 +151,7 @@ export default function MerchantInstructionsPage() {
 
           {activeTab === "profile" && (
             <div className="space-y-6">
-              <div className="border-b border-[#EFEBE3] pb-3">
+              <div className="border-b border-[#edf4ef] pb-3">
                 <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] flex items-center gap-2">
                   <AlertCircle size={18} className="text-[#0D0D0D]" /> Store Profile Setup (Mandatory)
                 </h2>
@@ -172,7 +172,7 @@ export default function MerchantInstructionsPage() {
 
           {activeTab === "products" && (
             <div className="space-y-6">
-              <div className="border-b border-[#EFEBE3] pb-3">
+              <div className="border-b border-[#edf4ef] pb-3">
                 <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] flex items-center gap-2">
                   <Package size={18} className="text-[#0D0D0D]" /> Catalog & Product Management
                 </h2>
@@ -193,7 +193,7 @@ export default function MerchantInstructionsPage() {
 
           {activeTab === "logistics" && (
             <div className="space-y-6">
-              <div className="border-b border-[#EFEBE3] pb-3">
+              <div className="border-b border-[#edf4ef] pb-3">
                 <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] flex items-center gap-2">
                   <Truck size={18} className="text-[#0D0D0D]" /> Logistics & Fulfillment Workflow
                 </h2>
@@ -214,7 +214,7 @@ export default function MerchantInstructionsPage() {
 
           {activeTab === "wallet" && (
             <div className="space-y-6">
-              <div className="border-b border-[#EFEBE3] pb-3">
+              <div className="border-b border-[#edf4ef] pb-3">
                 <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A] flex items-center gap-2">
                   <Wallet size={18} className="text-[#0D0D0D]" /> Wallet Earnings & Payout Withdrawals
                 </h2>

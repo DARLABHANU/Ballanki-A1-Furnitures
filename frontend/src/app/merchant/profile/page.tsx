@@ -109,7 +109,7 @@ export default function MerchantProfilePage() {
       )}
 
       {profile?.is_approved && (
-        <div className="bg-[#EFEBE3] border border-[#E2DAC8] rounded-2xl p-4 flex items-center gap-3">
+        <div className="bg-[#edf4ef] border border-[#dce5df] rounded-2xl p-4 flex items-center gap-3">
           <CheckCircle2 size={18} className="text-[#2E7D32] flex-shrink-0" />
           <div>
             <p className="font-bold text-xs text-[#2E7D32]">Approved Merchant</p>
@@ -119,9 +119,9 @@ export default function MerchantProfilePage() {
       )}
 
       {/* Profile Form */}
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
-        <div className="flex items-center gap-3 border-b border-[#EFEBE3] pb-4">
-          <div className="w-16 h-16 rounded-2xl bg-white border border-[#E2DAC8] flex items-center justify-center overflow-hidden flex-shrink-0">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-6">
+        <div className="flex items-center gap-3 border-b border-[#edf4ef] pb-4">
+          <div className="w-16 h-16 rounded-2xl bg-white border border-[#dce5df] flex items-center justify-center overflow-hidden flex-shrink-0">
             {watch("logo_url") ? (
               <img src={watch("logo_url")} alt="Store Logo" className="w-full h-full object-cover" />
             ) : (
@@ -137,7 +137,7 @@ export default function MerchantProfilePage() {
             </p>
             
             <div className="mt-2">
-              <label className="cursor-pointer inline-flex items-center gap-1.5 bg-white border border-[#E2DAC8] px-3 py-1.5 rounded-lg text-[11px] font-bold text-[#1A1A1A] hover:bg-[#E2DAC8] transition-colors">
+              <label className="cursor-pointer inline-flex items-center gap-1.5 bg-white border border-[#dce5df] px-3 py-1.5 rounded-lg text-[11px] font-bold text-[#1A1A1A] hover:bg-[#dce5df] transition-colors">
                 {isUploading ? <Loader2 size={12} className="animate-spin" /> : "Upload Logo"}
                 <input type="file" accept="image/*" onChange={handleLogoUpload} disabled={isUploading} className="hidden" />
               </label>
@@ -149,7 +149,7 @@ export default function MerchantProfilePage() {
           <div>
             <label className="font-bold text-[#1A1A1A] block mb-1">Business / Store Name *</label>
             <input {...register("business_name")}
-              className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               placeholder="e.g. Sowmya Collections" />
             {errors.business_name && <p className="text-red-500 text-[11px] mt-1">{errors.business_name.message}</p>}
           </div>
@@ -157,14 +157,14 @@ export default function MerchantProfilePage() {
           <div>
             <label className="font-bold text-[#1A1A1A] block mb-1">Business Description</label>
             <textarea {...register("business_description")} rows={3}
-              className="w-full bg-white border border-[#E2DAC8] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
+              className="w-full bg-white border border-[#dce5df] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D] resize-none"
               placeholder="Tell customers about your store, specialities, and craftsmanship..." />
           </div>
 
           <div>
             <label className="font-bold text-[#1A1A1A] block mb-1">GSTIN (Optional)</label>
             <input {...register("gstin")}
-              className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+              className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
               placeholder="22AAAAA0000A1Z5" />
           </div>
 
@@ -172,20 +172,20 @@ export default function MerchantProfilePage() {
             <div>
               <label className="font-bold text-[#1A1A1A] block mb-1">Bank Account Number</label>
               <input {...register("bank_account")}
-                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 placeholder="Account number" />
             </div>
             <div>
               <label className="font-bold text-[#1A1A1A] block mb-1">IFSC Code</label>
               <input {...register("ifsc_code")}
-                className="w-full bg-white border border-[#E2DAC8] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
+                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
                 placeholder="SBIN0001234" />
             </div>
           </div>
 
-          <div className="flex justify-end pt-4 border-t border-[#EFEBE3]">
+          <div className="flex justify-end pt-4 border-t border-[#edf4ef]">
             <button type="submit" disabled={isSaving}
-              className="inline-flex items-center gap-2 bg-[#0D0D0D] hover:bg-[#333333] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs">
+              className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs">
               {isSaving && <Loader2 size={14} className="animate-spin" />}
               <Save size={14} />
               <span>{isCreating ? "Create Profile" : "Save Changes"}</span>

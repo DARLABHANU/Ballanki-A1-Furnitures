@@ -36,10 +36,10 @@ function MerchantAnalyticsContent() {
       
       <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Earnings &amp; Analytics</h1>
 
-      <div className="bg-white border border-[#E2DAC8] rounded-3xl p-6 shadow-xs space-y-6">
+      <div className="bg-white border border-[#dce5df] rounded-3xl p-6 shadow-xs space-y-6">
         
         {/* Metrics */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-6 border-b border-[#EFEBE3]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-6 border-b border-[#edf4ef]">
           <div>
             <span className="text-xs font-medium text-[#666666] block mb-1">Total Sales Revenue</span>
             <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{formatPrice(analytics?.total_revenue || 0)}</span>
@@ -64,14 +64,14 @@ function MerchantAnalyticsContent() {
             <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">Revenue Trend (Last 30 Days)</h3>
             <button
               onClick={() => toast.success("Exporting Earnings Statement...")}
-              className="inline-flex items-center gap-1.5 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#0D0D0D] hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
+              className="inline-flex items-center gap-1.5 border border-[#0D0D0D] text-[#0D0D0D] hover:bg-[#214f40] hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs"
             >
               <Download size={14} />
               <span>Export CSV</span>
             </button>
           </div>
 
-          <div className="relative h-56 w-full pt-4 bg-white border border-[#E2DAC8] rounded-2xl p-4">
+          <div className="relative h-56 w-full pt-4 bg-white border border-[#dce5df] rounded-2xl p-4">
             <svg viewBox="0 0 500 160" className="w-full h-40 overflow-visible">
               <defs>
                 <linearGradient id="sellerAnalyticsGrad" x1="0" y1="0" x2="0" y2="1">
