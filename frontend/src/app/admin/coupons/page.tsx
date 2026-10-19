@@ -1,4 +1,5 @@
 "use client";
+import AdminTable from "@/components/admin/AdminTable";
 
 import { useEffect, useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
@@ -81,7 +82,9 @@ function CouponsContent() {
     }
   };
 
-  const displayList = coupons.map((c) => ({
+  const matchingCoupons=coupons.filter(c=>(String(c.code||"")+" "+String(c.description||"")).toLowerCase().includes(search.trim().toLowerCase()));
+  const couponPages=Math.max(1,Math.ceil(matchingCoupons.length/20));
+  const displayList = matchingCoupons.slice((page-1)*20,page*20).map((c) => ({
     id: c.id,
     code: c.code,
     description: c.description || "General Coupon",
@@ -90,7 +93,7 @@ function CouponsContent() {
     platform_profit: c.platform_profit ? formatPrice(c.platform_profit) : "N/A",
     usage_count: c.used_count || 0,
     is_active: c.is_active,
-    created_at: formatDate(c.created_at || "2025-05-30T10:00:00Z")
+    created_at: c.created_at?formatDate(c.created_at):"Not recorded"
   }));
 
   return (
@@ -129,7 +132,7 @@ function CouponsContent() {
               type="text"
               placeholder="Search coupons..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {setSearch(e.target.value);setPage(1);}}
               className="w-full bg-white border border-[#dce5df] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
             />
           </div>
@@ -150,7 +153,7 @@ function CouponsContent() {
               <Loader2 className="animate-spin text-[#0D0D0D]" size={32} />
             </div>
           ) : (
-            <table className="w-full text-left text-xs">
+            <AdminTable aria-label="Coupons" className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-[#edf4ef] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
                   <th className="pb-3 px-3">Code</th>
@@ -164,6 +167,7 @@ function CouponsContent() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#edf4ef]">
+                {!displayList.length&&<tr><td colSpan={8}>No matching coupons.</td></tr>}
                 {displayList.map((item) => (
                   <tr key={item.id} className="hover:bg-white/60 transition-colors">
                     <td className="py-3.5 px-3">
@@ -195,22 +199,12 @@ function CouponsContent() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </AdminTable>
           )}
         </div>
 
         {/* ── 4. Pagination ── */}
-        <div className="flex items-center justify-center gap-1.5 pt-4 border-t border-[#edf4ef]">
-          <button onClick={() => setPage(1)} className="w-7 h-7 rounded-lg bg-[#214f40] text-white font-bold text-xs flex items-center justify-center shadow-xs">
-            1
-          </button>
-          <button onClick={() => setPage(2)} className="w-7 h-7 rounded-lg text-[#666666] hover:bg-white text-xs font-semibold">
-            2
-          </button>
-          <button onClick={() => setPage(3)} className="w-7 h-7 rounded-lg text-[#666666] hover:bg-white text-xs font-semibold">
-            3
-          </button>
-        </div>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#edf4ef] pt-4"><span className="text-xs text-[#75847e]">Page {page} of {couponPages} · {matchingCoupons.length} matching coupons</span><div className="flex gap-2"><button type="button" disabled={page<=1} onClick={()=>setPage(p=>p-1)} aria-label="Previous coupon page" className="rounded-lg border px-3 py-2 disabled:opacity-40"><ChevronLeft size={16}/></button><button type="button" disabled={page>=couponPages} onClick={()=>setPage(p=>p+1)} aria-label="Next coupon page" className="rounded-lg border px-3 py-2 disabled:opacity-40"><ChevronRight size={16}/></button></div></div>
 
       </div>
 

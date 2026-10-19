@@ -1,4 +1,5 @@
 "use client";
+import AdminTable from "@/components/admin/AdminTable";
 
 import { useEffect, useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
@@ -143,7 +144,7 @@ function ReturnRequestsContent() {
               <Loader2 className="animate-spin text-[#0D0D0D]" size={32} />
             </div>
           ) : (
-            <table className="w-full text-left text-xs">
+            <AdminTable aria-label="Returns and disputes" className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-[#edf4ef] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
                   <th className="pb-3 px-3">Order ID</th>
@@ -199,7 +200,7 @@ function ReturnRequestsContent() {
                   ))
                 )}
               </tbody>
-            </table>
+            </AdminTable>
           )}
         </div>
 
@@ -208,6 +209,7 @@ function ReturnRequestsContent() {
           <span className="text-[11px] text-[#808080] font-medium">Page {page} of {totalPages}</span>
           <div className="flex gap-2">
             <button
+              aria-label="Previous page"
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
               className="p-1.5 rounded-lg border border-[#dce5df] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
@@ -215,6 +217,7 @@ function ReturnRequestsContent() {
               <ChevronLeft size={16} />
             </button>
             <button
+              aria-label="Next page"
               onClick={() => setPage(p => p + 1)}
               disabled={page >= totalPages}
               className="p-1.5 rounded-lg border border-[#dce5df] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"

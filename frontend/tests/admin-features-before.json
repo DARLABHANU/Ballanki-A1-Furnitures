@@ -1,0 +1,191 @@
+{
+  "src/app/admin/categories/page.tsx": {
+    "api_calls": [
+      "api.post('/admin/catalog/image',{base64,kind},{timeout:60000})"
+    ],
+    "handlers": [
+      "load",
+      "save"
+    ],
+    "inputs": 7
+  },
+  "src/app/admin/commissions/page.tsx": {
+    "api_calls": [],
+    "handlers": [],
+    "inputs": 0
+  },
+  "src/app/admin/coupons/page.tsx": {
+    "api_calls": [
+      "adminApi.coupons()",
+      "adminApi.createCoupon({code:code.trim().toUpperCase(),discount_type:\"fixed\",discount_value:amount})",
+      "adminApi.deleteCoupon(id)"
+    ],
+    "handlers": [
+      "loadCoupons",
+      "handleCreateCoupon",
+      "handleDeleteCoupon"
+    ],
+    "inputs": 1
+  },
+  "src/app/admin/dashboard/page.tsx": {
+    "api_calls": [
+      "adminApi.dashboard(timeRange)\r"
+    ],
+    "handlers": [],
+    "inputs": 1
+  },
+  "src/app/admin/enquiries/page.tsx": {
+    "api_calls": [
+      "api.get('/admin/conversations')",
+      "api.post(`/conversations/${active._id}/messages`,{content:message.trim()})",
+      "api.post(`/conversations/${active._id}/offers`,{proposed_price:price})",
+      "api.post(`/conversations/offers/${id}/${action}`)"
+    ],
+    "handlers": [
+      "load",
+      "send",
+      "counterOffer",
+      "decide"
+    ],
+    "inputs": 2
+  },
+  "src/app/admin/marketing/page.tsx": {
+    "api_calls": [],
+    "handlers": [
+      "handleSendBroadcast"
+    ],
+    "inputs": 2
+  },
+  "src/app/admin/orders/page.tsx": {
+    "api_calls": [
+      "adminApi.orders({ page, page_size: 20, status: filter || undefined })",
+      "orderApi.updateStatus(orderId, { status })",
+      "adminApi.deleteOrder(orderId)"
+    ],
+    "handlers": [
+      "loadOrders",
+      "handleStatusUpdate",
+      "handleDeleteOrder"
+    ],
+    "inputs": 2
+  },
+  "src/app/admin/products/page.tsx": {
+    "api_calls": [
+      "productApi.list({ page, category: categoryFilter })",
+      "adminApi.deleteProduct(prod.id)",
+      "productApi.update(prod.id, { is_active: !prod.is_active })",
+      "adminApi.approveProduct(prod.id, { is_approved: true })"
+    ],
+    "handlers": [
+      "loadProducts",
+      "handleDeleteProduct",
+      "handleToggleActive",
+      "handleApproveProduct"
+    ],
+    "inputs": 2
+  },
+  "src/app/admin/promoters/page.tsx": {
+    "api_calls": [],
+    "handlers": [],
+    "inputs": 0
+  },
+  "src/app/admin/reports/page.tsx": {
+    "api_calls": [
+      "adminApi.dashboard(range)"
+    ],
+    "handlers": [
+      "load"
+    ],
+    "inputs": 1
+  },
+  "src/app/admin/return-requests/page.tsx": {
+    "api_calls": [
+      "adminApi.returnRequests({ page, page_size: 20 })"
+    ],
+    "handlers": [
+      "loadReturns",
+      "handleApproveReturn"
+    ],
+    "inputs": 1
+  },
+  "src/app/admin/sellers/page.tsx": {
+    "api_calls": [],
+    "handlers": [],
+    "inputs": 0
+  },
+  "src/app/admin/settings/page.tsx": {
+    "api_calls": [
+      "api.get('/admin/settings').then(({data}) => { if(data.platformMargin !== undefined) setPlatformMargin(String(data.platformMargin))",
+      "api.put('/admin/settings', { platformMargin, promoterDiscount, promoterCommission, platformProfit, supportEmail, supportPhone })"
+    ],
+    "handlers": [
+      "handleSave"
+    ],
+    "inputs": 6
+  },
+  "src/app/admin/settlements/page.tsx": {
+    "api_calls": [],
+    "handlers": [],
+    "inputs": 0
+  },
+  "src/app/admin/users/page.tsx": {
+    "api_calls": [
+      "adminApi.users({ page, page_size: 20, role: roleFilter || undefined, search: search.trim() || undefined })",
+      "adminApi.updateUser(user.id, { is_active: !user.is_active })"
+    ],
+    "handlers": [
+      "loadUsers",
+      "toggleActive"
+    ],
+    "inputs": 2
+  },
+  "src/app/admin/website-settings/page.tsx": {
+    "api_calls": [
+      "api.get('/admin/website-settings').then(({data}) => { if(data.siteName !== undefined) setSiteName(String(data.siteName))",
+      "api.put('/admin/website-settings', { siteName, footerText, seoTitle, seoMeta })"
+    ],
+    "handlers": [
+      "handleSave"
+    ],
+    "inputs": 4
+  },
+  "src/app/admin/withdrawals/page.tsx": {
+    "api_calls": [],
+    "handlers": [],
+    "inputs": 0
+  },
+  "src/app/admin/withdrawals/[id]/page.tsx": {
+    "api_calls": [],
+    "handlers": [],
+    "inputs": 0
+  },
+  "src/app/admin/products/add/page.tsx": {
+    "api_calls": [
+      "api.get(\"/products/merchant/my-products\", { params: { limit: 100 } }).then(({data}) => setCatalog((data.items || []).map((p:any)=>({id:String(p.id),name:p.name})))).catch(()=>{})",
+      "api.get(`/products/${editId}/manage`).then(({data:p}) => {\r",
+      "api.post(\"/upload\", { filename: file.name, base64 })",
+      "api.put(`/products/${editingId}`, payload)",
+      "api.post(\"/products\", payload)"
+    ],
+    "handlers": [
+      "handleChange",
+      "handleAddImage",
+      "handleUploadImages",
+      "handleRemoveImage",
+      "handleSubmit"
+    ],
+    "inputs": 23
+  },
+  "src/app/admin/orders/[id]/page.tsx": {
+    "api_calls": [
+      "adminApi.order(params.id)",
+      "api.post(`/orders/${params.id}/ready-for-delivery`)",
+      "api.patch(`/orders/${params.id}/status`,{status:action})"
+    ],
+    "handlers": [
+      "load",
+      "advance"
+    ],
+    "inputs": 0
+  }
+}

@@ -64,6 +64,7 @@ export interface MerchantProfileSummary {
 }
 
 export interface Product {
+  main_category?: string;
   id: string | number;
   merchant_id: string | number;
   name: string;
@@ -166,6 +167,7 @@ export interface OrderItem {
 }
 
 export interface Order {
+  customer?: Pick<User,"id"|"full_name"|"email">;
   shipping_address?: Partial<Address>;
   id: string | number;
   order_number: string;

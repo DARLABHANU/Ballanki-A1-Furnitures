@@ -300,7 +300,7 @@ export default function AdminAddProductPage() {
           {editingId&&<a href={`/customer/products/${editingId}`} className="inline-block text-xs underline">Preview product and answer customer questions ↗</a>}
         </section>
         {/* Action Bar */}
-        <div className="col-span-1 lg:col-span-3 bg-white border border-[#dce5df] rounded-3xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="admin-savebar col-span-1 lg:col-span-3 bg-white border border-[#dce5df] rounded-3xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-[#1A1A1A]">
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" name="is_active" checked={formData.is_active} onChange={handleChange} className="accent-[#0D0D0D] w-4 h-4" />

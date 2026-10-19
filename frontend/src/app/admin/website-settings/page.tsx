@@ -90,7 +90,7 @@ export default function WebsiteSettingsPage() {
         </div>
 
         {/* Save Button */}
-        <div className="flex justify-end pt-2">
+        <div className="admin-savebar flex justify-end rounded-xl border bg-white p-4">
           <button
             type="submit"
             className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs"

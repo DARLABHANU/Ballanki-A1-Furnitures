@@ -1,4 +1,5 @@
 "use client";
+import AdminTable from "@/components/admin/AdminTable";
 
 import { useEffect, useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
@@ -6,11 +7,13 @@ import { Loader2, Search, Plus, Edit2, Trash2, ChevronLeft, ChevronRight } from 
 import toast from "react-hot-toast";
 import { adminApi, productApi } from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
+import {useFurnitureCatalog} from "@/store/catalogStore";
 import { Product } from "@/types";
 import { formatPrice, getApiError } from "@/lib/utils";
 
 function ProductsContent() {
   const router = useRouter();
+  const catalog=useFurnitureCatalog();
   const { isAuthenticated, role } = useAuthStore();
 
   const [products, setProducts] = useState<Product[]>([]);
@@ -21,6 +24,9 @@ function ProductsContent() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [debouncedSearch,setDebouncedSearch]=useState("");
+  const [loadError,setLoadError]=useState("");
+  useEffect(()=>{const timer=window.setTimeout(()=>setDebouncedSearch(search.trim()),300);return()=>window.clearTimeout(timer);},[search]);
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -32,12 +38,12 @@ function ProductsContent() {
       return;
     }
     loadProducts();
-  }, [isAuthenticated, role, page, categoryFilter]);
+  }, [isAuthenticated, role, page, categoryFilter, debouncedSearch]);
 
   const loadProducts = async () => {
-    setIsLoading(true);
+    setIsLoading(true);setLoadError("");
     try {
-      const response = await productApi.list({ page, category: categoryFilter });
+      const response = await adminApi.products({ page, category: categoryFilter,search:debouncedSearch||undefined });
       const { items, total, pages } = response.data;
 
       if (items && items.length > 0) {
@@ -59,10 +65,10 @@ function ProductsContent() {
         setInactiveProducts(inactive);
         setOutOfStock(oos);
       } else {
-        setProducts([]);
+        setProducts([]);setTotalProducts(total||0);setTotalPages(pages||1);setActiveProducts(0);setInactiveProducts(0);setOutOfStock(0);
       }
-    } catch {
-      setProducts([]);
+    } catch (error) {
+      setLoadError(getApiError(error));
     } finally {
       setIsLoading(false);
     }
@@ -109,22 +115,22 @@ function ProductsContent() {
   };
 
   const displayList = products
-    .filter(p => categoryFilter === "all" || p.category?.name?.toLowerCase() === categoryFilter.toLowerCase())
     .map((p) => ({
       id: p.id,
       name: p.name,
-      category: p.category?.name || "General",
+      category: p.category?.name || p.main_category || "Uncategorised",
       price: p.price,
       status: p.is_active ? "Active" : "Inactive",
       is_active: p.is_active,
       is_approved: p.is_approved,
       stock: p.stock_quantity,
-      image: p.images?.[0] || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=200&auto=format&fit=crop"
+      image: p.images?.[0] || "/logo.png"
     }));
 
   return (
     <div className="space-y-6 text-[#1A1A1A] font-garamond">
 
+      {loadError&&<div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">{loadError}<button type="button" onClick={()=>void loadProducts()} className="font-semibold underline">Retry</button></div>}
       {/* Page Title */}
       <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Products Management</h1>
 
@@ -137,15 +143,15 @@ function ProductsContent() {
             <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{totalProducts.toLocaleString()}</span>
           </div>
           <div>
-            <span className="text-xs font-medium text-[#666666] block mb-1">Active Products</span>
+            <span className="text-xs font-medium text-[#666666] block mb-1">Active on this page</span>
             <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{activeProducts.toLocaleString()}</span>
           </div>
           <div>
-            <span className="text-xs font-medium text-[#666666] block mb-1">Inactive Products</span>
+            <span className="text-xs font-medium text-[#666666] block mb-1">Hidden on this page</span>
             <span className="font-cormorant text-3xl font-extrabold text-[#0D0D0D]">{inactiveProducts.toLocaleString()}</span>
           </div>
           <div>
-            <span className="text-xs font-medium text-[#666666] block mb-1">Out of Stock</span>
+            <span className="text-xs font-medium text-[#666666] block mb-1">Low stock on this page</span>
             <span className="font-cormorant text-3xl font-extrabold text-[#1A1A1A]">{outOfStock.toLocaleString()}</span>
           </div>
         </div>
@@ -160,7 +166,7 @@ function ProductsContent() {
               type="text"
               placeholder="Search products..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {setSearch(e.target.value);setPage(1);}}
               className="w-full bg-white border border-[#dce5df] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
             />
           </div>
@@ -170,10 +176,12 @@ function ProductsContent() {
             <div className="relative border border-[#dce5df] rounded-xl px-3 py-2 bg-white">
               <select
                 value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
+                aria-label="Filter products by category"
+                onChange={(e) => {setCategoryFilter(e.target.value);setPage(1);}}
                 className="text-xs font-semibold text-[#1A1A1A] bg-transparent appearance-none pr-6 focus:outline-none cursor-pointer"
               >
                 <option value="all">All Categories</option>
+                {catalog.categories.filter(c=>!["living-room","bedroom","dining","office","outdoor"].includes(c.id)).map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
                 <option value="living-room">Living Room</option>
                 <option value="bedroom">Bedroom</option>
                 <option value="dining">Dining Room</option>
@@ -200,7 +208,7 @@ function ProductsContent() {
               <Loader2 className="animate-spin text-[#0D0D0D]" size={32} />
             </div>
           ) : (
-            <table className="w-full text-left text-xs">
+            <AdminTable aria-label="Products" className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-[#edf4ef] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
                   <th className="pb-3 px-3">Product</th>
@@ -212,6 +220,7 @@ function ProductsContent() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#edf4ef]">
+                {!displayList.length&&<tr><td colSpan={6}>No matching products. Try another search or category.</td></tr>}
                 {displayList.map((item) => (
                   <tr key={item.id} className="hover:bg-white/60 transition-colors">
 
@@ -298,7 +307,7 @@ function ProductsContent() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </AdminTable>
           )}
         </div>
 
@@ -307,6 +316,7 @@ function ProductsContent() {
           <span className="text-[11px] text-[#808080] font-medium">Page {page} of {totalPages}</span>
           <div className="flex gap-2">
             <button
+              aria-label="Previous page"
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
               className="p-1.5 rounded-lg border border-[#dce5df] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
@@ -314,6 +324,7 @@ function ProductsContent() {
               <ChevronLeft size={16} />
             </button>
             <button
+              aria-label="Next page"
               onClick={() => setPage(p => p + 1)}
               disabled={page >= totalPages}
               className="p-1.5 rounded-lg border border-[#dce5df] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"

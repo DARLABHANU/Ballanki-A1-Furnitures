@@ -1,264 +1,31 @@
 "use client";
-
-import { useState, useEffect } from "react";
+import {Suspense,useEffect,useRef,useState} from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import {
-  LayoutDashboard,
-  Users,
-  Megaphone,
-  Package,
-  ShoppingBag,
-  MessageCircle,
-  Tag,
-  BarChart3,
-  HelpCircle,
-  Settings,
-  Wrench,
-  Globe,
-  ChevronDown,
-  LogOut,
-  Headphones,
-  Search,
-  Bell,
-  ExternalLink,
-  Menu,
-  X
-} from "lucide-react";
-import { useAuthStore } from "@/store/authStore";
+import {usePathname,useRouter,useSearchParams} from "next/navigation";
+import {LayoutDashboard,Users,Megaphone,Package,ShoppingBag,MessageCircle,Tag,BarChart3,HelpCircle,Settings,Wrench,Globe,LogOut,Headphones,Search,ExternalLink,Menu,X,Plus,ChevronRight,ArrowUpRight} from "lucide-react";
+import {useAuthStore} from "@/store/authStore";
 import NotificationBell from "@/components/NotificationBell";
-
-interface NavItem {
-  href: string;
-  label: string;
-  icon: React.ElementType;
-  hasDropdown?: boolean;
+import {adminGroups,adminItems,activeAdminItem,searchAdminItems} from "@/lib/adminNavigation";
+import "./admin.css";
+const icons:Record<string,React.ElementType>={overview:LayoutDashboard,users:Users,promoters:Megaphone,products:Package,orders:ShoppingBag,chats:MessageCircle,categories:Tag,coupons:Tag,reports:BarChart3,returns:HelpCircle,settings:Settings,marketing:Wrench,website:Globe,support:Headphones};
+function AdminWorkspace({children}:{children:React.ReactNode}){
+ const pathname=usePathname(),params=useSearchParams(),router=useRouter();const {logout,user}=useAuthStore();
+ const [mobileOpen,setMobileOpen]=useState(false),[query,setQuery]=useState(""),[searchOpen,setSearchOpen]=useState(false),[resultIndex,setResultIndex]=useState(0);
+ const dialog=useRef<HTMLDialogElement>(null),menuButton=useRef<HTMLButtonElement>(null),searchBox=useRef<HTMLDivElement>(null);
+ const current=activeAdminItem(pathname,params.get("role"));const results=searchAdminItems(query);
+ useEffect(()=>{setMobileOpen(false);setSearchOpen(false);setQuery("");},[pathname,params]);
+ useEffect(()=>{const d=dialog.current;if(!d)return;if(mobileOpen){d.showModal();const previous=document.body.style.overflow;document.body.style.overflow="hidden";return()=>{d.close();document.body.style.overflow=previous;menuButton.current?.focus();};}d.close();},[mobileOpen]);
+ useEffect(()=>{if(!searchOpen)return;const outside=(event:PointerEvent)=>{if(!searchBox.current?.contains(event.target as Node))setSearchOpen(false);};document.addEventListener("pointerdown",outside);return()=>document.removeEventListener("pointerdown",outside);},[searchOpen]);
+ const go=(href:string)=>{setSearchOpen(false);setQuery("");setMobileOpen(false);router.push(href);};
+ const sidebar=(mobile=false)=><div className="admin-sidebar-inner"><div className="admin-brand"><Link href="/admin/dashboard" className="flex min-w-0 items-center gap-3" aria-label="Ballanki admin overview"><img src="/logo.png" alt="" className="h-12 w-12 object-contain"/><div><strong className="block text-sm">Ballanki A1</strong><span className="text-xs text-[#75847e]">Store administration</span></div></Link>{mobile&&<button type="button" onClick={()=>setMobileOpen(false)} aria-label="Close navigation" className="admin-icon-button"><X size={20}/></button>}</div>
+ <nav className="admin-menu" aria-label={mobile?"Mobile admin navigation":"Admin navigation"}>{adminGroups.map(group=><div key={group.label} className="mb-6"><p className="admin-nav-group">{group.label}</p>{group.items.map(item=>{const Icon=icons[item.icon];const active=current?.href===item.href;return <Link key={item.href} href={item.href} onClick={()=>setMobileOpen(false)} aria-current={active?"page":undefined} className={`admin-nav-link ${active?"is-active":""}`}><Icon size={18}/><span>{item.label}</span>{active&&<ChevronRight size={14} className="ml-auto"/>}</Link>;})}</div>)}</nav>
+ <div className="admin-sidebar-footer"><Link href="/" className="admin-store-link"><ExternalLink size={17}/>Open storefront<ArrowUpRight size={14} className="ml-auto"/></Link><div className="flex min-w-0 items-center gap-3 border-t border-[#e6ece8] pt-4"><span className="admin-avatar">{user?.full_name?.[0]||"A"}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold">{user?.full_name||"Administrator"}</p><p className="text-xs text-[#75847e]">Store owner</p></div><button type="button" onClick={logout} aria-label="Sign out" title="Sign out" className="admin-icon-button"><LogOut size={18}/></button></div></div></div>;
+ return <div className="admin-workspace dashboard-shell"><a href="#admin-main" className="admin-skip">Skip to page content</a><aside className="admin-desktop-sidebar">{sidebar()}</aside>
+ <dialog ref={dialog} className="admin-drawer" aria-label="Admin navigation" onClose={()=>setMobileOpen(false)} onCancel={()=>setMobileOpen(false)} onClick={e=>{if(e.target===e.currentTarget)setMobileOpen(false);}}>{sidebar(true)}</dialog>
+ <div className="admin-main-column"><header className="admin-topbar"><div className="flex min-w-0 items-center gap-3"><button ref={menuButton} type="button" onClick={()=>setMobileOpen(true)} aria-label="Open admin navigation" aria-expanded={mobileOpen} className="admin-icon-button admin-menu-trigger"><Menu size={22}/></button><div className="min-w-0"><p className="hidden text-[11px] font-medium uppercase tracking-[.14em] text-[#75847e] sm:block">Ballanki workspace</p><p className="truncate text-sm font-semibold sm:text-base">{current?.label||"Administration"}{pathname.includes("/products/add")&&<span className="ml-2 font-normal text-[#75847e]">/ Product editor</span>}</p></div></div>
+ <div className="admin-search" ref={searchBox}><Search size={17} className="shrink-0 text-[#75847e]"/><input aria-label="Find an admin page" role="combobox" aria-autocomplete="list" aria-controls="admin-page-results" aria-expanded={searchOpen} aria-activedescendant={searchOpen&&results[resultIndex]?`admin-result-${resultIndex}`:undefined} value={query} placeholder="Find a page or tool…" onFocus={()=>setSearchOpen(true)} onChange={e=>{setQuery(e.target.value);setResultIndex(0);setSearchOpen(true);}} onKeyDown={e=>{if(e.key==="Escape")setSearchOpen(false);if(e.key==="ArrowDown"){e.preventDefault();setResultIndex(i=>Math.min(results.length-1,i+1));setSearchOpen(true);}if(e.key==="ArrowUp"){e.preventDefault();setResultIndex(i=>Math.max(0,i-1));}if(e.key==="Enter"&&results[resultIndex]){e.preventDefault();go(results[resultIndex].href);}}}/>{query&&<button type="button" onClick={()=>{setQuery("");setResultIndex(0);}} aria-label="Clear page search"><X size={14}/></button>}{searchOpen&&<div id="admin-page-results" role="listbox" aria-label="Admin pages" className="admin-search-results">{results.length?results.map((item,index)=>{const Icon=icons[item.icon];return <button key={item.href} id={`admin-result-${index}`} type="button" role="option" aria-selected={index===resultIndex} onMouseEnter={()=>setResultIndex(index)} onClick={()=>go(item.href)}><Icon size={18}/><span><strong>{item.label}</strong><small>{item.description}</small></span><ChevronRight size={14}/></button>;}):<p className="p-4 text-sm text-[#75847e]">No matching pages. Try orders, products or settings.</p>}</div>}</div>
+ <div className="flex shrink-0 items-center gap-1 sm:gap-3"><NotificationBell/><Link href="/admin/products/add" className="admin-primary-action" aria-label="Add product"><Plus size={17}/><span className="hidden xl:inline">Add product</span></Link><Link href="/" className="admin-icon-button admin-store-shortcut" aria-label="View storefront" title="View storefront"><ExternalLink size={18}/></Link></div></header>
+ <main id="admin-main" tabIndex={-1} className="admin-page dashboard-content">{children}</main><footer className="admin-workspace-footer">Ballanki A1 Furnitures <span>Store management</span></footer></div>
+ <nav className="admin-mobile-nav" aria-label="Quick admin navigation">{adminItems.filter(item=>["overview","orders","products","chats"].includes(item.icon)).sort((a,b)=>["overview","orders","products","chats"].indexOf(a.icon)-["overview","orders","products","chats"].indexOf(b.icon)).map(item=>{const Icon=icons[item.icon];return <Link key={item.href} href={item.href} aria-current={current?.href===item.href?"page":undefined}><Icon size={20}/><span>{item.icon==="overview"?"Home":item.icon==="chats"?"Chats":item.label}</span></Link>;})}<button type="button" onClick={()=>setMobileOpen(true)} aria-label="All admin pages" aria-expanded={mobileOpen}><Menu size={20}/><span>More</span></button></nav></div>;
 }
-
-const NAV_ITEMS: NavItem[] = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/users", label: "Users", icon: Users, hasDropdown: true },
-  { href: "/admin/users?role=promoter", label: "Promoters", icon: Megaphone },
-  { href: "/admin/products", label: "Products", icon: Package, hasDropdown: true },
-  { href: "/admin/categories", label: "Categories & Types", icon: Tag },
-  { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
-  { href: "/admin/enquiries", label: "Price Enquiries", icon: MessageCircle },
-  { href: "/admin/coupons", label: "Coupons & Offers", icon: Tag },
-  { href: "/admin/reports", label: "Reports & Analytics", icon: BarChart3 },
-  { href: "/admin/return-requests", label: "Disputes & Support", icon: HelpCircle },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
-  { href: "/admin/marketing", label: "Marketing Tools", icon: Wrench },
-  { href: "/admin/website-settings", label: "Website Settings", icon: Globe }
-];
-
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const { logout, user, isAuthenticated, role } = useAuthStore();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const sidebarContent = (
-    <div className="flex flex-col h-full bg-wood-900 text-wood-100 p-4 font-garamond justify-between">
-
-      <div className="space-y-4 overflow-y-auto pr-1">
-        {/* Top Admin Logo */}
-        <div className="flex items-center justify-center py-2 border-b border-wood-800/80 mb-2">
-          <img
-            src="/logo.png"
-            alt="Ballanki A1 Furnitures Logo"
-            className="h-[55px] w-auto object-contain drop-shadow-sm brightness-110 filter"
-          />
-        </div>
-
-        {/* Nav Items */}
-        <div className="space-y-1">
-          {NAV_ITEMS.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href || (item.href !== "/admin/dashboard" && pathname.startsWith(item.href));
-
-            if (isActive) {
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-white text-wood-900 font-bold text-xs shadow-sm transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon size={16} className="text-wood-900" />
-                    <span>{item.label}</span>
-                  </div>
-                  {item.hasDropdown && <ChevronDown size={14} className="opacity-70" />}
-                </Link>
-              );
-            }
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center justify-between px-4 py-2.5 rounded-xl text-wood-100/80 hover:bg-white/10 hover:text-white text-xs font-medium transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <Icon size={16} className="text-wood-300/80" />
-                  <span>{item.label}</span>
-                </div>
-                {item.hasDropdown && <ChevronDown size={14} className="opacity-50" />}
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Bottom Section: Help Box + User Account / Logout */}
-      <div className="pt-4 border-t border-wood-900/50 space-y-3">
-        <div className="bg-[#123337] border border-wood-800/40 rounded-xl p-3.5 space-y-2">
-          <div>
-            <h4 className="text-xs font-bold text-white">Need Help?</h4>
-            <p className="text-[11px] text-wood-200/70">We are here to help you.</p>
-          </div>
-          <button
-            onClick={() => router.push("/support/dashboard")}
-            className="w-full bg-wood-900 hover:bg-[#193e32] text-wood-200 border border-wood-700/40 text-xs font-semibold py-2 px-3 rounded-lg flex items-center justify-center gap-2 transition-colors"
-          >
-            <span>Contact Support</span>
-            <Headphones size={13} />
-          </button>
-        </div>
-
-        {/* User Account / Logout */}
-        <div className="flex items-center justify-between px-2 pt-1">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-wood-800 text-wood-200 font-bold text-xs flex items-center justify-center">
-              {user?.full_name?.[0] || "A"}
-            </div>
-            <div className="text-left">
-              <p className="text-xs font-bold text-white leading-none">{user?.full_name?.split(" ")[0] || "Admin"}</p>
-              <p className="text-[10px] text-wood-300">Administrator</p>
-            </div>
-          </div>
-          <button
-            onClick={() => {
-              logout();
-              router.push("/auth/login");
-            }}
-            className="text-wood-400 hover:text-red-400 p-1"
-            title="Sign Out"
-          >
-            <LogOut size={15} />
-          </button>
-        </div>
-      </div>
-
-    </div>
-  );
-
-  return (
-    <div className="dashboard-shell min-h-dvh bg-white text-wood-900 font-garamond flex flex-col lg:flex-row">
-
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:block w-60 flex-shrink-0 min-h-screen border-r border-wood-950 bg-wood-900">
-        {sidebarContent}
-      </aside>
-
-      {/* Mobile Drawer */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs lg:hidden" onClick={() => setMobileOpen(false)}>
-          <div className="w-64 max-w-[85vw] overflow-y-auto bg-wood-900 h-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            {sidebarContent}
-          </div>
-        </div>
-      )}
-
-      {/* Main Content Area + Top Header */}
-      <div className="flex-1 flex flex-col min-w-0">
-
-        {/* Header Bar */}
-        <header className="bg-white border-b border-[#dce5df] px-3 sm:px-6 py-3 flex items-center justify-between gap-2 sm:gap-4 sticky top-0 z-30 shadow-2xs">
-
-          {/* Left: Mobile Menu Toggle + Search */}
-          <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0 max-w-md">
-            <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden text-wood-900 p-1">
-              <Menu size={22} />
-            </button>
-
-            <div className="relative w-full min-w-0">
-              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#808080]" />
-              <input
-                type="text"
-                placeholder="Search anything..."
-                className="w-full bg-white border border-[#dce5df] rounded-full pl-9 pr-4 py-1.5 text-xs font-garamond text-wood-900 placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
-              />
-            </div>
-          </div>
-
-          {/* Right Controls: Notifications + Admin Avatar + View Store */}
-          <div className="flex shrink-0 items-center gap-2 sm:gap-4">
-
-            <NotificationBell />
-
-            {/* Admin profile pill */}
-            <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-[#edf4ef]">
-              <div className="w-8 h-8 rounded-full bg-wood-900 text-white font-bold text-xs flex items-center justify-center border border-[#dce5df]">
-                {user?.full_name?.[0] || "A"}
-              </div>
-              <div className="hidden sm:block text-left">
-                <p className="text-xs font-bold text-wood-900 leading-none truncate max-w-[100px]">
-                  {user?.full_name?.split(" ")[0] || "Admin"}
-                </p>
-                <p className="text-[10px] text-[#808080] flex items-center gap-0.5">
-                  Admin <ChevronDown size={10} />
-                </p>
-              </div>
-            </div>
-
-            {/* View Store button */}
-            <button
-              onClick={() => router.push("/")}
-              className="hidden md:inline-flex items-center gap-1.5 bg-wood-900 hover:bg-[#193e32] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
-            >
-              <span>View Store</span>
-              <ExternalLink size={13} />
-            </button>
-
-          </div>
-
-        </header>
-
-        {/* Page Content */}
-        <main className="dashboard-content flex-1 min-w-0 p-3 sm:p-4 md:p-6 lg:p-8 max-w-7xl mx-auto w-full pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-8">
-          {children}
-        </main>
-
-        {/* Mobile Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#dce5df] lg:hidden z-40 pb-safe">
-          <div className="flex items-center justify-around px-2 py-2">
-            {[
-              { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-              { href: "/admin/users", label: "Users", icon: Users },
-            ].map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href || (item.href !== "/admin/dashboard" && pathname.startsWith(item.href));
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex flex-col items-center justify-center p-2 relative ${isActive ? "text-wood-900" : "text-[#808080] hover:text-[#666666]"
-                    }`}
-                >
-                  <Icon size={20} className={isActive ? "fill-[#0D0D0D]/10" : ""} />
-                  <span className={`text-[10px] mt-1 font-medium ${isActive ? "font-bold" : ""}`}>
-                    {item.label}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  );
-}
+export default function AdminLayout({children}:{children:React.ReactNode}){return <Suspense fallback={<div className="min-h-dvh bg-[#f4f7f5] p-8 text-sm text-[#214f40]">Loading admin workspace…</div>}><AdminWorkspace>{children}</AdminWorkspace></Suspense>;}

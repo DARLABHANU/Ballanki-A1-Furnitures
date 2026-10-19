@@ -1,4 +1,5 @@
 "use client";
+import AdminTable from "@/components/admin/AdminTable";
 
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -105,12 +106,12 @@ function AdminOrdersContent() {
   const displayList = orders
     .filter(o => 
       (o.order_number || "").toLowerCase().includes(search.toLowerCase()) || 
-      ((o as any).user?.full_name || "").toLowerCase().includes(search.toLowerCase())
+      (o.customer?.full_name || "").toLowerCase().includes(search.toLowerCase())
     )
     .map((o) => ({
       id: o.id,
       order_number: o.order_number,
-      customer_name: (o as any).user?.full_name || "Guest Customer",
+      customer_name: o.customer?.full_name || "Customer details unavailable",
       price: formatPrice(o.total_amount),
       status: o.status,
       date: formatDate(o.created_at || "")
@@ -165,7 +166,7 @@ function AdminOrdersContent() {
             <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#808080]" />
             <input
               type="text"
-              placeholder="Search orders..."
+              placeholder="Search displayed orders…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-white border border-[#dce5df] rounded-full pl-9 pr-4 py-2 text-xs font-garamond text-[#1A1A1A] placeholder-[#808080] focus:outline-none focus:border-[#0D0D0D]"
@@ -199,7 +200,7 @@ function AdminOrdersContent() {
               <Loader2 className="animate-spin text-[#0D0D0D]" size={32} />
             </div>
           ) : (
-            <table className="w-full text-left text-xs">
+            <AdminTable aria-label="Orders" className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-[#edf4ef] text-[#666666] font-bold uppercase tracking-wider text-[11px]">
                   <th className="pb-3 px-3">Order ID</th>
@@ -247,7 +248,7 @@ function AdminOrdersContent() {
                 ))
                 )}
               </tbody>
-            </table>
+            </AdminTable>
           )}
         </div>
 
@@ -256,6 +257,7 @@ function AdminOrdersContent() {
           <span className="text-[11px] text-[#808080] font-medium">Page {page} of {totalPages}</span>
           <div className="flex gap-2">
             <button
+              aria-label="Previous page"
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
               className="p-1.5 rounded-lg border border-[#dce5df] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
@@ -263,6 +265,7 @@ function AdminOrdersContent() {
               <ChevronLeft size={16} />
             </button>
             <button
+              aria-label="Next page"
               onClick={() => setPage(p => p + 1)}
               disabled={page >= totalPages}
               className="p-1.5 rounded-lg border border-[#dce5df] text-[#1A1A1A] hover:bg-white disabled:opacity-50 transition-colors"
