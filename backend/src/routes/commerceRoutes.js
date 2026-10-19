@@ -8,6 +8,7 @@ const {Address,CartItem,Wishlist,Order,Coupon,Notification,ReturnRequest,Offer}=
 const {authenticate,roles}=require('../middleware/auth');
 const {asyncRoute:wrap,fail,pick,id,plain,page}=require('../lib/http');
 const {split,totals}=require('../lib/preorder');
+const {deliveryEstimate}=require('../lib/delivery');
 router.use(authenticate);
 const cart=async user=>{
  const rows=await CartItem.find({user}).populate('product');
@@ -39,7 +40,7 @@ const discountFor=async(code,subtotal,session)=>{
  if(coupon.max_discount_amount)discount=Math.min(discount,coupon.max_discount_amount);
  return {coupon,discount:Math.round(Math.min(subtotal,discount)*100)/100};
 };
-router.post('/orders/quote',wrap(async(req,res)=>{const current=await cart(req.user._id);const {discount}=await discountFor(req.body.coupon_code,current.subtotal);const items=current.items.map(i=>({...i,unit_price:i.product.price,expected_delivery_date:i.product.expected_delivery_date}));res.json({items,...totals(items,discount)});}));
+router.post('/orders/quote',wrap(async(req,res)=>{const current=await cart(req.user._id);const {discount}=await discountFor(req.body.coupon_code,current.subtotal);const items=current.items.map(i=>({...i,unit_price:i.product.price,...deliveryEstimate(i.product)}));res.json({items,...totals(items,discount)});}));
 router.get('/orders/active-coupons',wrap(async(req,res)=>res.json((await Coupon.find({is_active:true})).map(plain))));
 router.post('/orders/validate-coupon',wrap(async(req,res)=>{const current=await cart(req.user._id);const result=await discountFor(req.body.code||req.body.coupon_code,current.subtotal);res.json({valid:true,discount_amount:result.discount,coupon:plain(result.coupon)});}));
 const orderView=order=>({...plain(order),customer_id:String(order.customer?._id||order.customer),customer:order.customer?.full_name?order.customer.toJSON():undefined});
@@ -52,7 +53,7 @@ router.post('/orders',wrap(async(req,res)=>{
  const rows=await CartItem.find({user:req.user._id});if(!rows.length)fail(400,'Your cart is empty');
  const reservedStock=[],claimedOffers=[];let couponId=null,created=null;
  try{
-  const items=[];let subtotal=0;
+  const items=[];let subtotal=0;const deliveryBase=new Date();
   for(const row of rows){
    const p=await Product.findOne({_id:row.product,is_active:true,is_approved:true});if(!p)fail(409,'A product in your cart is no longer available');
    const offer=await Offer.findOne({customer:req.user._id,product:p._id,status:'accepted',used_at:null,expires_at:{$gt:new Date()},listed_price:p.price}).sort({accepted_at:-1});
@@ -65,7 +66,7 @@ router.post('/orders',wrap(async(req,res)=>{
     if(attempt===19)fail(409,'Stock changed. Please retry checkout.');
    }
    const price=offer?offer.price:p.price;const allocation=split(row.quantity,ready,price);
-   items.push({id:String(row._id),product_id:String(p._id),merchant_id:String(p.merchant||''),product_name:p.name,product_image:p.images?.[0]||'',quantity:row.quantity,unit_price:price,total_price:price*row.quantity,...allocation,stock_reserved_quantity:ready,expected_delivery_date:p.expected_delivery_date||null,manufacturing_duration_days:p.manufacturing_duration_days,deposit_rate:20,...(offer?{accepted_offer_id:String(offer._id)}:{})});subtotal+=price*row.quantity;
+   items.push({id:String(row._id),product_id:String(p._id),merchant_id:String(p.merchant||''),product_name:p.name,product_image:p.images?.[0]||'',quantity:row.quantity,unit_price:price,total_price:price*row.quantity,...allocation,stock_reserved_quantity:ready,...deliveryEstimate(p,deliveryBase),deposit_rate:20,...(offer?{accepted_offer_id:String(offer._id)}:{})});subtotal+=price*row.quantity;
   }
   if(req.body.expected_allocation){if(!Array.isArray(req.body.expected_allocation)||req.body.expected_allocation.length!==items.length||items.some(i=>!req.body.expected_allocation.some(e=>String(e.product_id)===i.product_id&&e.ready_stock_quantity===i.ready_stock_quantity&&e.preorder_quantity===i.preorder_quantity&&e.unit_price===i.unit_price)))fail(409,'Stock or price changed. Review the updated pre-booking amounts before placing your order.');}
   const {coupon,discount}=await discountFor(req.body.coupon_code,subtotal);const shipping=subtotal>=100000?0:1500;

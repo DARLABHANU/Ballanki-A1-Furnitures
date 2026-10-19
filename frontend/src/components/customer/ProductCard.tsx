@@ -139,20 +139,7 @@ export default function ProductCard({ product }: Props) {
           </div>
 
           {/* Estimate Display */}
-          {isMadeToOrder && (product.manufacturing_duration_days ?? 0) > 0 && (
-            <div className="bg-white rounded p-2 mt-auto mb-2 text-xs text-wood-700 space-y-1 border border-wood-100">
-              <div className="flex items-center gap-1.5 font-medium">
-                <Clock size={12} className="text-wood-500" />
-                <span>Est. Making time: {product.manufacturing_duration_days} days</span>
-              </div>
-              {(product.shipping_duration_days ?? 0) > 0 && (
-                <div className="flex items-center gap-1.5 opacity-80">
-                  <CalendarIcon size={12} className="text-wood-500" />
-                  <span>+{product.shipping_duration_days} days shipping</span>
-                </div>
-              )}
-            </div>
-          )}
+          {(product.delivery_duration_days ?? 0) > 0 && <p className="mt-2 text-xs text-[#315b49]">Making + delivery: {product.delivery_duration_days} days</p>}
         </div>
       </Link>
 

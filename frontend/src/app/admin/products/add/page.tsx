@@ -37,13 +37,11 @@ export default function AdminAddProductPage() {
     main_category: "Living Room",
     subcategory: "",
     allow_pre_order: true,
-    expected_delivery_date: "",
+    delivery_duration_days: "",
     material: "",
     wood_type: "",
     dimensions: "",
     fulfillment_type: "READY_STOCK",
-    manufacturing_duration_days: "",
-    shipping_duration_days: "5",
     is_active: true,
     is_featured: false
   });
@@ -54,7 +52,7 @@ export default function AdminAddProductPage() {
     api.get("/products/merchant/my-products", { params: { limit: 100 } }).then(({data}) => setCatalog((data.items || []).map((p:any)=>({id:String(p.id),name:p.name})))).catch(()=>{});
     if (!editId) { setLoadingEdit(false); return; }
     api.get(`/products/${editId}/manage`).then(({data:p}) => {
-      setFormData(previous => Object.fromEntries(Object.entries(previous).map(([key,value]) => [key, typeof value === "boolean" ? Boolean(p[key]) : p[key] == null ? "" : key === "expected_delivery_date" ? String(p[key]).slice(0,10) : key === "dimensions" && typeof p[key] === "object" ? [p[key].length,p[key].width,p[key].height].filter(v=>v!=null).join(" × ")+" "+(p[key].unit||"") : String(p[key])])) as typeof previous);
+      setFormData(previous => Object.fromEntries(Object.entries(previous).map(([key,value]) => [key, typeof value === "boolean" ? Boolean(p[key]) : p[key] == null ? "" : key === "dimensions" && typeof p[key] === "object" ? [p[key].length,p[key].width,p[key].height].filter(v=>v!=null).join(" × ")+" "+(p[key].unit||"") : String(p[key])])) as typeof previous);
       setImages(p.images || []);
       setConstruction(p.attributes?.construction || "");
       setExistingTags(p.tags || []);
@@ -124,6 +122,7 @@ export default function AdminAddProductPage() {
       return;
     }
     
+    if(!Number.isInteger(Number(formData.delivery_duration_days))||Number(formData.delivery_duration_days)<1||Number(formData.delivery_duration_days)>3650){toast.error("Enter total making and delivery time as 1–3650 whole days.");return;}
     const category=furnitureCatalog.categories.find(c=>c.id===storeCategory);
     const furnitureType=category?.types.find(t=>t.value===formData.subcategory);
     if(!category||!furnitureType){toast.error("Select a storefront category, then one of its furniture types.");return;}
@@ -142,8 +141,7 @@ export default function AdminAddProductPage() {
         compare_price: formData.compare_price ? Number(formData.compare_price) : 0,
         stock_quantity: Number(formData.stock_quantity),
         low_stock_threshold: Number(formData.low_stock_threshold),
-        manufacturing_duration_days: formData.manufacturing_duration_days ? Number(formData.manufacturing_duration_days) : undefined,
-        shipping_duration_days: formData.shipping_duration_days ? Number(formData.shipping_duration_days) : undefined,
+        delivery_duration_days: Number(formData.delivery_duration_days),
         images
       };
 
@@ -293,7 +291,7 @@ export default function AdminAddProductPage() {
           <h2 className="font-inter text-base font-semibold">Product page details</h2>
           <label className="block text-xs font-semibold">Full product description<textarea name="description" value={formData.description} onChange={handleChange} rows={4} className="mt-2 block w-full rounded-lg border p-3 font-normal"/></label>
           <label className="block text-xs font-semibold">Storefront category<select required value={storeCategory} onChange={e=>{categoryInitialized.current=true;setStoreCategory(e.target.value);setFormData(previous=>({...previous,subcategory:""}));}} className="mt-2 block w-full rounded-lg border p-3 font-normal"><option value="">Select storefront category</option>{furnitureCatalog.categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label><label className="block text-xs font-semibold">Furniture type<select required disabled={!storeCategory||!furnitureCatalog.ready} name="subcategory" value={formData.subcategory} onChange={handleChange} className="mt-2 block w-full rounded-lg border p-3 font-normal"><option value="">Select furniture type</option>{furnitureCatalog.categories.filter(c=>c.id===storeCategory).map(c=><optgroup key={c.id} label={c.name}>{c.types.map(type=><option key={type.id} value={type.value}>{type.name}</option>)}</optgroup>)}{formData.subcategory&&!furnitureCatalog.categories.some(c=>c.types.some(t=>t.value===formData.subcategory))&&<option value={formData.subcategory}>{formData.subcategory} (existing type)</option>}</select></label>
-          <label className="block text-xs font-semibold">Expected delivery date<input required type="date" name="expected_delivery_date" value={formData.expected_delivery_date} onChange={handleChange} className="mt-2 block w-full rounded-lg border p-3"/></label><p className="text-xs leading-5">Available stock is sold first. Additional quantities are pre-booked with a fixed 20% advance on the listed or accepted negotiated price. Payment collection must be enabled separately.</p>
+          <label className="block text-xs font-semibold">Total making + delivery time (days)<input required type="number" min="1" max="3650" step="1" inputMode="numeric" name="delivery_duration_days" value={formData.delivery_duration_days} onChange={handleChange} placeholder="e.g. 15" className="mt-2 block w-full rounded-lg border p-3"/><span className="mt-2 block text-xs font-normal leading-5 text-slate-500">Calendar days from the order date, including making, finishing and delivery. Set this separately for each product. The expected delivery date is calculated automatically.</span></label><p className="text-xs leading-5">Available stock is sold first. Additional quantities are pre-booked with a fixed 20% advance on the listed or accepted negotiated price. Payment collection must be enabled separately.</p>
           <p className="text-xs text-slate-500">Only enter verified details. Linked options and room combinations use actual product prices.</p>
           <label className="block text-xs font-semibold">Warranty & service details<textarea value={details.warranty_text} maxLength={2000} onChange={e=>setDetails(d=>({...d,warranty_text:e.target.value}))} rows={3} className="mt-2 block w-full rounded-lg border p-3 font-normal" placeholder="Enter the actual warranty and service terms, if applicable"/></label>
           <label className="block text-xs font-semibold">Construction<select value={construction} onChange={e=>setConstruction(e.target.value)} className="mt-2 block w-full rounded-lg border p-3 font-normal"><option value="">Not yet classified</option><option value="solid_wood">Solid wood — no engineered wood panels</option><option value="mixed">Mixed / engineered materials</option></select><span className="mt-2 block text-xs font-normal text-slate-500">Confirm the furniture body and panels are solid wood before selecting. Hardware, finish and cushions may use other materials.</span></label><label className="block text-xs font-semibold">Additional specifications<textarea value={details.specifications} onChange={e=>setDetails(d=>({...d,specifications:e.target.value}))} rows={4} className="mt-2 block w-full rounded-lg border p-3 font-normal" placeholder={"Colour: Walnut\nAssembly: Required\nCare: Wipe with a dry cloth"}/></label>

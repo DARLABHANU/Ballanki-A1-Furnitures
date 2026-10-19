@@ -13,6 +13,7 @@ module.exports=async function invoice(order){
  [a.full_name,a.line1,a.line2,[a.city,a.state,a.pincode].filter(Boolean).join(', '),a.country,a.phone].filter(Boolean).forEach(v=>line(v));doc.moveDown();
  line('ITEMS',11,'#173f35');
  for(const item of order.items){room(110);line(item.product_name,12,'#172b26');line('Quantity '+item.quantity+' x '+money(item.unit_price)+' = '+money(item.total_price));
+ if(item.delivery_duration_days)line('Making + delivery: '+item.delivery_duration_days+' calendar days from order date');
  if(item.preorder_quantity)line('Pre-booked units: '+item.preorder_quantity+' | Ready stock: '+(item.ready_stock_quantity||0));
  line(item.expected_delivery_date?'Expected delivery: '+new Date(item.expected_delivery_date).toLocaleDateString('en-IN',{timeZone:'UTC'}):'Delivery date: awaiting store confirmation');doc.moveDown(.4);}
  room(235);doc.moveDown();

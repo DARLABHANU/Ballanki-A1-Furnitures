@@ -106,7 +106,8 @@ export interface Product {
     unit?: string;
   };
   fulfillment_type?: 'READY_STOCK' | 'MADE_TO_ORDER' | 'CUSTOM_ORDER';
-  expected_delivery_date?: string;
+  delivery_duration_days?: number | null;
+  expected_delivery_date?: string | null;
   allow_pre_order?: boolean;
   manufacturing_duration_days?: number;
   shipping_duration_days?: number;
@@ -150,7 +151,8 @@ export interface Cart {
 
 // ─── Order ────────────────────────────────────────────────────────────────────
 export interface OrderItem {
-  expected_delivery_date?: string;
+  delivery_duration_days?: number | null;
+  expected_delivery_date?: string | null;
   ready_stock_quantity?: number;
   preorder_quantity?: number;
   advance_amount?: number;
