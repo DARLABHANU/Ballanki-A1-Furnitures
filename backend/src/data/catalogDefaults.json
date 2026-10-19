@@ -67,7 +67,7 @@
   {
     "id": "chair",
     "name": "Chairs",
-    "image": "/images/categories/chair.jpg",
+    "image": "https://res.cloudinary.com/qh2vxjhu/image/upload/v1792388075/ballanki/categories/hb0qir33kte45jsvaosy.jpg",
     "active": true,
     "solidWoodOnly": true,
     "types": [
@@ -96,7 +96,7 @@
         "id": "rocking-chairs",
         "name": "Rocking chairs",
         "value": "Rocking chairs",
-        "image": "/images/furniture-types/4627516.jpg",
+        "image": "https://res.cloudinary.com/qh2vxjhu/image/upload/v1792388075/ballanki/category-types/liza5bk7kdqifpcz1gfw.jpg",
         "active": true
       },
       {
