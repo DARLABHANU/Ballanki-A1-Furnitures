@@ -177,6 +177,7 @@ export interface Order {
   advance_amount?: number;
   amount_due_now?: number;
   balance_amount?: number;
+  balance_released_at?: string;
   has_preorder?: boolean;
   status: OrderStatus;
   payment_status: PaymentStatus;

@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict');const {payablePaise}=require('../src/lib/paymentSchedule');
+const order={total_amount:50000,amount_due_now:10000,has_preorder:true,paid_amount_paise:0};
+assert.equal(payablePaise(order),1000000);
+assert.equal(payablePaise({...order,paid_amount_paise:500000}),500000);
+assert.throws(()=>payablePaise({...order,paid_amount_paise:1000000}),e=>e.status===409);
+assert.equal(payablePaise({...order,paid_amount_paise:1000000,balance_released_at:new Date()}),4000000);
+assert.equal(payablePaise({...order,paid_amount_paise:5000000}),0);
+assert.equal(payablePaise({...order,has_preorder:false,amount_due_now:50000}),5000000);
+assert.throws(()=>payablePaise({...order,paid_amount_paise:undefined,paid_amount:10000}),e=>e.status===409);
+console.log('7 payment schedule checks passed: INR 50,000 order, 20% advance, incomplete advance, balance lock/unlock, paid order, ready stock and legacy paid amount.');

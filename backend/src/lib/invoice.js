@@ -18,6 +18,7 @@ module.exports=async function invoice(order){
  line(item.expected_delivery_date?'Expected delivery: '+new Date(item.expected_delivery_date).toLocaleDateString('en-IN',{timeZone:'UTC'}):'Delivery date: awaiting store confirmation');doc.moveDown(.4);}
  room(235);doc.moveDown();
  [['Subtotal',order.subtotal],['Discount',-Number(order.discount_amount||0)],['Delivery',order.shipping_amount],...(order.tax_amount?[['Tax',order.tax_amount]]:[]),['Order total',order.total_amount],['Verified paid',order.paid_amount||0],['Outstanding',order.outstanding_amount??Math.max(0,order.total_amount-(order.paid_amount||0))]].forEach(([label,value])=>line(label+': '+money(value),label==='Order total'?14:11));
+ if(order.has_preorder)line(order.balance_released_at?'Furniture ready: balance payment unlocked before dispatch.':'Balance payment is locked until the owner confirms furniture is ready for delivery.',10);
  line('This document is an order and payment summary, not a GST tax invoice.',9);
  line('Pending orders are not proof of payment. Only verified captured payments appear as paid.',9);
  const pages=doc.bufferedPageRange();for(let n=pages.start;n<pages.start+pages.count;n++){doc.switchToPage(n);doc.fontSize(8).fillColor('#64748b').text('Ballanki A1 Furnitures | '+order.order_number+' | Page '+(n+1),48,doc.page.height-45,{lineBreak:false});}

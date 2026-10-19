@@ -1,5 +1,6 @@
 const crypto=require('crypto');
 const gateway=require('./razorpay');const Attempt=require('../models/PaymentAttempt');const {Order,Notification}=require('../models/Commerce');const {fail}=require('./http');const {orderEmail}=require('./emailQueue');
+const {payablePaise}=require('./paymentSchedule');
 async function reconcile(attempt){
  if(attempt.provider!=='razorpay')fail(409,'This is a legacy payment. Contact the store before changing payment providers.');
  if(attempt.environment!==gateway.environment())fail(409,'This payment belongs to another Razorpay environment. Contact the store.');
@@ -32,6 +33,7 @@ async function start(orderId,customer){
  if(!order)fail(409,'Payment is already being prepared, paid, or the order is unavailable. Refresh its status.');
  try{
   if((order.paid_amount_paise||0)>0&&order.payment_environment!==gateway.environment())fail(409,'Test and live payments cannot be mixed on an order. Contact the store.');
+  payablePaise(order); // Enforce the balance lock even when resuming an older gateway session.
   if(order.payment_active_id){let previous=await Attempt.findOne({merchant_order_id:order.payment_active_id});if(!previous)fail(409,'Payment session is missing. Contact the store.');
    if(previous.provider!=='razorpay'){
     if(previous.environment!=='sandbox')fail(409,'An earlier payment provider has an active transaction. Contact the store before paying again.');
@@ -39,7 +41,7 @@ async function start(orderId,customer){
    }else{previous=await ensureGatewayOrder(previous);order=await reconcile(previous);if((await Attempt.findById(previous._id)).state==='PENDING')return checkout(previous);}
   }
   if(['cancelled','refunded'].includes(order.status)||order.payment_status==='paid')fail(409,'This order cannot be paid.');
-  const paid=order.paid_amount_paise||0,total=Math.round(order.total_amount*100),initial=Math.round((order.amount_due_now??order.total_amount)*100),amount=(paid<initial?initial:total)-paid;
+  const amount=payablePaise(order);
   if(!Number.isSafeInteger(amount)||amount<100)fail(400,'No payable Razorpay amount of at least INR 1 remains. Contact the store.');
   const attempt=await Attempt.create({provider:'razorpay',order:order._id,merchant_order_id:'BA_'+crypto.randomBytes(16).toString('hex'),environment:gateway.environment(),amount_paise:amount});
   const updated=await Order.updateOne({_id:orderId,payment_lock_token:lock},{$set:{payment_active_id:attempt.merchant_order_id,payment_method:'razorpay',payment_environment:gateway.environment()}});if(!updated.modifiedCount)fail(409,'Checkout changed. Refresh before retrying.');

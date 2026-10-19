@@ -103,11 +103,21 @@ const cancelOrder=async order=>{
  return updated;
 };
 router.post('/orders/:id/cancel',wrap(async(req,res)=>{const o=await accessible(req);if(req.user.role==='merchant')fail(403,'Ask an administrator to cancel the order');await cancelOrder(o);res.json(orderView(await Order.findById(o._id)));}));
+router.post('/orders/:id/ready-for-delivery',roles('admin'),wrap(async(req,res)=>{
+ const o=await accessible(req);
+ if(!o.has_preorder||o.status!=='processing')fail(409,'Only a pre-booked order being made can be marked ready for delivery.');
+ const initial=Math.round((o.amount_due_now??o.total_amount)*100);
+ if((o.paid_amount_paise??Math.round((o.paid_amount||0)*100))<initial)fail(409,'The initial payment must be verified first.');
+ if(o.balance_released_at)return res.json(orderView(o));
+ const updated=await Order.findOneAndUpdate({_id:o._id,status:'processing',balance_released_at:null},{$set:{balance_released_at:new Date(),balance_released_by:req.user._id},$push:{status_history:{status:'ready_for_delivery',timestamp:new Date(),note:'Furniture completed. The customer can now pay the remaining balance before dispatch.'}}},{new:true});
+ if(!updated)fail(409,'Order changed. Refresh and try again.');
+ await orderEmail(updated,'ready for delivery');res.json(orderView(updated));
+}));
 router.patch('/orders/:id/status',roles('merchant','admin'),wrap(async(req,res)=>{
  const o=await accessible(req);if(req.user.role==='merchant'&&o.items.some(i=>i.merchant_id!==String(req.user._id)))fail(409,'An administrator must update a multi-merchant order');
  const transitions={pending:['confirmed','cancelled'],confirmed:['processing','cancelled'],processing:['shipped'],shipped:['out_for_delivery','delivered'],out_for_delivery:['delivered'],delivered:[],cancelled:[],refunded:[]};
  const previousStatus=o.status;const status=req.body.status||o.status;if(status!==o.status&&!transitions[o.status].includes(status))fail(409,'Invalid order status transition');
- if(status!=='cancelled'&&status!==o.status&&['razorpay','phonepe'].includes(o.payment_method)&&(Math.round((o.paid_amount||0)*100)<Math.round((['shipped','out_for_delivery','delivered'].includes(status)?o.total_amount:(o.amount_due_now??o.total_amount))*100)))fail(409,'Collect the required payment before advancing this order');
+ if(status!=='cancelled'&&status!==o.status&&(Math.round((o.paid_amount||0)*100)<Math.round((['shipped','out_for_delivery','delivered'].includes(status)?o.total_amount:(o.amount_due_now??o.total_amount))*100)))fail(409,'Collect the required payment before advancing this order');
  if(status==='cancelled')await cancelOrder(o);else{Object.assign(o,pick(req.body,['tracking_number','current_location','notes']));if(status!==o.status){o.status=status;o.status_history.push({status,timestamp:new Date(),note:req.body.note||'Fulfillment status updated'});if(status==='delivered')o.delivered_at=new Date();}await o.save();}
  if(status!==previousStatus&&status!=='cancelled')await orderEmail(o,status);
  res.json(orderView(await Order.findById(o._id)));
