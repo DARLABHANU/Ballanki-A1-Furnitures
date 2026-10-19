@@ -1,0 +1,947 @@
+[
+  {
+    "id": "sofa",
+    "name": "Sofas",
+    "image": "/images/categories/sofa.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "wooden-sofa-sets",
+        "name": "Wooden sofa sets",
+        "value": "Wooden sofa sets",
+        "image": "/images/furniture-types/26821694.jpg",
+        "active": true
+      },
+      {
+        "id": "three-seater-sofas",
+        "name": "Three-seater sofas",
+        "value": "Three-seater sofas",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "two-seater-sofas",
+        "name": "Two-seater sofas",
+        "value": "Two-seater sofas",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "single-seater-sofas",
+        "name": "Single-seater sofas",
+        "value": "Single-seater sofas",
+        "image": "/images/furniture-types/8123130.jpg",
+        "active": true
+      },
+      {
+        "id": "corner-sofas",
+        "name": "Corner sofas",
+        "value": "Corner sofas",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "carved-sofa-sets",
+        "name": "Carved sofa sets",
+        "value": "Carved sofa sets",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "diwans",
+        "name": "Diwans",
+        "value": "Diwans",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "sofa-cum-beds",
+        "name": "Sofa cum beds",
+        "value": "Sofa cum beds",
+        "image": "",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "chair",
+    "name": "Chairs",
+    "image": "/images/categories/chair.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "dining-chairs",
+        "name": "Dining chairs",
+        "value": "Dining chairs",
+        "image": "/images/furniture-types/19093861.jpg",
+        "active": true
+      },
+      {
+        "id": "armchairs",
+        "name": "Armchairs",
+        "value": "Armchairs",
+        "image": "/images/furniture-types/11112742.jpg",
+        "active": true
+      },
+      {
+        "id": "armless-chairs",
+        "name": "Armless chairs",
+        "value": "Armless chairs",
+        "image": "/images/furniture-types/11112728.jpg",
+        "active": true
+      },
+      {
+        "id": "rocking-chairs",
+        "name": "Rocking chairs",
+        "value": "Rocking chairs",
+        "image": "/images/furniture-types/4627516.jpg",
+        "active": true
+      },
+      {
+        "id": "easy-chairs",
+        "name": "Easy chairs",
+        "value": "Easy chairs",
+        "image": "/images/furniture-types/39712613.jpg",
+        "active": true
+      },
+      {
+        "id": "carved-chairs",
+        "name": "Carved chairs",
+        "value": "Carved chairs",
+        "image": "/images/furniture-types/8135249.jpg",
+        "active": true
+      },
+      {
+        "id": "slat-back-chairs",
+        "name": "Slat-back chairs",
+        "value": "Slat-back chairs",
+        "image": "/images/furniture-types/14700400.jpg",
+        "active": true
+      },
+      {
+        "id": "ladder-back-chairs",
+        "name": "Ladder-back chairs",
+        "value": "Ladder-back chairs",
+        "image": "/images/furniture-types/11112732.jpg",
+        "active": true
+      },
+      {
+        "id": "study-chairs",
+        "name": "Study chairs",
+        "value": "Study chairs",
+        "image": "/images/furniture-types/4769492.jpg",
+        "active": true
+      },
+      {
+        "id": "wooden-stools",
+        "name": "Wooden stools",
+        "value": "Wooden stools",
+        "image": "/images/furniture-types/36085626.jpg",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "dining",
+    "name": "Dining",
+    "image": "/images/categories/dining.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "four-seater-dining-sets",
+        "name": "Four-seater dining sets",
+        "value": "Four-seater dining sets",
+        "image": "/images/furniture-types/271647.jpg",
+        "active": true
+      },
+      {
+        "id": "six-seater-dining-sets",
+        "name": "Six-seater dining sets",
+        "value": "Six-seater dining sets",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "eight-seater-dining-sets",
+        "name": "Eight-seater dining sets",
+        "value": "Eight-seater dining sets",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "round-dining-sets",
+        "name": "Round dining sets",
+        "value": "Round dining sets",
+        "image": "/images/furniture-types/5677020.jpg",
+        "active": true
+      },
+      {
+        "id": "square-dining-sets",
+        "name": "Square dining sets",
+        "value": "Square dining sets",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "rectangular-dining-sets",
+        "name": "Rectangular dining sets",
+        "value": "Rectangular dining sets",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "dining-benches",
+        "name": "Dining benches",
+        "value": "Dining benches",
+        "image": "/images/furniture-types/4044789.jpg",
+        "active": true
+      },
+      {
+        "id": "wooden-top-dining-tables",
+        "name": "Wooden-top dining tables",
+        "value": "Wooden-top dining tables",
+        "image": "",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "bed",
+    "name": "Beds",
+    "image": "/images/categories/bed.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "pandiri-mancham",
+        "name": "Pandiri Mancham",
+        "value": "Pandiri Mancham",
+        "image": "/images/furniture-types/12715595.jpg",
+        "active": true
+      },
+      {
+        "id": "teak-cots",
+        "name": "Teak cots",
+        "value": "Teak cots",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "single-cots",
+        "name": "Single cots",
+        "value": "Single cots",
+        "image": "/images/furniture-types/19878532.jpg",
+        "active": true
+      },
+      {
+        "id": "double-cots",
+        "name": "Double cots",
+        "value": "Double cots",
+        "image": "/images/furniture-types/5502218.jpg",
+        "active": true
+      },
+      {
+        "id": "queen-size-beds",
+        "name": "Queen-size beds",
+        "value": "Queen-size beds",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "king-size-beds",
+        "name": "King-size beds",
+        "value": "King-size beds",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "storage-cots",
+        "name": "Storage cots",
+        "value": "Storage cots",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "carved-cots",
+        "name": "Carved cots",
+        "value": "Carved cots",
+        "image": "/images/furniture-types/29627918.jpg",
+        "active": true
+      },
+      {
+        "id": "diwan-cots",
+        "name": "Diwan cots",
+        "value": "Diwan cots",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "bunk-beds",
+        "name": "Bunk beds",
+        "value": "Bunk beds",
+        "image": "/images/furniture-types/12870114.jpg",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "cupboard",
+    "name": "Cupboards",
+    "image": "/images/categories/cupboard.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "berwa-cupboards",
+        "name": "Berwa cupboards",
+        "value": "Berwa cupboards",
+        "image": "/images/furniture-types/19962637.jpg",
+        "active": true
+      },
+      {
+        "id": "two-door-cupboards",
+        "name": "Two-door cupboards",
+        "value": "Two-door cupboards",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "three-door-cupboards",
+        "name": "Three-door cupboards",
+        "value": "Three-door cupboards",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "kitchen-cupboards",
+        "name": "Kitchen cupboards",
+        "value": "Kitchen cupboards",
+        "image": "/images/furniture-types/18038117.jpg",
+        "active": true
+      },
+      {
+        "id": "crockery-cupboards",
+        "name": "Crockery cupboards",
+        "value": "Crockery cupboards",
+        "image": "/images/furniture-types/271682.jpg",
+        "active": true
+      },
+      {
+        "id": "pooja-cupboards",
+        "name": "Pooja cupboards",
+        "value": "Pooja cupboards",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "carved-cupboards",
+        "name": "Carved cupboards",
+        "value": "Carved cupboards",
+        "image": "",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "table",
+    "name": "Tables",
+    "image": "/images/categories/table.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "tea-poys",
+        "name": "Tea poys",
+        "value": "Tea poys",
+        "image": "/images/furniture-types/12635891.jpg",
+        "active": true
+      },
+      {
+        "id": "coffee-tables",
+        "name": "Coffee tables",
+        "value": "Coffee tables",
+        "image": "/images/furniture-types/1444424.jpg",
+        "active": true
+      },
+      {
+        "id": "side-tables",
+        "name": "Side tables",
+        "value": "Side tables",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "bedside-tables",
+        "name": "Bedside tables",
+        "value": "Bedside tables",
+        "image": "/images/furniture-types/4440215.jpg",
+        "active": true
+      },
+      {
+        "id": "console-tables",
+        "name": "Console tables",
+        "value": "Console tables",
+        "image": "/images/furniture-types/8135270.jpg",
+        "active": true
+      },
+      {
+        "id": "nesting-tables",
+        "name": "Nesting tables",
+        "value": "Nesting tables",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "centre-tables",
+        "name": "Centre tables",
+        "value": "Centre tables",
+        "image": "",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "wardrobe",
+    "name": "Wardrobes",
+    "image": "/images/categories/wardrobe.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "two-door-wardrobes",
+        "name": "Two-door wardrobes",
+        "value": "Two-door wardrobes",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "three-door-wardrobes",
+        "name": "Three-door wardrobes",
+        "value": "Three-door wardrobes",
+        "image": "/images/furniture-types/2708106.jpg",
+        "active": true
+      },
+      {
+        "id": "four-door-wardrobes",
+        "name": "Four-door wardrobes",
+        "value": "Four-door wardrobes",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "mirror-wardrobes",
+        "name": "Mirror wardrobes",
+        "value": "Mirror wardrobes",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "drawer-wardrobes",
+        "name": "Drawer wardrobes",
+        "value": "Drawer wardrobes",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "carved-wardrobes",
+        "name": "Carved wardrobes",
+        "value": "Carved wardrobes",
+        "image": "/images/furniture-types/19962637.jpg",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "tv",
+    "name": "TV units",
+    "image": "/images/categories/tv.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "tv-consoles",
+        "name": "TV consoles",
+        "value": "TV consoles",
+        "image": "/images/furniture-types/31338029.jpg",
+        "active": true
+      },
+      {
+        "id": "tv-cabinets",
+        "name": "TV cabinets",
+        "value": "TV cabinets",
+        "image": "/images/furniture-types/6585620.jpg",
+        "active": true
+      },
+      {
+        "id": "low-tv-units",
+        "name": "Low TV units",
+        "value": "Low TV units",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "tv-units-with-storage",
+        "name": "TV units with storage",
+        "value": "TV units with storage",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "tv-stands",
+        "name": "TV stands",
+        "value": "TV stands",
+        "image": "",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "storage",
+    "name": "Storage",
+    "image": "/images/categories/storage.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "wooden-chests",
+        "name": "Wooden chests",
+        "value": "Wooden chests",
+        "image": "/images/furniture-types/6370036.jpg",
+        "active": true
+      },
+      {
+        "id": "drawer-chests",
+        "name": "Drawer chests",
+        "value": "Drawer chests",
+        "image": "/images/furniture-types/5825540.jpg",
+        "active": true
+      },
+      {
+        "id": "sideboards",
+        "name": "Sideboards",
+        "value": "Sideboards",
+        "image": "/images/furniture-types/34984437.jpg",
+        "active": true
+      },
+      {
+        "id": "display-cabinets",
+        "name": "Display cabinets",
+        "value": "Display cabinets",
+        "image": "/images/furniture-types/271682.jpg",
+        "active": true
+      },
+      {
+        "id": "pooja-mandirs",
+        "name": "Pooja mandirs",
+        "value": "Pooja mandirs",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "storage-benches",
+        "name": "Storage benches",
+        "value": "Storage benches",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "blanket-boxes",
+        "name": "Blanket boxes",
+        "value": "Blanket boxes",
+        "image": "",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "office",
+    "name": "Office",
+    "image": "/images/categories/office.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "office-desks",
+        "name": "Office desks",
+        "value": "Office desks",
+        "image": "/images/furniture-types/5393443.jpg",
+        "active": true
+      },
+      {
+        "id": "writing-desks",
+        "name": "Writing desks",
+        "value": "Writing desks",
+        "image": "/images/furniture-types/4769492.jpg",
+        "active": true
+      },
+      {
+        "id": "office-chairs",
+        "name": "Office chairs",
+        "value": "Office chairs",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "filing-cabinets",
+        "name": "Filing cabinets",
+        "value": "Filing cabinets",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "office-bookcases",
+        "name": "Office bookcases",
+        "value": "Office bookcases",
+        "image": "/images/furniture-types/2883049.jpg",
+        "active": true
+      },
+      {
+        "id": "meeting-tables",
+        "name": "Meeting tables",
+        "value": "Meeting tables",
+        "image": "",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "recliner",
+    "name": "Recliners",
+    "image": "/images/categories/recliner.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "wooden-easy-chairs",
+        "name": "Wooden easy chairs",
+        "value": "Wooden easy chairs",
+        "image": "/images/furniture-types/39712613.jpg",
+        "active": true
+      },
+      {
+        "id": "wooden-lounge-chairs",
+        "name": "Wooden lounge chairs",
+        "value": "Wooden lounge chairs",
+        "image": "/images/furniture-types/11112742.jpg",
+        "active": true
+      },
+      {
+        "id": "reclining-wooden-chairs",
+        "name": "Reclining wooden chairs",
+        "value": "Reclining wooden chairs",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "wooden-footstools",
+        "name": "Wooden footstools",
+        "value": "Wooden footstools",
+        "image": "/images/furniture-types/6611422.jpg",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "shoe",
+    "name": "Shoe racks",
+    "image": "/images/categories/shoe.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "open-shoe-racks",
+        "name": "Open shoe racks",
+        "value": "Open shoe racks",
+        "image": "/images/furniture-types/35549708.jpg",
+        "active": true
+      },
+      {
+        "id": "closed-shoe-cabinets",
+        "name": "Closed shoe cabinets",
+        "value": "Closed shoe cabinets",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "shoe-benches",
+        "name": "Shoe benches",
+        "value": "Shoe benches",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "slatted-shoe-racks",
+        "name": "Slatted shoe racks",
+        "value": "Slatted shoe racks",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "tall-shoe-cabinets",
+        "name": "Tall shoe cabinets",
+        "value": "Tall shoe cabinets",
+        "image": "",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "bookshelf",
+    "name": "Bookshelves",
+    "image": "/images/categories/bookshelf.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "open-bookcases",
+        "name": "Open bookcases",
+        "value": "Open bookcases",
+        "image": "/images/furniture-types/2883049.jpg",
+        "active": true
+      },
+      {
+        "id": "glass-door-bookcases",
+        "name": "Glass-door bookcases",
+        "value": "Glass-door bookcases",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "low-bookshelves",
+        "name": "Low bookshelves",
+        "value": "Low bookshelves",
+        "image": "/images/furniture-types/31338030.jpg",
+        "active": true
+      },
+      {
+        "id": "tall-bookshelves",
+        "name": "Tall bookshelves",
+        "value": "Tall bookshelves",
+        "image": "/images/furniture-types/763135.jpg",
+        "active": true
+      },
+      {
+        "id": "corner-bookshelves",
+        "name": "Corner bookshelves",
+        "value": "Corner bookshelves",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "wall-bookshelves",
+        "name": "Wall bookshelves",
+        "value": "Wall bookshelves",
+        "image": "",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "desk",
+    "name": "Study desks",
+    "image": "/images/categories/desk.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "writing-tables",
+        "name": "Writing tables",
+        "value": "Writing tables",
+        "image": "/images/furniture-types/5393443.jpg",
+        "active": true
+      },
+      {
+        "id": "study-tables",
+        "name": "Study tables",
+        "value": "Study tables",
+        "image": "/images/furniture-types/4769492.jpg",
+        "active": true
+      },
+      {
+        "id": "study-tables-with-drawers",
+        "name": "Study tables with drawers",
+        "value": "Study tables with drawers",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "study-desks-with-shelves",
+        "name": "Study desks with shelves",
+        "value": "Study desks with shelves",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "computer-desks",
+        "name": "Computer desks",
+        "value": "Computer desks",
+        "image": "",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "dressing",
+    "name": "Dressing tables",
+    "image": "/images/categories/dressing.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "dressing-tables-with-drawers",
+        "name": "Dressing tables with drawers",
+        "value": "Dressing tables with drawers",
+        "image": "/images/furniture-types/6873890.jpg",
+        "active": true
+      },
+      {
+        "id": "dressing-tables-with-storage",
+        "name": "Dressing tables with storage",
+        "value": "Dressing tables with storage",
+        "image": "/images/furniture-types/6903253.jpg",
+        "active": true
+      },
+      {
+        "id": "standing-mirror-dressers",
+        "name": "Standing mirror dressers",
+        "value": "Standing mirror dressers",
+        "image": "/images/furniture-types/4986116.jpg",
+        "active": true
+      },
+      {
+        "id": "compact-dressing-tables",
+        "name": "Compact dressing tables",
+        "value": "Compact dressing tables",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "carved-dressing-tables",
+        "name": "Carved dressing tables",
+        "value": "Carved dressing tables",
+        "image": "",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "mattress",
+    "name": "Mattresses",
+    "image": "/images/categories/mattress.jpg",
+    "active": true,
+    "solidWoodOnly": false,
+    "types": []
+  },
+  {
+    "id": "outdoor",
+    "name": "Outdoor",
+    "image": "/images/categories/outdoor.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "verandah-chairs",
+        "name": "Verandah chairs",
+        "value": "Verandah chairs",
+        "image": "/images/furniture-types/14700400.jpg",
+        "active": true
+      },
+      {
+        "id": "garden-benches",
+        "name": "Garden benches",
+        "value": "Garden benches",
+        "image": "/images/furniture-types/289445.jpg",
+        "active": true
+      },
+      {
+        "id": "outdoor-tables",
+        "name": "Outdoor tables",
+        "value": "Outdoor tables",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "patio-dining-sets",
+        "name": "Patio dining sets",
+        "value": "Patio dining sets",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "wooden-swings",
+        "name": "Wooden swings",
+        "value": "Wooden swings",
+        "image": "/images/furniture-types/31959789.jpg",
+        "active": true
+      },
+      {
+        "id": "balcony-stools",
+        "name": "Balcony stools",
+        "value": "Balcony stools",
+        "image": "/images/furniture-types/36085626.jpg",
+        "active": true
+      }
+    ]
+  },
+  {
+    "id": "kids",
+    "name": "Kids furniture",
+    "image": "/images/categories/kids.jpg",
+    "active": true,
+    "solidWoodOnly": true,
+    "types": [
+      {
+        "id": "wooden-cradles",
+        "name": "Wooden cradles",
+        "value": "Wooden cradles",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "kids-beds",
+        "name": "Kids beds",
+        "value": "Kids beds",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "kids-bunk-beds",
+        "name": "Kids bunk beds",
+        "value": "Kids bunk beds",
+        "image": "/images/furniture-types/12870114.jpg",
+        "active": true
+      },
+      {
+        "id": "kids-study-sets",
+        "name": "Kids study sets",
+        "value": "Kids study sets",
+        "image": "/images/furniture-types/30798684.jpg",
+        "active": true
+      },
+      {
+        "id": "kids-chairs",
+        "name": "Kids chairs",
+        "value": "Kids chairs",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "toy-chests",
+        "name": "Toy chests",
+        "value": "Toy chests",
+        "image": "",
+        "active": true
+      },
+      {
+        "id": "kids-bookshelves",
+        "name": "Kids bookshelves",
+        "value": "Kids bookshelves",
+        "image": "",
+        "active": true
+      }
+    ]
+  }
+]

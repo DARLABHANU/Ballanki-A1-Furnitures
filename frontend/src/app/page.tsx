@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Heart, Loader2, MapPin, Menu, MessageCircle, Package, Search, ShoppingBag, User, X } from "lucide-react";
 import toast from "react-hot-toast";
-import {furnitureCategories as categories,categoryBrowserHref} from "@/lib/furnitureCategories";
+import {categoryBrowserHref} from "@/lib/furnitureCategories";
 import { productApi } from "@/lib/api";
 import { Product } from "@/types";
 import { formatPrice, getApiError, getProductImage } from "@/lib/utils";
@@ -17,10 +17,14 @@ import { useDeliveryLocationStore } from "@/store/deliveryLocationStore";
 import NotificationBell from "@/components/NotificationBell";
 
 
+import {useFurnitureCatalog} from "@/store/catalogStore";
+
 const PAGE_SIZE=24;
 
 export default function HomePage(){
   const router=useRouter();
+  const catalog=useFurnitureCatalog();
+  const categories=[{name:"All furniture",slug:"",image:"/images/categories/all.jpg"},...catalog.categories.map(c=>({...c,slug:c.id}))];
   const {isAuthenticated,role}=useAuthStore();
   const {cart,fetchCart}=useCartStore();
   const {wishlistIds,toggleWishlist,fetchWishlist}=useWishlistStore();
@@ -36,13 +40,16 @@ export default function HomePage(){
   const categoryRail=useRef<HTMLDivElement>(null);
   const menuRef=useRef<HTMLDivElement>(null);
   const mounted=useRef(false);
+  const productRequest=useRef<AbortController|null>(null);
   const fetchPage=useCallback(async(nextPage:number)=>{
+    productRequest.current?.abort();
+    const controller=new AbortController();productRequest.current=controller;
     setLoading(true);setError("");
-    try{const {data}=await productApi.list({page:nextPage,page_size:PAGE_SIZE,sort_by:"created_at",sort_order:"desc"});if(!mounted.current)return;const rows:Product[]=data.items||[];setProducts(previous=>nextPage===1?rows:[...previous,...rows.filter(row=>!previous.some(p=>String(p.id)===String(row.id)))]);setPage(nextPage);setHasMore(nextPage<(data.pages||1));}
-    catch(e){if(mounted.current)setError(getApiError(e));}
-    finally{if(mounted.current)setLoading(false);}
+    try{const {data}=await productApi.list({page:nextPage,page_size:PAGE_SIZE,sort_by:"created_at",sort_order:"desc"},controller.signal);if(!mounted.current||controller.signal.aborted)return;const rows:Product[]=data.items||[];setProducts(previous=>nextPage===1?rows:[...previous,...rows.filter(row=>!previous.some(p=>String(p.id)===String(row.id)))]);setPage(nextPage);setHasMore(nextPage<(data.pages||1));}
+    catch(e){if(mounted.current&&!controller.signal.aborted)setError(getApiError(e));}
+    finally{if(mounted.current&&!controller.signal.aborted)setLoading(false);}
   },[]);
-  useEffect(()=>{mounted.current=true;void fetchPage(1);const coupon=new URLSearchParams(window.location.search).get("coupon");if(coupon)Cookies.set("affiliate_coupon",coupon,{expires:7,sameSite:"Lax"});return()=>{mounted.current=false;};},[fetchPage]);
+  useEffect(()=>{mounted.current=true;void fetchPage(1);const coupon=new URLSearchParams(window.location.search).get("coupon");if(coupon)Cookies.set("affiliate_coupon",coupon,{expires:7,sameSite:"Lax"});return()=>{mounted.current=false;productRequest.current?.abort();};},[fetchPage]);
   useEffect(()=>{if(isAuthenticated){void fetchCart();void fetchWishlist();}},[isAuthenticated,fetchCart,fetchWishlist]);
   useEffect(()=>{if(!menuOpen)return;const outside=(e:PointerEvent)=>{if(!menuRef.current?.contains(e.target as Node))setMenuOpen(false);};const escape=(e:KeyboardEvent)=>{if(e.key==="Escape")setMenuOpen(false);};document.addEventListener("pointerdown",outside);document.addEventListener("keydown",escape);return()=>{document.removeEventListener("pointerdown",outside);document.removeEventListener("keydown",escape);};},[menuOpen]);
   const account= !isAuthenticated?"/auth/login":role==="admin"?"/admin/dashboard":"/customer/profile";
@@ -67,7 +74,7 @@ export default function HomePage(){
     <main className="mx-auto max-w-[1320px] px-3 pb-10 pt-5 sm:px-6 sm:pt-7 lg:px-8">
       <section aria-label="Furniture categories" className="mb-6 border-b border-[#e9ecee] pb-4 sm:mb-8 sm:pb-6">
         <div className="mb-4 flex items-center justify-between gap-3"><h1 className="font-inter text-sm font-semibold sm:text-base">Explore furniture</h1><div className="flex gap-1"><button type="button" aria-label="Previous categories" onClick={()=>scrollCategories(-1)} className="grid h-8 w-8 place-items-center rounded-full border border-[#e2e7e8] hover:bg-slate-50"><ChevronLeft size={17}/></button><button type="button" aria-label="More categories" onClick={()=>scrollCategories(1)} className="grid h-8 w-8 place-items-center rounded-full border border-[#e2e7e8] hover:bg-slate-50"><ChevronRight size={17}/></button></div></div>
-        <div ref={categoryRail} tabIndex={0} aria-label="All furniture categories, swipe to explore" className="grid auto-cols-[68px] grid-flow-col grid-rows-2 scrollbar-none gap-x-3 gap-y-5 overflow-x-auto overscroll-x-contain pb-2 sm:auto-cols-[90px] sm:gap-x-5 lg:auto-cols-[108px] lg:gap-x-4">{categories.map(({name,slug,image})=><Link key={name} href={categoryBrowserHref(slug)} className="group flex flex-col items-center gap-1.5 text-center"><span className="block h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-slate-100 bg-[#f5f7f6] transition-transform group-hover:-translate-y-0.5 sm:h-16 sm:w-16"><img src={image} alt="" width={64} height={64} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105" onError={event=>{const img=event.currentTarget;if(!img.dataset.fallback){img.dataset.fallback="true";img.src="/images/categories/all.jpg";}}}/></span><span className="max-w-full text-[10px] font-medium leading-3 sm:text-xs sm:leading-4">{name}</span></Link>)}</div>
+        <div role="status" className="mb-2 text-xs text-[#63777a]">{catalog.loading?"Loading categories…":catalog.error?<button onClick={()=>void catalog.refresh(true)} className="underline">{catalog.error}</button>:null}</div><div ref={categoryRail} tabIndex={0} aria-label="All furniture categories, swipe to explore" className="grid auto-cols-[68px] grid-flow-col grid-rows-2 scrollbar-none gap-x-3 gap-y-5 overflow-x-auto overscroll-x-contain pb-2 sm:auto-cols-[90px] sm:gap-x-5 lg:auto-cols-[108px] lg:gap-x-4">{categories.map(({name,slug,image})=><Link key={name} href={categoryBrowserHref(slug)} className="group flex flex-col items-center gap-1.5 text-center"><span className="block h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-slate-100 bg-[#f5f7f6] transition-transform group-hover:-translate-y-0.5 sm:h-16 sm:w-16"><img src={image||"/placeholder-product.svg"} alt="" width={64} height={64} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105" onError={event=>{const img=event.currentTarget;if(!img.dataset.fallback){img.dataset.fallback="true";img.src="/placeholder-product.svg";}}}/></span><span className="max-w-full text-[10px] font-medium leading-3 sm:text-xs sm:leading-4">{name}</span></Link>)}</div>
       </section>
 
       <section aria-labelledby="fresh-heading"><div className="mb-4 flex items-center justify-between gap-3 sm:mb-5"><h2 id="fresh-heading" className="font-inter text-lg font-medium tracking-tight sm:text-2xl">Fresh recommendations</h2><Link href="/customer/products" className="inline-flex min-h-10 items-center gap-1 text-[11px] font-semibold underline underline-offset-4 sm:text-xs">View all<ArrowRight size={14}/></Link></div>
@@ -78,7 +85,7 @@ export default function HomePage(){
           <div className="grid grid-cols-2 border-t border-[#e8edef] text-[10px] font-medium sm:text-xs"><Link href={`/customer/products/${product.id}`} className="flex min-h-10 items-center justify-center gap-1 border-r border-[#e8edef] hover:bg-slate-50"><Package size={13}/>Details</Link><Link href={`/customer/products/${product.id}?negotiate=1`} className="flex min-h-10 items-center justify-center gap-1 hover:bg-slate-50"><MessageCircle size={13}/>Chat</Link></div>
         </article>;})}
         {loading&&Array.from({length:products.length?4:8},(_,i)=><div key={`loading-${i}`} aria-hidden="true" className="animate-pulse overflow-hidden rounded-md border border-[#e2e7e8]"><div className="aspect-square bg-[#f0f2f3]"/><div className="space-y-3 p-3"><div className="h-4 w-20 rounded bg-slate-100"/><div className="h-3 w-4/5 rounded bg-slate-100"/><div className="h-3 w-1/2 rounded bg-slate-100"/></div></div>)}</div>
-        {loading&&<p role="status" className="mt-4 text-center text-xs text-[#6b7d80]">Loading furniture…</p>}
+        {loading&&<p role="status" className="mt-4 text-center text-xs text-[#6b7d80]">Loading furniture… This may take a moment on your first visit.</p>}
         {!loading&&!error&&!products.length&&<div className="rounded-lg border border-dashed p-10 text-center"><ShoppingBag size={28} className="mx-auto mb-3 text-[#78908a]"/><h3 className="font-inter text-base font-semibold">The collection is coming together</h3><p className="mt-2 text-sm text-[#6b7d80]">Products will appear here when the store publishes them.</p></div>}
         {!loading&&!error&&hasMore&&<div className="mt-8 text-center"><button type="button" onClick={()=>void fetchPage(page+1)} className="min-h-11 rounded border-2 border-[#123337] px-8 text-sm font-semibold hover:bg-[#f2f6f5]">Load more furniture</button></div>}
       </section>

@@ -14,8 +14,21 @@ if(p.images!==undefined&&(!Array.isArray(p.images)||p.images.length>5||p.images.
 const list=async(req,res,scope={is_active:true,is_approved:true})=>{
  const filter={...scope};const q=req.query;
  if(q.search)filter.$or=['name','description','sku'].map(k=>({[k]:{$regex:escape(q.search),$options:'i'}}));
- if(q.category&&q.category!=='all')filter.$and=[{$or:['main_category','subcategory','category','tags'].map(k=>({[k]:{$regex:escape(q.category).replace(/-/g,' '),$options:'i'}}))}];
- for(const k of ['wood_type','fabric','subcategory'])if(q[k])filter[k]={$regex:escape(q[k]),$options:'i'};
+ let catalogCategory;
+ if(q.type&&!q.category)fail(400,'Choose a category before selecting a type');
+ if(q.category&&q.category!=='all'){
+  const catalog=await require('../lib/catalog').readCatalog();catalogCategory=catalog.categories.find(c=>c.id===q.category);
+  const options=['main_category','subcategory','category','tags'].map(k=>({[k]:{$regex:escape(q.category).replace(/-/g,' '),$options:'i'}}));
+  if(catalogCategory){options.push({tags:catalogCategory.id});if(catalogCategory.types.length)options.push({subcategory:{$in:catalogCategory.types.map(t=>t.value)}});}
+  filter.$and=[{$or:[{catalog_category_id:String(q.category)},{$and:[{catalog_category_id:{$in:[null,'']}},{$or:options}]}]}];
+ }
+ if(q.type){
+  const type=catalogCategory?.active&&catalogCategory.types.find(t=>t.id===q.type&&t.active);
+  if(!type)fail(400,'This type is not available in the selected category');
+  filter.$and.push({$or:[{catalog_category_id:catalogCategory.id,catalog_type_id:type.id},{$and:[{catalog_category_id:{$in:[null,'']}},{subcategory:{$regex:'^'+escape(type.value)+'$',$options:'i'}}]}]});
+ }
+ for(const k of ['wood_type','fabric','subcategory'])if(q[k]&&!(k==='subcategory'&&q.type))filter[k]={$regex:escape(q[k]),$options:'i'};
+ if(q.construction==='solid_wood')filter['attributes.construction']='solid_wood';
  if(q.min_price||q.max_price){filter.price={};if(Number.isFinite(Number(q.min_price))&&q.min_price)filter.price.$gte=Number(q.min_price);if(Number.isFinite(Number(q.max_price))&&q.max_price)filter.price.$lte=Number(q.max_price);}
  if(q.min_rating)filter.rating_avg={$gte:Number(q.min_rating)||0};
  const n=Math.max(1,parseInt(q.page)||1),size=Math.max(1,Math.min(100,parseInt(q.page_size||q.limit)||20));
@@ -42,9 +55,9 @@ router.post('/:id/reviews',authenticate,wrap(async(req,res)=>{
  const all=await Review.find({product:p._id});p.rating_count=all.length;p.rating_avg=all.reduce((n,r)=>n+r.rating,0)/all.length;await p.save();res.status(201).json(plain(review));
 }));
 router.get('/:id',wrap(async(req,res)=>{const p=await Product.findOne({_id:id(req.params.id),is_active:true,is_approved:true});if(!p)fail(404,'Product not found');res.json(p);}));
-router.post('/',authenticate,roles('admin'),wrap(async(req,res)=>{const p=await Product.create({...normalize(req.body),merchant:req.user._id,is_approved:req.user.role==='admin'});res.status(201).json(p);}));
+router.post('/',authenticate,roles('admin'),wrap(async(req,res)=>{const p=await Product.create({...normalize(req.body),...await require('../lib/catalog').productAssignment(req.body),merchant:req.user._id,is_approved:req.user.role==='admin'});res.status(201).json(p);}));
 const owned=async req=>{const p=await Product.findById(id(req.params.id));if(!p)fail(404,'Product not found');if(req.user.role!=='admin'&&String(p.merchant)!==String(req.user._id))fail(403,'This product belongs to another merchant');return p;};
-router.put('/:id',authenticate,roles('admin'),wrap(async(req,res)=>{const p=await owned(req);Object.assign(p,normalize(req.body));if(req.user.role!=='admin')p.is_approved=false;await p.save();res.json(p);}));
+router.put('/:id',authenticate,roles('admin'),wrap(async(req,res)=>{const p=await owned(req);Object.assign(p,normalize(req.body),await require('../lib/catalog').productAssignment(req.body,p));if(req.user.role!=='admin')p.is_approved=false;await p.save();res.json(p);}));
 router.delete('/:id',authenticate,roles('admin'),wrap(async(req,res)=>{const p=await owned(req);p.is_active=false;await p.save();res.json({success:true});}));
 module.exports=router;module.exports.list=list;module.exports.normalize=normalize;
 

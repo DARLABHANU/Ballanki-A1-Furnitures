@@ -4,10 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, ArrowLeft, Image as ImageIcon, Save, CheckCircle2 } from "lucide-react";
 import toast from "react-hot-toast";
+import {useFurnitureCatalog} from "@/store/catalogStore";
 import { api } from "@/lib/api";
 
 export default function AdminAddProductPage() {
   const router = useRouter();
+  const furnitureCatalog=useFurnitureCatalog();
+  const [storeCategory,setStoreCategory]=useState("");
+  const categoryInitialized=useRef(false);
+  const [construction,setConstruction]=useState("");
+  const [existingTags,setExistingTags]=useState<string[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [loadingEdit, setLoadingEdit] = useState(true);
   const [editError, setEditError] = useState("");
@@ -50,9 +56,14 @@ export default function AdminAddProductPage() {
     api.get(`/products/${editId}/manage`).then(({data:p}) => {
       setFormData(previous => Object.fromEntries(Object.entries(previous).map(([key,value]) => [key, typeof value === "boolean" ? Boolean(p[key]) : p[key] == null ? "" : key === "expected_delivery_date" ? String(p[key]).slice(0,10) : key === "dimensions" && typeof p[key] === "object" ? [p[key].length,p[key].width,p[key].height].filter(v=>v!=null).join(" × ")+" "+(p[key].unit||"") : String(p[key])])) as typeof previous);
       setImages(p.images || []);
+      setConstruction(p.attributes?.construction || "");
+      setExistingTags(p.tags || []);
+      if(p.catalog_category_id){categoryInitialized.current=true;setStoreCategory(p.catalog_category_id);}
       setDetails({warranty_text:p.warranty_text || "", specifications:Object.entries(p.attributes || {}).map(([key,value])=>`${key}: ${value}`).join("\n"), variant_ids:(p.variant_ids||[]).map(String), bundle_ids:(p.bundle_ids||[]).map(String)});
     }).catch(()=>setEditError("Could not load this product. Return to the product list and try again.")).finally(()=>setLoadingEdit(false));
   }, []);
+
+  useEffect(()=>{if(!categoryInitialized.current&&furnitureCatalog.ready){const linked=furnitureCatalog.categories.find(c=>existingTags.includes(c.id)||c.types.some(t=>t.value===formData.subcategory));if(linked){categoryInitialized.current=true;setStoreCategory(linked.id);}}},[furnitureCatalog.ready,existingTags,formData.subcategory,storeCategory]);
 
   const handleChange = (e: any) => {
     const { name, value, type, checked } = e.target;
@@ -113,12 +124,18 @@ export default function AdminAddProductPage() {
       return;
     }
     
+    const category=furnitureCatalog.categories.find(c=>c.id===storeCategory);
+    const furnitureType=category?.types.find(t=>t.value===formData.subcategory);
+    if(!category||!furnitureType){toast.error("Select a storefront category, then one of its furniture types.");return;}
     setIsSubmitting(true);
     try {
       const payload = {
         ...formData,
+        catalog_category_id:category.id,
+        catalog_type_id:furnitureType.id,
         warranty_text: details.warranty_text,
-        attributes: Object.fromEntries(details.specifications.split("\n").filter(line=>line.includes(":")).map(line=>{const [key,...value]=line.split(":");return [key.trim(),value.join(":").trim()];})),
+        attributes: { ...Object.fromEntries(details.specifications.split("\n").filter(line=>line.includes(":")).map(line=>{const [key,...value]=line.split(":");return [key.trim(),value.join(":").trim()];})), construction },
+        tags: Array.from(new Set([...existingTags.filter(tag=>!storeCategory||!furnitureCatalog.categories.some(c=>c.id===tag)),...(storeCategory?[storeCategory]:furnitureCatalog.categories.filter(c=>c.types.some(t=>t.value===formData.subcategory)).map(c=>c.id))])),
         variant_ids: details.variant_ids,
         bundle_ids: details.bundle_ids,
         price: Number(formData.price),
@@ -275,11 +292,11 @@ export default function AdminAddProductPage() {
         <section className="col-span-1 space-y-4 rounded-2xl border bg-white p-5 lg:col-span-3">
           <h2 className="font-inter text-base font-semibold">Product page details</h2>
           <label className="block text-xs font-semibold">Full product description<textarea name="description" value={formData.description} onChange={handleChange} rows={4} className="mt-2 block w-full rounded-lg border p-3 font-normal"/></label>
-          <label className="block text-xs font-semibold">Furniture type<input name="subcategory" value={formData.subcategory} onChange={handleChange} className="mt-2 block w-full rounded-lg border p-3 font-normal" placeholder="Sofa, chair, dining table, cupboard…"/></label>
+          <label className="block text-xs font-semibold">Storefront category<select required value={storeCategory} onChange={e=>{categoryInitialized.current=true;setStoreCategory(e.target.value);setFormData(previous=>({...previous,subcategory:""}));}} className="mt-2 block w-full rounded-lg border p-3 font-normal"><option value="">Select storefront category</option>{furnitureCatalog.categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label><label className="block text-xs font-semibold">Furniture type<select required disabled={!storeCategory||!furnitureCatalog.ready} name="subcategory" value={formData.subcategory} onChange={handleChange} className="mt-2 block w-full rounded-lg border p-3 font-normal"><option value="">Select furniture type</option>{furnitureCatalog.categories.filter(c=>c.id===storeCategory).map(c=><optgroup key={c.id} label={c.name}>{c.types.map(type=><option key={type.id} value={type.value}>{type.name}</option>)}</optgroup>)}{formData.subcategory&&!furnitureCatalog.categories.some(c=>c.types.some(t=>t.value===formData.subcategory))&&<option value={formData.subcategory}>{formData.subcategory} (existing type)</option>}</select></label>
           <label className="block text-xs font-semibold">Expected delivery date<input required type="date" name="expected_delivery_date" value={formData.expected_delivery_date} onChange={handleChange} className="mt-2 block w-full rounded-lg border p-3"/></label><p className="text-xs leading-5">Available stock is sold first. Additional quantities are pre-booked with a fixed 20% advance on the listed or accepted negotiated price. Payment collection must be enabled separately.</p>
           <p className="text-xs text-slate-500">Only enter verified details. Linked options and room combinations use actual product prices.</p>
           <label className="block text-xs font-semibold">Warranty & service details<textarea value={details.warranty_text} maxLength={2000} onChange={e=>setDetails(d=>({...d,warranty_text:e.target.value}))} rows={3} className="mt-2 block w-full rounded-lg border p-3 font-normal" placeholder="Enter the actual warranty and service terms, if applicable"/></label>
-          <label className="block text-xs font-semibold">Additional specifications<textarea value={details.specifications} onChange={e=>setDetails(d=>({...d,specifications:e.target.value}))} rows={4} className="mt-2 block w-full rounded-lg border p-3 font-normal" placeholder={"Colour: Walnut\nAssembly: Required\nCare: Wipe with a dry cloth"}/></label>
+          <label className="block text-xs font-semibold">Construction<select value={construction} onChange={e=>setConstruction(e.target.value)} className="mt-2 block w-full rounded-lg border p-3 font-normal"><option value="">Not yet classified</option><option value="solid_wood">Solid wood — no engineered wood panels</option><option value="mixed">Mixed / engineered materials</option></select><span className="mt-2 block text-xs font-normal text-slate-500">Confirm the furniture body and panels are solid wood before selecting. Hardware, finish and cushions may use other materials.</span></label><label className="block text-xs font-semibold">Additional specifications<textarea value={details.specifications} onChange={e=>setDetails(d=>({...d,specifications:e.target.value}))} rows={4} className="mt-2 block w-full rounded-lg border p-3 font-normal" placeholder={"Colour: Walnut\nAssembly: Required\nCare: Wipe with a dry cloth"}/></label>
           <p className="text-[11px] text-slate-500">One specification per line, in Name: Value format. Maximum 30.</p>
           <div className="grid gap-5 sm:grid-cols-2">{(["variant_ids","bundle_ids"] as const).map(key=><label key={key} className="text-xs font-semibold">{key==="variant_ids"?"Other colours / sizes (linked products)":"Complete the room (linked products)"}<select multiple value={details[key]} onChange={e=>setDetails(d=>({...d,[key]:Array.from(e.target.selectedOptions,option=>option.value)}))} className="mt-2 block h-36 w-full rounded-lg border p-2 font-normal">{catalog.filter(p=>p.id!==editingId).map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select><span className="mt-1 block text-[10px] font-normal text-slate-500">Hold Ctrl / Command to select multiple. Up to 12 items. Only public products appear to customers.</span></label>)}</div>
           {editingId&&<a href={`/customer/products/${editingId}`} className="inline-block text-xs underline">Preview product and answer customer questions ↗</a>}

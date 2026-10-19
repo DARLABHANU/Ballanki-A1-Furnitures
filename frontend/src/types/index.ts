@@ -88,6 +88,8 @@ export interface Product {
   weight_grams?: number;
   category_id?: number | null;
   category?: Category;
+  catalog_category_id?: string;
+  catalog_type_id?: string;
   subcategory?: string;
   subcategory_slug?: string;
   merchant?: MerchantProfileSummary;

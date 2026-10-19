@@ -1,0 +1,338 @@
+{
+  "chair:Dining chairs": {
+    "image": "/images/furniture-types/19093861.jpg",
+    "source": "https://www.pexels.com/photo/19093861/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "chair:Armchairs": {
+    "image": "/images/furniture-types/11112742.jpg",
+    "source": "https://www.pexels.com/photo/11112742/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "chair:Armless chairs": {
+    "image": "/images/furniture-types/11112728.jpg",
+    "source": "https://www.pexels.com/photo/11112728/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "chair:Rocking chairs": {
+    "image": "/images/furniture-types/4627516.jpg",
+    "source": "https://www.pexels.com/photo/4627516/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "chair:Easy chairs": {
+    "image": "/images/furniture-types/39712613.jpg",
+    "source": "https://www.pexels.com/photo/39712613/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "chair:Carved chairs": {
+    "image": "/images/furniture-types/8135249.jpg",
+    "source": "https://www.pexels.com/photo/8135249/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "chair:Slat-back chairs": {
+    "image": "/images/furniture-types/14700400.jpg",
+    "source": "https://www.pexels.com/photo/14700400/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "chair:Ladder-back chairs": {
+    "image": "/images/furniture-types/11112732.jpg",
+    "source": "https://www.pexels.com/photo/11112732/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "chair:Study chairs": {
+    "image": "/images/furniture-types/4769492.jpg",
+    "source": "https://www.pexels.com/photo/4769492/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "chair:Wooden stools": {
+    "image": "/images/furniture-types/36085626.jpg",
+    "source": "https://www.pexels.com/photo/36085626/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "sofa:Wooden sofa sets": {
+    "image": "/images/furniture-types/26821694.jpg",
+    "source": "https://www.pexels.com/photo/26821694/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "sofa:Single-seater sofas": {
+    "image": "/images/furniture-types/8123130.jpg",
+    "source": "https://www.pexels.com/photo/8123130/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "dining:Four-seater dining sets": {
+    "image": "/images/furniture-types/271647.jpg",
+    "source": "https://www.pexels.com/photo/271647/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "dining:Round dining sets": {
+    "image": "/images/furniture-types/5677020.jpg",
+    "source": "https://www.pexels.com/photo/5677020/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "dining:Dining benches": {
+    "image": "/images/furniture-types/4044789.jpg",
+    "source": "https://www.pexels.com/photo/4044789/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "bed:Pandiri Mancham": {
+    "image": "/images/furniture-types/12715595.jpg",
+    "source": "https://www.pexels.com/photo/12715595/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "bed:Single cots": {
+    "image": "/images/furniture-types/19878532.jpg",
+    "source": "https://www.pexels.com/photo/19878532/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "bed:Double cots": {
+    "image": "/images/furniture-types/5502218.jpg",
+    "source": "https://www.pexels.com/photo/5502218/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "bed:Carved cots": {
+    "image": "/images/furniture-types/29627918.jpg",
+    "source": "https://www.pexels.com/photo/29627918/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "bed:Bunk beds": {
+    "image": "/images/furniture-types/12870114.jpg",
+    "source": "https://www.pexels.com/photo/12870114/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "cupboard:Berwa cupboards": {
+    "image": "/images/furniture-types/19962637.jpg",
+    "source": "https://www.pexels.com/photo/19962637/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "cupboard:Kitchen cupboards": {
+    "image": "/images/furniture-types/18038117.jpg",
+    "source": "https://www.pexels.com/photo/18038117/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "cupboard:Crockery cupboards": {
+    "image": "/images/furniture-types/271682.jpg",
+    "source": "https://www.pexels.com/photo/271682/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "wardrobe:Carved wardrobes": {
+    "image": "/images/furniture-types/19962637.jpg",
+    "source": "https://www.pexels.com/photo/19962637/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "table:Tea poys": {
+    "image": "/images/furniture-types/12635891.jpg",
+    "source": "https://www.pexels.com/photo/12635891/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "table:Coffee tables": {
+    "image": "/images/furniture-types/1444424.jpg",
+    "source": "https://www.pexels.com/photo/1444424/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "table:Bedside tables": {
+    "image": "/images/furniture-types/4440215.jpg",
+    "source": "https://www.pexels.com/photo/4440215/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "table:Console tables": {
+    "image": "/images/furniture-types/8135270.jpg",
+    "source": "https://www.pexels.com/photo/8135270/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "tv:TV consoles": {
+    "image": "/images/furniture-types/31338029.jpg",
+    "source": "https://www.pexels.com/photo/31338029/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "storage:Wooden chests": {
+    "image": "/images/furniture-types/6370036.jpg",
+    "source": "https://www.pexels.com/photo/6370036/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "storage:Drawer chests": {
+    "image": "/images/furniture-types/5825540.jpg",
+    "source": "https://www.pexels.com/photo/5825540/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "storage:Sideboards": {
+    "image": "/images/furniture-types/34984437.jpg",
+    "source": "https://www.pexels.com/photo/34984437/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "storage:Display cabinets": {
+    "image": "/images/furniture-types/271682.jpg",
+    "source": "https://www.pexels.com/photo/271682/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "office:Office desks": {
+    "image": "/images/furniture-types/5393443.jpg",
+    "source": "https://www.pexels.com/photo/5393443/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "office:Writing desks": {
+    "image": "/images/furniture-types/4769492.jpg",
+    "source": "https://www.pexels.com/photo/4769492/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "office:Office bookcases": {
+    "image": "/images/furniture-types/2883049.jpg",
+    "source": "https://www.pexels.com/photo/2883049/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "recliner:Wooden easy chairs": {
+    "image": "/images/furniture-types/39712613.jpg",
+    "source": "https://www.pexels.com/photo/39712613/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "recliner:Wooden footstools": {
+    "image": "/images/furniture-types/6611422.jpg",
+    "source": "https://www.pexels.com/photo/6611422/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "recliner:Wooden lounge chairs": {
+    "image": "/images/furniture-types/11112742.jpg",
+    "source": "https://www.pexels.com/photo/11112742/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "shoe:Open shoe racks": {
+    "image": "/images/furniture-types/35549708.jpg",
+    "source": "https://www.pexels.com/photo/35549708/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "bookshelf:Open bookcases": {
+    "image": "/images/furniture-types/2883049.jpg",
+    "source": "https://www.pexels.com/photo/2883049/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "bookshelf:Low bookshelves": {
+    "image": "/images/furniture-types/31338030.jpg",
+    "source": "https://www.pexels.com/photo/31338030/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "bookshelf:Tall bookshelves": {
+    "image": "/images/furniture-types/763135.jpg",
+    "source": "https://www.pexels.com/photo/763135/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "desk:Writing tables": {
+    "image": "/images/furniture-types/5393443.jpg",
+    "source": "https://www.pexels.com/photo/5393443/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "desk:Study tables": {
+    "image": "/images/furniture-types/4769492.jpg",
+    "source": "https://www.pexels.com/photo/4769492/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "dressing:Dressing tables with drawers": {
+    "image": "/images/furniture-types/6873890.jpg",
+    "source": "https://www.pexels.com/photo/6873890/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "dressing:Dressing tables with storage": {
+    "image": "/images/furniture-types/6903253.jpg",
+    "source": "https://www.pexels.com/photo/6903253/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "dressing:Standing mirror dressers": {
+    "image": "/images/furniture-types/4986116.jpg",
+    "source": "https://www.pexels.com/photo/4986116/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "outdoor:Verandah chairs": {
+    "image": "/images/furniture-types/14700400.jpg",
+    "source": "https://www.pexels.com/photo/14700400/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "outdoor:Garden benches": {
+    "image": "/images/furniture-types/289445.jpg",
+    "source": "https://www.pexels.com/photo/289445/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "outdoor:Wooden swings": {
+    "image": "/images/furniture-types/31959789.jpg",
+    "source": "https://www.pexels.com/photo/31959789/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "outdoor:Balcony stools": {
+    "image": "/images/furniture-types/36085626.jpg",
+    "source": "https://www.pexels.com/photo/36085626/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "kids:Kids bunk beds": {
+    "image": "/images/furniture-types/12870114.jpg",
+    "source": "https://www.pexels.com/photo/12870114/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "kids:Kids study sets": {
+    "image": "/images/furniture-types/30798684.jpg",
+    "source": "https://www.pexels.com/photo/30798684/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "wardrobe:Three-door wardrobes": {
+    "image": "/images/furniture-types/2708106.jpg",
+    "source": "https://www.pexels.com/photo/2708106/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  },
+  "tv:TV cabinets": {
+    "image": "/images/furniture-types/6585620.jpg",
+    "source": "https://www.pexels.com/photo/6585620/",
+    "license": "https://www.pexels.com/license/",
+    "use": "Design reference for category navigation, not a store product photo or a wood-species/size guarantee"
+  }
+}

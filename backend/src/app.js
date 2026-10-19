@@ -6,6 +6,7 @@ app.get('/api/health',(req,res)=>res.status(mongoose.connection.readyState===1?2
 app.get('/api/v1',(req,res)=>res.json({version:'1.1',database_name:mongoose.connection.name||null,payment_mode:require('./lib/razorpay').mode()}));
 app.use('/uploads',express.static(path.resolve(__dirname,'../uploads'),{dotfiles:'deny',setHeaders:res=>res.setHeader('Content-Security-Policy',"default-src 'none'")}));
 app.use('/api/v1',require('./routes/locationRoutes'));
+app.use('/api/v1',require('./routes/catalogRoutes'));
 app.use('/api/v1',require('./routes/paymentRoutes'));
 app.use('/api/v1/auth',require('./routes/authRoutes'));
 app.use('/api/v1/products',require('./routes/productRoutes'));

@@ -16,10 +16,13 @@ import { useWishlistStore } from "@/store/wishlistStore";
 import { useDeliveryLocationStore } from "@/store/deliveryLocationStore";
 import { authApi } from "@/lib/api";
 
+import {useFurnitureCatalog} from "@/store/catalogStore";
+import {categoryBrowserHref} from "@/lib/furnitureCategories";
 import NotificationBell from "@/components/NotificationBell";
 
 export default function Navbar({ discovery = false, hideSearch = false }: { discovery?: boolean; hideSearch?: boolean }) {
   const router = useRouter();
+  const catalog=useFurnitureCatalog();
   const pathname = usePathname();
   const { user, isAuthenticated, logout, role } = useAuthStore();
   const { cart, fetchCart } = useCartStore();
@@ -185,10 +188,7 @@ export default function Navbar({ discovery = false, hideSearch = false }: { disc
                     className="text-xs font-inter font-semibold text-wood-800 bg-transparent appearance-none pr-5 focus:outline-none cursor-pointer"
                   >
                     <option value="all">All Categories</option>
-                    <option value="sofas">Sofas</option>
-                    <option value="chairs">Chairs</option>
-                    <option value="tables">Tables</option>
-                    <option value="beds">Beds</option>
+                    {catalog.categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                   <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-wood-500 pointer-events-none" />
                 </div>
@@ -266,11 +266,8 @@ export default function Navbar({ discovery = false, hideSearch = false }: { disc
                   <ChevronDown size={14} />
                 </button>
                 {categoryDropdownOpen && (
-                  <div className="absolute left-0 top-full mt-1 w-56 bg-white border border-wood-200 shadow-xl z-50 rounded-lg overflow-hidden py-2">
-                    <Link href="/customer/products?category=sofas" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-white font-medium">🛋️ Sofas & Lounges</Link>
-                    <Link href="/customer/products?category=chairs" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-white font-medium">🪑 Chairs</Link>
-                    <Link href="/customer/products?category=tables" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-white font-medium">🪚 Tables & Desks</Link>
-                    <Link href="/customer/products?category=beds" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-white font-medium">🛏️ Beds</Link>
+                  <div className="absolute left-0 top-full mt-1 w-56 max-h-[60vh] overflow-y-auto bg-white border border-wood-200 shadow-xl z-50 rounded-lg py-2">
+                    {catalog.categories.map(c=><Link key={c.id} href={categoryBrowserHref(c.id)} onClick={()=>setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs text-wood-900 hover:bg-[#edf4ef]">{c.name}</Link>)}
                     <div className="border-t border-wood-100 my-1" />
                     <Link href="/customer/products?is_featured=true" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-white">New Arrivals</Link>
                     <Link href="/customer/products?sort_by=total_sold" onClick={() => setCategoryDropdownOpen(false)} className="block px-4 py-2 text-xs font-inter text-wood-900 hover:bg-white">Bestsellers</Link>
@@ -280,27 +277,7 @@ export default function Navbar({ discovery = false, hideSearch = false }: { disc
               <div className="flex items-center gap-6 py-2 uppercase tracking-wider text-[11px]">
                 <Link href="/" className="bg-wood-200 text-wood-900 px-3 py-1.5 rounded font-bold">Home</Link>
 
-                <div className="relative group py-2">
-                  <Link href="/customer/products?category=living" className="text-wood-600 hover:text-wood-900 flex items-center gap-1 transition-colors">Living <ChevronDown size={11} className="opacity-70 group-hover:rotate-180 transition-transform" /></Link>
-                  <div className="absolute left-0 top-full hidden group-hover:block w-48 bg-white border border-wood-200 shadow-lg rounded-lg overflow-hidden z-50 pt-1 border-t-2 border-t-wood-900">
-                    <div className="py-2 normal-case tracking-normal">
-                      <Link href="/customer/products?category=living&subcategory=sofas" className="block px-4 py-2 text-xs text-wood-900 hover:bg-white font-medium">Sofas</Link>
-                      <Link href="/customer/products?category=living&subcategory=tv_units" className="block px-4 py-2 text-xs text-wood-900 hover:bg-white font-medium">TV Units</Link>
-                      <Link href="/customer/products?category=living&subcategory=coffee_tables" className="block px-4 py-2 text-xs text-wood-900 hover:bg-white font-medium">Coffee Tables</Link>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="relative group py-2">
-                  <Link href="/customer/products?category=dining" className="text-wood-600 hover:text-wood-900 flex items-center gap-1 transition-colors">Dining <ChevronDown size={11} className="opacity-70 group-hover:rotate-180 transition-transform" /></Link>
-                  <div className="absolute left-0 top-full hidden group-hover:block w-48 bg-white border border-wood-200 shadow-lg rounded-lg overflow-hidden z-50 pt-1 border-t-2 border-t-wood-900">
-                    <div className="py-2 normal-case tracking-normal">
-                      <Link href="/customer/products?category=dining&subcategory=dining_tables" className="block px-4 py-2 text-xs text-wood-900 hover:bg-white font-medium">Dining Tables</Link>
-                      <Link href="/customer/products?category=dining&subcategory=dining_chairs" className="block px-4 py-2 text-xs text-wood-900 hover:bg-white font-medium">Dining Chairs</Link>
-                    </div>
-                  </div>
-                </div>
-
+                {catalog.categories.slice(0,3).map(c=><Link key={c.id} href={categoryBrowserHref(c.id)} className="max-w-[120px] truncate text-wood-600 hover:text-wood-900 py-2">{c.name}</Link>)}
                 <Link href="/customer/products?is_featured=true" className="text-wood-600 hover:text-wood-900 transition-colors py-2">New Arrivals</Link>
                 <Link href="/customer/products?sort_by=total_sold&sort_order=desc" className="text-wood-600 hover:text-wood-900 transition-colors py-2">Bestsellers</Link>
                 <Link href="/about" className="text-wood-600 hover:text-wood-900 transition-colors py-2">About Us</Link>
@@ -357,9 +334,7 @@ export default function Navbar({ discovery = false, hideSearch = false }: { disc
               <div className="space-y-1">
                 {[
                   { href: "/", label: "Home", icon: Home },
-                  { href: "/customer/products?category=sofas", label: "Sofas", icon: Sparkles },
-                  { href: "/customer/products?category=chairs", label: "Chairs", icon: Tag },
-                  { href: "/customer/products?category=tables", label: "Tables", icon: Package },
+                  ...catalog.categories.map(c=>({href:categoryBrowserHref(c.id),label:c.name,icon:Package})),
                   { href: "/customer/products?is_featured=true", label: "New Arrivals", icon: Star },
                   { href: "/customer/products?sort_by=total_sold", label: "Bestsellers", icon: Flame },
                   { href: "/customer/orders", label: "Track Order", icon: ShoppingBag },

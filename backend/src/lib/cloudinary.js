@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const { fail } = require('./http');
 
-async function uploadProductImage(value) {
+async function uploadProductImage(value, folder = 'ballanki/products') {
   const match = typeof value === 'string' && value.match(/^data:image\/(png|jpeg|webp);base64,([A-Za-z0-9+/=\r\n]+)$/);
   if (!match) fail(400, 'Choose a PNG, JPEG or WebP image');
   const buffer = Buffer.from(match[2], 'base64');
@@ -15,7 +15,6 @@ async function uploadProductImage(value) {
   const key = process.env.CLOUDINARY_API_KEY;
   const secret = process.env.CLOUDINARY_API_SECRET;
   if (!cloud || !key || !secret) fail(503, 'Image uploads are not configured yet. Contact the store administrator.');
-  const folder = 'ballanki/products';
   const timestamp = Math.floor(Date.now() / 1000);
   const signature = crypto.createHash('sha256').update(`folder=${folder}&timestamp=${timestamp}${secret}`).digest('hex');
   const body = new FormData();

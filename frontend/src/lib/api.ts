@@ -1,8 +1,10 @@
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
+import { installCatalogRetry } from "./catalogRetry";
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "/api/v1";
 export const api = axios.create({ baseURL: API_BASE_URL, headers: { "Content-Type": "application/json" }, timeout: 20000 });
 api.interceptors.request.use(config => { const token = Cookies.get("access_token"); if(token) config.headers.Authorization = `Bearer ${token}`; return config; });
+installCatalogRetry(api);
 let refreshPromise: Promise<string> | null = null;
 api.interceptors.response.use(response => response, async (error: AxiosError) => {
  const original = error.config as typeof error.config & { _retry?: boolean };
@@ -39,7 +41,7 @@ export const authApi = {
 };
 
 export const productApi = {
-  list: (params?: object) => api.get("/products", { params }),
+  list: (params?: object, signal?: AbortSignal) => api.get("/products", { params, signal }),
   get: (id: string | number) => api.get(`/products/${id}`),
   create: (data: object) => api.post("/products", data),
   update: (id: string | number, data: object) => api.put(`/products/${id}`, data),

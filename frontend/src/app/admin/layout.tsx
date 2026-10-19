@@ -40,6 +40,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/admin/users", label: "Users", icon: Users, hasDropdown: true },
   { href: "/admin/users?role=promoter", label: "Promoters", icon: Megaphone },
   { href: "/admin/products", label: "Products", icon: Package, hasDropdown: true },
+  { href: "/admin/categories", label: "Categories & Types", icon: Tag },
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { href: "/admin/enquiries", label: "Price Enquiries", icon: MessageCircle },
   { href: "/admin/coupons", label: "Coupons & Offers", icon: Tag },
