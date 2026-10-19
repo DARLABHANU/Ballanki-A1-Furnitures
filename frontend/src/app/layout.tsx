@@ -3,6 +3,7 @@ import { Playfair_Display, Inter, Outfit } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { Sparkles, Clock, Hammer } from "lucide-react";
 import "./globals.css";
+import BrowserPushProvider from "@/components/BrowserPushProvider";
 import GoogleAuthProvider from "@/components/GoogleAuthProvider";
 import AuthInitializer from "@/components/AuthInitializer";
 import ImpersonationBanner from "@/components/ImpersonationBanner";
@@ -30,6 +31,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  manifest:"/manifest.webmanifest",
+  appleWebApp:{capable:true,title:"Ballanki A1 Furnitures",statusBarStyle:"default"},
   title: "Ballanki A1 Furnitures | Bespoke Sofas & Premium Woods",
   description:
     "Handcrafted bespoke furniture — celebrating the timeless beauty of modern craftsmanship.",
@@ -55,7 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
       <body className="bg-white font-inter text-wood-900 antialiased" suppressHydrationWarning>
-        <GoogleAuthProvider>
+        <GoogleAuthProvider><BrowserPushProvider>
         <ImpersonationBanner />
         {!MAINTENANCE_MODE && <AuthInitializer />}
         <Toaster
@@ -152,7 +155,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         )}
         {!MAINTENANCE_MODE && <DeliveryLocationInitializer />}
         <BottomNav />
-        </GoogleAuthProvider>
+        </BrowserPushProvider></GoogleAuthProvider>
       </body>
     </html>
   );

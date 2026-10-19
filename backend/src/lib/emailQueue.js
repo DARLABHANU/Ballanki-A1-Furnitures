@@ -1,5 +1,6 @@
 const { EmailJob } = require('../models/Email');
 const User = require('../models/User');
+const {Notification}=require('../models/Commerce');
 const mail = require('./email');
 let timer, running=false;
 async function enqueue(message) {
@@ -18,9 +19,11 @@ async function orderEmail(order,event) {
  try {
   const customer=order.customer?._id||order.customer;
   const text='Order '+order.order_number+'\nStatus: '+order.status.replaceAll('_',' ')+'\nTotal: INR '+Number(order.total_amount).toFixed(2)+(order.amount_due_now!=null?'\nInitial payment required: INR '+order.amount_due_now+'\nPre-book advance (20%): INR '+order.advance_amount+'\nBalance after initial payment: INR '+order.balance_amount:'')+'\nPayment: '+order.payment_status+(order.tracking_number?'\nTracking: '+order.tracking_number:'')+(order.items?.length?'\n\nItems:\n'+order.items.map(item=>item.product_name+' × '+item.quantity).join('\n'):'');
+  const link='/customer/orders/'+order._id;
+  if(event!=='placed'&&event!=='payment received')await Notification.create({user:customer,title:'Order '+event.replaceAll('_',' '),message:order.order_number+' — '+event.replaceAll('_',' '),link});
   await notifyUser(customer,'Order '+event,text,'/customer/orders/'+order._id,'order-'+order._id+'-'+event+'-customer');
   const admins=await User.find({role:'admin',is_active:true,is_verified:true});
-  for(const admin of admins) await notifyUser(admin._id,event==='placed'?'New order':'Order '+event,text,'/admin/orders/'+order._id,'order-'+order._id+'-'+event+'-'+admin._id);
+  for(const admin of admins){if(['placed','payment received','cancelled'].includes(event))await Notification.create({user:admin._id,title:event==='placed'?'New order':'Order '+event,message:order.order_number+' — payment '+order.payment_status,link:'/admin/orders/'+order._id});await notifyUser(admin._id,event==='placed'?'New order':'Order '+event,text,'/admin/orders/'+order._id,'order-'+order._id+'-'+event+'-'+admin._id);}
  }catch(error){console.error('Order email queue failed:',error.name);}
 }
 async function processQueue() {

@@ -73,7 +73,7 @@ router.post('/refresh', wrap(async (req, res) => {
   res.json(tokens(user));
 }));
 router.get('/me', authenticate, (req, res) => res.json(req.user));
-router.post('/logout', authenticate, wrap(async (req, res) => { req.user.token_version += 1; await req.user.save(); res.json({ success: true }); }));
+router.post('/logout', authenticate, wrap(async (req, res) => { req.user.token_version += 1; await req.user.save(); await require('../models/Push').PushSubscription.deleteMany({user:req.user._id}); res.json({ success: true }); }));
 router.put('/profile', authenticate, wrap(async (req, res) => {
   if (!String(req.body.full_name || '').trim()) fail(400, 'Full name is required');
   Object.assign(req.user, pick(req.body, ['full_name', 'phone'])); await req.user.save(); res.json(req.user);
