@@ -4,6 +4,7 @@ const {deliveryEstimate}=require('../src/lib/delivery');
 const products=[3,20].map((days,index)=>new Product({_id:new mongoose.Types.ObjectId(),name:'Delivery test '+index,price:1000,stock_quantity:0,is_active:true,is_approved:true,delivery_duration_days:days}));
 CartItem.find=()=>({populate:async()=>products.map(product=>({_id:new mongoose.Types.ObjectId(),product,quantity:1}))});
 Offer.findOne=()=>({sort:async()=>null});
+require('../src/models/Commerce').Setting.findOne=async()=>null;
 const router=require('../src/routes/commerceRoutes');const handler=router.stack.find(layer=>layer.route?.path==='/orders/quote').route.stack[0].handle;
 const quote=()=>new Promise((resolve,reject)=>handler({user:{_id:new mongoose.Types.ObjectId()},body:{}},{json:resolve},reject));
 (async()=>{

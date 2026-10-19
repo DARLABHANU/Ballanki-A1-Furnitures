@@ -13,6 +13,7 @@ async function reconcile(attempt){
  if(attempt.state==='COMPLETED'&&remote.state!=='COMPLETED')return Order.findById(attempt.order);
  await Attempt.updateOne({_id:attempt._id},{$set:{state:remote.state,last_checked_at:new Date(),...(remote.orderId?{provider_order_id:remote.orderId}:{}),...(remote.paymentId?{provider_payment_id:remote.paymentId}:{})}});
  if(remote.state==='COMPLETED'){
+  await Attempt.updateOne({_id:attempt._id,captured_at:null},{$set:{captured_at:new Date()}});
   const updated=await Order.findOneAndUpdate({_id:attempt.order,status:{$nin:['cancelled','refunded']},processed_payment_ids:{$ne:attempt.merchant_order_id},$expr:{$lte:[{$add:[{$ifNull:['$paid_amount_paise',0]},attempt.amount_paise]},{$round:[{$multiply:['$total_amount',100]},0]}]}},[
    {$set:{paid_amount_paise:{$add:[{$ifNull:['$paid_amount_paise',0]},attempt.amount_paise]},processed_payment_ids:{$concatArrays:[{$ifNull:['$processed_payment_ids',[]]},[attempt.merchant_order_id]]},payment_method:'razorpay',payment_environment:attempt.environment}},
    {$set:{paid_amount:{$divide:['$paid_amount_paise',100]},outstanding_amount:{$round:[{$subtract:['$total_amount',{$divide:['$paid_amount_paise',100]}]},2]},payment_status:{$cond:[{$gte:['$paid_amount_paise',{$round:[{$multiply:['$total_amount',100]},0]}]},'paid','partially_paid']},status:{$cond:[{$and:[{$eq:['$status','pending']},{$gte:['$paid_amount_paise',{$round:[{$multiply:[{$ifNull:['$amount_due_now','$total_amount']},100]},0]}]}]},'confirmed','$status']},status_history:{$concatArrays:[{$ifNull:['$status_history',[]]},[{status:'payment_received',timestamp:new Date(),note:(attempt.environment==='sandbox'?'Sandbox test payment':'Razorpay payment')+' verified: INR '+(attempt.amount_paise/100).toFixed(2)}]]}}}
@@ -25,7 +26,7 @@ async function reconcile(attempt){
  if(remote.state!=='PENDING')await Order.updateOne({_id:attempt.order,payment_active_id:attempt.merchant_order_id},{$unset:{payment_active_id:1}});
  return Order.findById(attempt.order);
 }
-function checkout(attempt){return {key_id:process.env.RAZORPAY_KEY_ID,order_id:attempt.provider_order_id,razorpay_order_id:attempt.provider_order_id,amount:attempt.amount_paise,currency:'INR',environment:attempt.environment,merchant_order_id:attempt.merchant_order_id};}
+function checkout(attempt){return {key_id:gateway.keyId(),order_id:attempt.provider_order_id,razorpay_order_id:attempt.provider_order_id,amount:attempt.amount_paise,currency:'INR',environment:attempt.environment,merchant_order_id:attempt.merchant_order_id};}
 async function ensureGatewayOrder(attempt){if(attempt.provider_order_id)return attempt;const remote=await gateway.pay(attempt);return Attempt.findByIdAndUpdate(attempt._id,{$set:{provider_order_id:remote.id}},{new:true});}
 async function start(orderId,customer){
  if(!gateway.configured())fail(503,'Razorpay is not configured. Contact the store.');

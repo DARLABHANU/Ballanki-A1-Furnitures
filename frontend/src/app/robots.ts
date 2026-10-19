@@ -1,0 +1,2 @@
+import type {MetadataRoute} from 'next';import {readBranding} from '@/lib/serverBranding';
+export default async function robots():Promise<MetadataRoute.Robots>{const b=await readBranding();return {rules:{userAgent:'*',allow:'/',disallow:['/admin/','/auth/','/support/','/merchant/','/promoter/','/customer/orders','/customer/profile','/customer/payments','/customer/cart','/customer/wishlist','/api/']},sitemap:b.siteUrl+'/sitemap.xml'};}

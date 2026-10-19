@@ -194,6 +194,9 @@ export interface Order {
   razorpay_signature?: string;
   razorpay_key_id?: string;
   tracking_number?: string;
+  carrier_name?: string;
+  tracking_url?: string;
+  refunded_amount?: number;
   current_location?: string;
   notes?: string;
   status_history?: StatusHistoryEntry[];

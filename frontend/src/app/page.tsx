@@ -1,4 +1,5 @@
 "use client";
+import {useBranding} from "@/store/brandingStore";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -22,6 +23,7 @@ import {useFurnitureCatalog} from "@/store/catalogStore";
 const PAGE_SIZE=24;
 
 export default function HomePage(){
+  const brand=useBranding();
   const router=useRouter();
   const catalog=useFurnitureCatalog();
   const categories=[{name:"All furniture",slug:"",image:"/images/categories/all.jpg"},...catalog.categories.map(c=>({...c,slug:c.id}))];
@@ -62,7 +64,7 @@ export default function HomePage(){
       <div className="mx-auto max-w-[1320px] px-3 sm:px-6 lg:px-8">
         <div className="flex h-[66px] items-center gap-2 sm:gap-4 lg:h-20">
           <div ref={menuRef} className="relative lg:hidden"><button type="button" aria-label={menuOpen?"Close menu":"Open menu"} aria-expanded={menuOpen} onClick={()=>setMenuOpen(v=>!v)} className="grid h-10 w-8 place-items-center">{menuOpen?<X size={21}/>:<Menu size={21}/>}</button>{menuOpen&&<nav aria-label="Shopping menu" className="absolute left-0 top-12 w-60 rounded-lg border bg-white p-2 shadow-lg">{[{href:"/customer/products",text:"Browse furniture"},{href:"/customer/orders",text:"My orders"},{href:"/customer/wishlist",text:"Wishlist"},{href:"/customer/cart",text:"Shopping cart"},{href:account,text:isAuthenticated?"My account":"Login / Sign up"},{href:"/contact",text:"Contact the store"}].map(item=><Link key={item.href} onClick={()=>setMenuOpen(false)} href={item.href} className="block rounded px-3 py-3 text-sm hover:bg-slate-50">{item.text}</Link>)}</nav>}</div>
-          <Link href="/" aria-label="Ballanki A1 Furnitures home" className="shrink-0"><img src="/logo.png" alt="Ballanki A1 Furnitures" className="h-11 w-[64px] object-contain sm:h-14 sm:w-[90px]"/></Link>
+          <Link href="/" aria-label={`${brand.siteName} home`} className="shrink-0"><img src={brand.logoUrl||"/logo.png"} alt={brand.siteName} className="h-11 w-[64px] object-contain sm:h-14 sm:w-[90px]"/></Link>
           <button type="button" onClick={openModal} className="ml-auto flex min-w-0 max-w-[190px] items-center gap-1.5 text-left lg:ml-0 lg:max-w-[210px] lg:rounded-md lg:border lg:px-3 lg:py-3"><MapPin size={15} className="shrink-0"/><span className="truncate text-[10px] font-medium sm:text-xs">{location?`${location.city}, ${location.state}`:"Select location"}</span><ChevronDown size={14} className="shrink-0"/></button>
           <form role="search" aria-label="Desktop furniture search" onSubmit={search} className="hidden min-w-0 flex-1 lg:flex"><input aria-label="Search furniture" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find sofas, chairs, beds and more" className="h-12 min-w-0 flex-1 rounded-l-md border-2 border-r-0 border-[#123337] bg-white px-4 text-sm outline-none focus:bg-slate-50"/><button type="submit" aria-label="Search" className="grid h-12 w-14 place-items-center rounded-r-md bg-[#123337] text-white"><Search size={23}/></button></form>
           <div className="flex shrink-0 items-center gap-1 lg:gap-3"><NotificationBell/><Link href="/customer/wishlist" aria-label={`Wishlist, ${wishlistIds.length} items`} className="relative hidden p-2 sm:block"><Heart size={23}/>{wishlistIds.length>0&&<span className="absolute -right-1 -top-1 rounded-full bg-[#315b49] px-1.5 text-[10px] text-white">{wishlistIds.length}</span>}</Link><Link href="/customer/cart" aria-label={`Cart, ${cart.item_count||0} items`} className="relative p-1.5 lg:p-2"><ShoppingBag size={21}/>{cart.item_count>0&&<span className="absolute -right-1 -top-1 rounded-full bg-[#315b49] px-1.5 text-[10px] text-white">{cart.item_count}</span>}</Link><Link href={account} className="hidden min-h-10 items-center gap-2 whitespace-nowrap border-b-2 border-[#123337] px-1 text-sm font-semibold lg:inline-flex"><User size={18}/>{isAuthenticated?"My account":"Login / Sign up"}</Link></div>
@@ -90,7 +92,7 @@ export default function HomePage(){
         {!loading&&!error&&hasMore&&<div className="mt-8 text-center"><button type="button" onClick={()=>void fetchPage(page+1)} className="min-h-11 rounded border-2 border-[#123337] px-8 text-sm font-semibold hover:bg-[#f2f6f5]">Load more furniture</button></div>}
       </section>
     </main>
-    <footer className="border-t border-[#e5e9eb] bg-[#f7f9f9] px-4 py-7 text-[#63777a]"><div className="mx-auto flex max-w-[1256px] flex-col justify-between gap-4 text-[11px] sm:flex-row"><p>© {new Date().getFullYear()} Ballanki A1 Furnitures</p><nav aria-label="Store information" className="flex flex-wrap gap-x-5 gap-y-3"><Link href="/contact">Contact & support</Link><Link href="/shipping-policy">Delivery</Link><Link href="/refund-policy">Returns</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></nav></div></footer>
+    <footer className="border-t border-[#e5e9eb] bg-[#f7f9f9] px-4 py-7 text-[#63777a]"><div className="mx-auto flex max-w-[1256px] flex-col justify-between gap-4 text-[11px] sm:flex-row"><p>{brand.footerText||`© ${new Date().getFullYear()} ${brand.siteName}`}</p><nav aria-label="Store information" className="flex flex-wrap gap-x-5 gap-y-3"><Link href="/contact">Contact & support</Link><Link href="/shipping-policy">Delivery</Link><Link href="/refund-policy">Returns</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></nav></div></footer>
     
   </div>;
 }

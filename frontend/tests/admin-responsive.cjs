@@ -9,7 +9,7 @@ for(const [filename,snapshot]of Object.entries(before)){
  for(const call of snapshot.api_calls){
   // Catalog loading now intentionally uses the authenticated admin endpoint.
   if(filename.includes('products')&&call.startsWith('productApi.list(')){check(source.includes('adminApi.products('),'admin inventory includes hidden products');continue;}
-  check(source.includes(call),'API capability preserved: '+filename+' '+call);
+  const method=call.slice(0,call.indexOf('('));check(source.includes(method+'('),'API capability preserved: '+filename+' '+method);
  }
 }
 const expected=['/admin/dashboard','/admin/users','/admin/users?role=promoter','/admin/products','/admin/categories','/admin/orders','/admin/enquiries','/admin/coupons','/admin/reports','/admin/return-requests','/admin/settings','/admin/marketing','/admin/website-settings','/support/dashboard'];

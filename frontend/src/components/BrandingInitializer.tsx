@@ -1,0 +1,3 @@
+"use client";
+import {useEffect} from 'react';import {useBrandingStore} from '@/store/brandingStore';
+export default function BrandingInitializer(){useEffect(()=>{const refresh=()=>void useBrandingStore.getState().refresh();refresh();window.addEventListener('focus',refresh);window.addEventListener('ballanki-branding-updated',refresh);const storage=(e:StorageEvent)=>{if(e.key==='ballanki-branding-revision')refresh();};window.addEventListener('storage',storage);const timer=window.setInterval(()=>{if(!document.hidden)refresh();},30000);return()=>{window.clearInterval(timer);window.removeEventListener('focus',refresh);window.removeEventListener('ballanki-branding-updated',refresh);window.removeEventListener('storage',storage);};},[]);return null;}

@@ -1,7 +1,7 @@
 const { notify } = require('../lib/notifications');
 const router=require('express').Router();const User=require('../models/User');const Product=require('../models/Product');
 const {Ticket,Order,Audit,Conversation,Offer,Coupon,Setting,Newsletter,Notification}=require('../models/Commerce');const {authenticate,roles}=require('../middleware/auth');const {asyncRoute:wrap,fail,pick,id,plain,page}=require('../lib/http');const crypto=require('crypto');
-router.get('/website-settings',wrap(async(req,res)=>res.json((await Setting.findOne({key:'website-settings'}))?.value||{})));
+router.get('/website-settings',wrap(async(req,res)=>res.json(await require('../lib/storeSettings').branding())));
 router.post('/newsletter',wrap(async(req,res)=>{const email=String(req.body.email||'').trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))fail(400,'Enter a valid email');await Newsletter.findOneAndUpdate({email},{$set:{email}},{upsert:true});res.json({success:true});}));
 router.use(authenticate);
 const ticketView=t=>({...plain(t),user_id:String(t.user?._id||t.user),user:t.user?.full_name?t.user.toJSON():undefined,user_name:t.user?.full_name||'',replies:t.messages});

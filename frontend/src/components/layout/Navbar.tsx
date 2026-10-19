@@ -1,4 +1,5 @@
 "use client";
+import {useBranding} from "@/store/brandingStore";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -23,6 +24,7 @@ import NotificationBell from "@/components/NotificationBell";
 export default function Navbar({ discovery = false, hideSearch = false }: { discovery?: boolean; hideSearch?: boolean }) {
   const router = useRouter();
   const catalog=useFurnitureCatalog();
+  const brand=useBranding();
   const pathname = usePathname();
   const { user, isAuthenticated, logout, role } = useAuthStore();
   const { cart, fetchCart } = useCartStore();
@@ -127,8 +129,8 @@ export default function Navbar({ discovery = false, hideSearch = false }: { disc
               {/* Center Brand */}
               <Link href="/" className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center justify-center">
                 <img
-                  src="/logo.png"
-                  alt="Ballanki A1 Furnitures Logo"
+                  src={brand.logoUrl||"/logo.png"}
+                  alt={brand.siteName}
                   className="h-[50px] w-auto object-contain drop-shadow-sm"
                 />
               </Link>
@@ -165,8 +167,8 @@ export default function Navbar({ discovery = false, hideSearch = false }: { disc
             {/* Logo */}
             <Link href="/" className="flex items-center group flex-shrink-0">
               <img
-                src="/logo.png"
-                alt="Ballanki A1 Furnitures Logo"
+                src={brand.logoUrl||"/logo.png"}
+                alt={brand.siteName}
                 className="h-[65px] w-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300"
               />
             </Link>
@@ -317,8 +319,8 @@ export default function Navbar({ discovery = false, hideSearch = false }: { disc
               <div className="flex items-center justify-between border-b border-wood-800 pb-3">
                 <div className="flex items-center gap-3">
                   <img
-                    src="/logo.png"
-                    alt="Ballanki A1 Furnitures Logo"
+                    src={brand.logoUrl||"/logo.png"}
+                    alt={brand.siteName}
                     className="h-[45px] w-auto object-contain drop-shadow-sm brightness-110 filter"
                   />
                 </div>

@@ -1,3 +1,5 @@
+import {readBranding} from "@/lib/serverBranding";
+import BrandingInitializer from "@/components/BrandingInitializer";
 import type { Metadata } from "next";
 import { Playfair_Display, Inter, Outfit } from "next/font/google";
 import { Toaster } from "react-hot-toast";
@@ -30,22 +32,7 @@ const outfit = Outfit({
   variable: "--font-outfit",
 });
 
-export const metadata: Metadata = {
-  manifest:"/manifest.webmanifest",
-  appleWebApp:{capable:true,title:"Ballanki A1 Furnitures",statusBarStyle:"default"},
-  title: "Ballanki A1 Furnitures | Bespoke Sofas & Premium Woods",
-  description:
-    "Handcrafted bespoke furniture — celebrating the timeless beauty of modern craftsmanship.",
-  keywords: ["furniture", "sofas", "dining tables", "wood", "premium"],
-  icons: {
-    icon: [
-      { url: "/favicon.png?v=9e17bdd7", type: "image/png" },
-    ],
-    apple: [
-      { url: "/favicon.png?v=9e17bdd7", type: "image/png" },
-    ],
-  },
-};
+export async function generateMetadata():Promise<Metadata>{const b=await readBranding();const image=b.socialImage||b.logoUrl;return {metadataBase:new URL(b.siteUrl),title:b.seoTitle||b.siteName,description:b.seoMeta,applicationName:b.siteName,manifest:"/manifest.webmanifest",appleWebApp:{capable:true,title:b.siteName,statusBarStyle:"default"},openGraph:{title:b.seoTitle||b.siteName,description:b.seoMeta,siteName:b.siteName,type:"website",images:image?[{url:image}]:[]},twitter:{card:"summary_large_image",title:b.seoTitle||b.siteName,description:b.seoMeta,images:image?[image]:[]},icons:{icon:[{url:b.logoUrl||"/favicon.png"}],apple:[{url:b.logoUrl||"/favicon.png"}]}};}
 
 // ==========================================
 // MAINTENANCE MODE TOGGLE
@@ -58,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
       <body className="bg-white font-inter text-wood-900 antialiased" suppressHydrationWarning>
-        <GoogleAuthProvider><BrowserPushProvider>
+        <GoogleAuthProvider><BrowserPushProvider><BrandingInitializer/>
         <ImpersonationBanner />
         {!MAINTENANCE_MODE && <AuthInitializer />}
         <Toaster

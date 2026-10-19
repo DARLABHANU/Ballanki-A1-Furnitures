@@ -26,3 +26,6 @@ Thumbs.db
 
 # Private browser-push deployment keys
 .env.push
+
+# Private live Razorpay webhook setup
+.env.razorpay-live

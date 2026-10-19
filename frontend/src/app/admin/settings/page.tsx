@@ -1,4 +1,5 @@
 "use client";
+import StoreOperations from "@/components/admin/StoreOperations";
 
 import { useState, useEffect } from "react";
 import { Save, Lock, Building, DollarSign, Bell } from "lucide-react";
@@ -10,8 +11,8 @@ export default function AdminSettingsPage() {
   const [promoterDiscount, setPromoterDiscount] = useState("199");
   const [promoterCommission, setPromoterCommission] = useState("100");
   const [platformProfit, setPlatformProfit] = useState("30");
-  const [supportEmail, setSupportEmail] = useState("support@ballankia1furnitures.live");
-  const [supportPhone, setSupportPhone] = useState("+91 98765 43210");
+  const [supportEmail, setSupportEmail] = useState("");
+  const [supportPhone, setSupportPhone] = useState("");
 
   useEffect(() => { api.get('/admin/settings').then(({data}) => { if(data.platformMargin !== undefined) setPlatformMargin(String(data.platformMargin)); if(data.promoterDiscount !== undefined) setPromoterDiscount(String(data.promoterDiscount)); if(data.promoterCommission !== undefined) setPromoterCommission(String(data.promoterCommission)); if(data.platformProfit !== undefined) setPlatformProfit(String(data.platformProfit)); if(data.supportEmail !== undefined) setSupportEmail(String(data.supportEmail)); if(data.supportPhone !== undefined) setSupportPhone(String(data.supportPhone)); }).catch(() => toast.error('Could not load settings')); }, []);
   const handleSave = async (e: React.FormEvent) => {
@@ -123,6 +124,7 @@ export default function AdminSettingsPage() {
         </div>
 
       </form>
+      <StoreOperations/>
 
     </div>
   );

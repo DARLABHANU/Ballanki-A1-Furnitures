@@ -1,107 +1,11 @@
 "use client";
-
-import { useState, useEffect } from "react";
-import { Globe, Save, Image as ImageIcon, Layout, ShieldCheck } from "lucide-react";
-import { api } from "@/lib/api";
-import toast from "react-hot-toast";
-
-export default function WebsiteSettingsPage() {
-  const [siteName, setSiteName] = useState("Ballanki A1 Furnitures");
-  const [footerText, setFooterText] = useState("© 2026 Ballanki A1 Furnitures. All Rights Reserved. Crafted with Elegance in Guntur, Andhra Pradesh.");
-  const [seoTitle, setSeoTitle] = useState("Ballanki A1 Furnitures | Premium Crafted Furniture & Decor");
-  const [seoMeta, setSeoMeta] = useState("Shop exquisite handcrafted wooden furniture, modern sofas, classic dining sets, and premium home decor.");
-
-  useEffect(() => { api.get('/admin/website-settings').then(({data}) => { if(data.siteName !== undefined) setSiteName(String(data.siteName)); if(data.footerText !== undefined) setFooterText(String(data.footerText)); if(data.seoTitle !== undefined) setSeoTitle(String(data.seoTitle)); if(data.seoMeta !== undefined) setSeoMeta(String(data.seoMeta)); }).catch(() => toast.error('Could not load settings')); }, []);
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try { await api.put('/admin/website-settings', { siteName, footerText, seoTitle, seoMeta }); toast.success('Settings saved'); } catch (err: any) { toast.error(err.response?.data?.error || 'Could not save settings'); }
-  };
-
-  return (
-    <div className="space-y-6 text-[#1A1A1A] font-garamond">
-
-      {/* Title */}
-      <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">Website Configuration &amp; Branding</h1>
-
-      <form onSubmit={handleSave} className="space-y-6">
-
-        {/* Card 1: General Branding */}
-        <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
-          <div className="flex items-center gap-2 border-b border-[#edf4ef] pb-3">
-            <Globe className="text-[#0D0D0D]" size={20} />
-            <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">Brand &amp; General Information</h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
-            <div>
-              <label className="font-bold text-[#1A1A1A] block mb-1">Website Brand Title</label>
-              <input
-                type="text"
-                value={siteName}
-                onChange={(e) => setSiteName(e.target.value)}
-                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="font-bold text-[#1A1A1A] block mb-1">Footer Copyright Notice</label>
-              <input
-                type="text"
-                value={footerText}
-                onChange={(e) => setFooterText(e.target.value)}
-                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
-                required
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Card 2: SEO & Meta */}
-        <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs space-y-6">
-          <div className="flex items-center gap-2 border-b border-[#edf4ef] pb-3">
-            <ShieldCheck className="text-[#0D0D0D]" size={20} />
-            <h3 className="font-cormorant text-xl font-bold text-[#1A1A1A]">SEO &amp; Search Engine Metadata</h3>
-          </div>
-
-          <div className="space-y-4 text-xs">
-            <div>
-              <label className="font-bold text-[#1A1A1A] block mb-1">Global Meta Title</label>
-              <input
-                type="text"
-                value={seoTitle}
-                onChange={(e) => setSeoTitle(e.target.value)}
-                className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2.5 font-semibold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="font-bold text-[#1A1A1A] block mb-1">Global Meta Description</label>
-              <textarea
-                rows={3}
-                value={seoMeta}
-                onChange={(e) => setSeoMeta(e.target.value)}
-                className="w-full bg-white border border-[#dce5df] rounded-xl p-4 font-garamond text-xs text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]"
-                required
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Save Button */}
-        <div className="admin-savebar flex justify-end rounded-xl border bg-white p-4">
-          <button
-            type="submit"
-            className="inline-flex items-center gap-2 bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all shadow-xs"
-          >
-            <Save size={15} />
-            <span>Save Website Settings</span>
-          </button>
-        </div>
-
-      </form>
-
-    </div>
-  );
+import {useEffect,useState,FormEvent} from 'react';import {Save,Upload,Loader2} from 'lucide-react';import toast from 'react-hot-toast';import {api} from '@/lib/api';import {getApiError} from '@/lib/utils';import {Branding,brandingDefaults,useBrandingStore} from '@/store/brandingStore';
+const field='mt-2 block w-full rounded-xl border border-[#dce5df] bg-white px-3 py-3 text-sm font-normal';
+export default function WebsiteSettingsPage(){const [value,setValue]=useState<Branding>(brandingDefaults),[loading,setLoading]=useState(true),[saving,setSaving]=useState(false),[uploading,setUploading]=useState(false),[error,setError]=useState('');
+useEffect(()=>{api.get('/admin/website-settings').then(({data})=>setValue({...brandingDefaults,...data})).catch(e=>setError(getApiError(e))).finally(()=>setLoading(false));},[]);
+const change=(key:keyof Branding,text:string)=>setValue(v=>({...v,[key]:text}));
+const handleSave=async(e:FormEvent)=>{e.preventDefault();setSaving(true);setError('');try{const {data}=await api.put('/admin/website-settings',value);setValue(data);useBrandingStore.getState().setBranding(data);window.dispatchEvent(new Event('ballanki-branding-updated'));localStorage.setItem('ballanki-branding-revision',String(Date.now()));toast.success('Branding, invoice details and SEO saved');}catch(e){setError(getApiError(e));}finally{setSaving(false);}};
+const upload=async(file?:File)=>{if(!file)return;if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>3*1024*1024){toast.error('Choose a JPEG, PNG or WebP picture up to 3 MB');return;}setUploading(true);try{const base64=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=reject;reader.readAsDataURL(file);});const {data}=await api.post('/admin/branding/image',{base64});change('logoUrl',data.url);toast.success('Logo uploaded to Cloudinary');}catch(e){toast.error(getApiError(e));}finally{setUploading(false);}};
+if(loading)return <p className="p-8">Loading website settings…</p>;
+return <section className="space-y-6"><header><h1>Website, branding & invoices</h1><p className="mt-2 text-sm text-slate-500">Use your actual business details. Storefront changes appear automatically; search metadata refreshes within about 30 seconds.</p></header>{error&&<p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">{error}</p>}<form onSubmit={handleSave} className="space-y-5"><section className="grid gap-5 rounded-2xl border bg-white p-5 sm:grid-cols-2"><h2 className="sm:col-span-2">Store identity</h2><label className="text-sm font-medium">Website brand title<input required maxLength={300} value={value.siteName} onChange={e=>change('siteName',e.target.value)} className={field}/></label><label className="text-sm font-medium">Canonical website URL<input required type="url" value={value.siteUrl} onChange={e=>change('siteUrl',e.target.value)} className={field}/></label><label className="text-sm font-medium sm:col-span-2">Footer notice<input maxLength={2000} value={value.footerText} onChange={e=>change('footerText',e.target.value)} className={field}/></label><div className="sm:col-span-2"><label className="text-sm font-medium">Logo URL<input required value={value.logoUrl} onChange={e=>change('logoUrl',e.target.value)} className={field}/></label><div className="mt-3 flex flex-wrap items-center gap-4"><img src={value.logoUrl||'/logo.png'} alt="Current store logo" className="h-20 w-24 rounded-xl border object-contain"/><label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-3 text-sm"><Upload size={16}/>{uploading?'Uploading…':'Upload logo'}<input className="sr-only" type="file" accept="image/png,image/jpeg,image/webp" disabled={uploading} onChange={e=>{void upload(e.target.files?.[0]);e.target.value='';}}/></label></div></div></section><section className="space-y-4 rounded-2xl border bg-white p-5"><h2>Search & social sharing</h2><label className="block text-sm font-medium">SEO title<input required value={value.seoTitle} maxLength={300} onChange={e=>change('seoTitle',e.target.value)} className={field}/></label><label className="block text-sm font-medium">SEO description<textarea required value={value.seoMeta} maxLength={2000} onChange={e=>change('seoMeta',e.target.value)} className={field}/></label><label className="block text-sm font-medium">Social sharing image URL (optional)<input value={value.socialImage} onChange={e=>change('socialImage',e.target.value)} className={field}/></label><p className="text-xs text-slate-500">The logo is used when a sharing image is not supplied. Product pages use their actual product title and pictures. Sitemap and robots files are generated automatically.</p></section><section className="grid gap-5 rounded-2xl border bg-white p-5 sm:grid-cols-2"><h2 className="sm:col-span-2">Business details for invoices & support</h2><p className="text-sm text-slate-500 sm:col-span-2">Ballanki is not GST-registered. These are regular sales invoices, with no GST charged. Details are saved with new orders so later edits do not change issued invoices.</p>{([['businessName','Business / proprietor name'],['supportEmail','Business email'],['supportPhone','Business phone']] as const).map(([key,label])=><label key={key} className="text-sm font-medium">{label}<input required={key==='businessName'} type={key==='supportEmail'?'email':'text'} value={value[key]} onChange={e=>change(key,e.target.value)} className={field}/></label>)}<label className="text-sm font-medium sm:col-span-2">Complete business address<textarea value={value.businessAddress} maxLength={2000} onChange={e=>change('businessAddress',e.target.value)} className={field}/></label><label className="text-sm font-medium sm:col-span-2">Invoice footer / service terms<textarea value={value.invoiceFooter} maxLength={2000} onChange={e=>change('invoiceFooter',e.target.value)} className={field}/></label></section><div className="admin-savebar flex justify-end rounded-xl border bg-white p-4"><button disabled={saving||uploading} className="inline-flex items-center gap-2 rounded-xl bg-[#214f40] px-6 py-3 text-sm font-semibold text-white disabled:opacity-50">{saving?<Loader2 className="animate-spin" size={16}/>:<Save size={16}/>}Save website settings</button></div></form></section>;
 }

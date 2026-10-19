@@ -1,4 +1,5 @@
 "use client";
+import {useBranding} from "@/store/brandingStore";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -20,6 +21,7 @@ import { api } from "@/lib/api";
 import { getApiError } from "@/lib/utils";
 
 export default function Footer() {
+  const brand=useBranding();
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -80,8 +82,8 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <img
-                src="/logo.png"
-                alt="Ballanki A1 Furnitures Logo"
+                src={brand.logoUrl||"/logo.png"}
+                alt={brand.siteName}
                 className="h-[60px] w-auto object-contain drop-shadow-sm brightness-110 filter"
               />
             </div>
@@ -120,8 +122,8 @@ export default function Footer() {
             <ul className="space-y-2.5 font-inter text-xs text-slate-600">
               <li><Link href="/customer/orders" className="hover:text-slate-900 transition-colors">Track Your Order</Link></li>
               <li><Link href="/customer/support" className="hover:text-slate-900 transition-colors">Help &amp; Support</Link></li>
-              <li><Link href="/shipping" className="hover:text-slate-900 transition-colors">Shipping &amp; Delivery Policy</Link></li>
-              <li><Link href="/returns" className="hover:text-slate-900 transition-colors">Return &amp; Refund Policy</Link></li>
+              <li><Link href="/shipping-policy" className="hover:text-slate-900 transition-colors">Shipping &amp; Delivery Policy</Link></li>
+              <li><Link href="/refund-policy" className="hover:text-slate-900 transition-colors">Return &amp; Refund Policy</Link></li>
               <li><Link href="/terms" className="hover:text-slate-900 transition-colors">Terms of Service</Link></li>
               <li><Link href="/privacy" className="hover:text-slate-900 transition-colors">Privacy Policy</Link></li>
             </ul>
@@ -130,7 +132,7 @@ export default function Footer() {
           {/* Store Support */}
           <div className="space-y-3 font-inter text-xs text-slate-600">
             <h4 className="font-playfair text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 border-b border-slate-200 pb-2">Store Support</h4>
-            <p>Contact the store team about orders or product questions.</p>
+            <p>{brand.businessAddress||"Contact the store team about orders or product questions."}</p>{brand.supportEmail&&<a className="block underline" href={`mailto:${brand.supportEmail}`}>{brand.supportEmail}</a>}{brand.supportPhone&&<a className="block underline" href={`tel:${brand.supportPhone}`}>{brand.supportPhone}</a>}
             <Link href="/customer/support" className="inline-flex items-center gap-2 text-slate-900 hover:text-wood-200"><MessageCircle size={15}/> Open support</Link>
           </div>
 
@@ -138,7 +140,7 @@ export default function Footer() {
 
         {/* ── 3. Bottom Rights ── */}
         <div className="mt-12 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 font-inter text-xs text-wood-500">
-          <p>© {new Date().getFullYear()} Ballanki A1 Furnitures. All rights reserved.</p>
+          <p>{brand.footerText||`© ${new Date().getFullYear()} ${brand.siteName}. All rights reserved.`}</p>
           <p>Handcrafted Masterpieces for Modern Homes.</p>
         </div>
       </div>

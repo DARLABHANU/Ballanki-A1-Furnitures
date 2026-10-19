@@ -5,12 +5,16 @@ import Link from "next/link";
 import { Trash2, ShoppingBag, Plus, Minus, ArrowRight, ShieldCheck, Calculator, CheckCircle2, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useCartStore } from "@/store/cartStore";
-import { orderApi } from "@/lib/api";
+import {useDeliveryLocationStore} from "@/store/deliveryLocationStore";
+import {api, orderApi } from "@/lib/api";
 import { getApiError } from "@/lib/utils";
 import { formatPrice, getProductImage } from "@/lib/utils";
 
 export default function CartPage() {
   const { cart, fetchCart, removeItem, addItem, isLoading } = useCartStore();
+  const pincode=useDeliveryLocationStore(s=>s.location?.pincode);
+  const [deliveryQuote,setDeliveryQuote]=useState<any>(null);
+  useEffect(()=>{let live=true;setDeliveryQuote(null);if(cart.items.length)void api.post("/orders/quote",{pincode}).then(({data})=>{if(live)setDeliveryQuote(data);}).catch(()=>{});return()=>{live=false;};},[cart,pincode]);
   const [couponCode, setCouponCode] = useState("");
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponMsg, setCouponMsg] = useState("");
@@ -45,7 +49,7 @@ export default function CartPage() {
 
   const totalAdvanceDepositRequired = itemsList.reduce((n,i)=>n+(i.advance_amount ?? Math.max(0,i.quantity-i.product.stock_quantity)*i.product.price*0.2),0);
   const readySubtotal = itemsList.reduce((n,i)=>n+(i.ready_stock_quantity ?? Math.min(i.quantity,i.product.stock_quantity))*i.product.price,0);
-  const deliveryCharges = rawSubtotal >= 100000 ? 0 : (rawSubtotal > 0 ? 1500 : 0);
+  const deliveryCharges = deliveryQuote?.shipping_amount??0;
   const finalTotalAmount = Math.max(0, rawSubtotal-couponDiscount+deliveryCharges);
   const dueToday = Math.min(finalTotalAmount,readySubtotal+totalAdvanceDepositRequired+deliveryCharges);
   const balanceRemaining = Math.round((finalTotalAmount-dueToday)*100)/100;
@@ -240,9 +244,9 @@ export default function CartPage() {
                     <span className="font-bold">- {formatPrice(couponDiscount)}</span>
                   </div>
                 )}
-                <div className="flex justify-between">
-                  <span>White Glove Delivery</span>
-                  <span className="font-bold text-wood-900">{deliveryCharges === 0 ? "Complimentary" : formatPrice(deliveryCharges)}</span>
+                {!deliveryQuote&&<p className="text-xs text-slate-500">Amounts below exclude delivery until an address is selected at checkout.</p>}<div className="flex justify-between">
+                  <span>Delivery</span>
+                  <span className="font-bold text-wood-900">{deliveryQuote?(deliveryCharges===0?"Free":formatPrice(deliveryCharges)):"Calculated at checkout"}</span>
                 </div>
               </div>
 
