@@ -14,7 +14,7 @@ export async function enableBrowserPush(config:PushConfig,user:string,current:()
  if(!config.enabled||!config.public_key)throw new Error('Browser notifications are not configured yet.');
  const publicKey=config.public_key;
  // Call permission first, directly in the click handler's promise chain (Safari user gesture).
- const permission=await Notification.requestPermission();if(permission!=='granted')throw new Error(permission==='denied'?'Notifications are blocked. Allow them in your browser’s site settings.':'Notification permission was not granted.');
+ const permission=Notification.permission==='granted'?'granted':await Notification.requestPermission();if(permission!=='granted')throw new Error(permission==='denied'?'Notifications are blocked. Allow them in your browser’s site settings.':'Notification permission was not granted.');
  return serialized(async()=>{assertCurrent(current);const reg=await registration();assertCurrent(current);let subscription=await reg.pushManager.getSubscription();
  const key=keyBytes(publicKey);
  if(subscription?.options.applicationServerKey&&Array.from(new Uint8Array(subscription.options.applicationServerKey)).join(',')!==Array.from(key).join(',')){await subscription.unsubscribe();subscription=null;}

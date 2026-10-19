@@ -3,20 +3,31 @@ import Cookies from "js-cookie";
 import { installCatalogRetry } from "./catalogRetry";
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "/api/v1";
 export const api = axios.create({ baseURL: API_BASE_URL, headers: { "Content-Type": "application/json" }, timeout: 20000 });
-api.interceptors.request.use(config => { const token = Cookies.get("access_token"); if(token) config.headers.Authorization = `Bearer ${token}`; return config; });
+// JWT expiry is only a refresh hint; the backend still verifies every token.
+function expiresSoon(token:string){try{const payload=JSON.parse(atob(token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));return typeof payload.exp==='number'&&payload.exp*1000<=Date.now()+30000;}catch{return false;}}
+function refreshAccess(refresh:string){
+ if(!refreshPromise)refreshPromise=axios.post(API_BASE_URL+"/auth/refresh",{refresh_token:refresh},{timeout:20000}).then(({data})=>{if(Cookies.get("refresh_token")!==refresh)throw new Error("Session changed during refresh");setAuthCookies(data.access_token,data.refresh_token);return data.access_token as string;}).finally(()=>{refreshPromise=null;});
+ return refreshPromise;
+}
+function rejectSession(error:unknown){if(axios.isAxiosError(error)&&error.response?.status===401){clearAuth();if(typeof window!=="undefined"&&!window.location.pathname.startsWith("/auth/"))window.location.assign("/auth/login");}}
+api.interceptors.request.use(async config=>{
+ let token=Cookies.get("access_token");const refresh=Cookies.get("refresh_token");
+ const publicAuth=/^\/auth\/(login|google|signup|refresh)(?:$|[/?])/.test(config.url||"");
+ if(!publicAuth&&refresh&&(!token||expiresSoon(token))){try{token=await refreshAccess(refresh);}catch(error){rejectSession(error);return Promise.reject(error);}}
+ if(token)config.headers.Authorization=`Bearer ${token}`;return config;
+});
 installCatalogRetry(api);
 let refreshPromise: Promise<string> | null = null;
 api.interceptors.response.use(response => response, async (error: AxiosError) => {
  const original = error.config as typeof error.config & { _retry?: boolean };
  const refresh = Cookies.get("refresh_token");
- if(error.response?.status !== 401 || !original || original._retry || original.url?.startsWith("/auth/login") || original.url?.startsWith("/auth/google") || original.url?.startsWith("/auth/signup") || !refresh) return Promise.reject(error);
+ if(error.response?.status !== 401 || !original || original._retry || original.url?.startsWith("/auth/login") || original.url?.startsWith("/auth/google") || original.url?.startsWith("/auth/signup") || original.url?.startsWith("/auth/refresh") || !refresh) return Promise.reject(error);
  original._retry = true;
  try {
-  if(!refreshPromise) refreshPromise = axios.post(API_BASE_URL + "/auth/refresh", {refresh_token: refresh}).then(({data}) => { setAuthCookies(data.access_token,data.refresh_token); return data.access_token as string; }).finally(() => { refreshPromise=null; });
-  const token = await refreshPromise;
+  const token = await refreshAccess(refresh);
   original.headers.Authorization = `Bearer ${token}`;
   return api(original);
- } catch (e) { clearAuth(); if(typeof window !== "undefined" && !window.location.pathname.startsWith("/auth/")) window.location.assign("/auth/login"); return Promise.reject(e); }
+ } catch (e) { rejectSession(e); return Promise.reject(e); }
 });
 export function setAuthCookies(accessToken: string, refreshToken: string) { const options = { sameSite: "Lax" as const, path: "/", secure: typeof location !== "undefined" && location.protocol === "https:" }; Cookies.set("access_token",accessToken,{...options,expires:1});Cookies.set("refresh_token",refreshToken,{...options,expires:7}); }
 export function clearAuth() { for(const key of ["access_token","refresh_token","user_role","user_id"]) Cookies.remove(key,{path:"/"}); }

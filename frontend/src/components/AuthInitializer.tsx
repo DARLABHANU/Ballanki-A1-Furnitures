@@ -7,7 +7,7 @@ export default function AuthInitializer() {
  useEffect(() => {
   const state=useAuthStore.getState();
   if(!Cookies.get('access_token')&&!Cookies.get('refresh_token')) { state.setLoading(false);return; }
-  authApi.me().then(({data})=>state.setUser(data)).catch(()=>{clearAuth();state.rehydrateFromCookies();state.setLoading(false);});
+  authApi.me().then(({data})=>state.setUser(data)).catch((error)=>{if(error.response?.status===401){clearAuth();state.rehydrateFromCookies();}state.setLoading(false);});
  },[]);
  return null;
 }
