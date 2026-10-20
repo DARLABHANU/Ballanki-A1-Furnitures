@@ -1,24 +1,22 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import toast from "react-hot-toast";
-import {
-  Loader2, User, Lock, MapPin, Plus, Trash2, Settings, ChevronRight,
-  ShoppingBag, Truck, CheckSquare, CreditCard, Tag, Gift, HelpCircle,
-  Info, LogOut, Clock, ChevronLeft
-} from "lucide-react";
-import { authApi, addressApi, setAuthCookies } from "@/lib/api";
-import { useAuthStore } from "@/store/authStore";
-import { Address } from "@/types";
-import { getApiError, formatDate } from "@/lib/utils";
-
+import {useCallback,useEffect,useState} from 'react';
+import Link from 'next/link';
+import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {z} from 'zod';
+import toast from 'react-hot-toast';
+import {Loader2,User,LockKeyhole,MapPin,Plus,Trash2,CreditCard,ShoppingBag,Heart,HelpCircle,LogOut,ChevronRight,LayoutDashboard,ShoppingCart,ArrowLeft,Eye,EyeOff,Check,RotateCcw} from 'lucide-react';
+import {authApi,addressApi,setAuthCookies} from '@/lib/api';
+import {useAuthStore} from '@/store/authStore';
+import {Address} from '@/types';
+import {getApiError,formatDate} from '@/lib/utils';
+const inputClass='min-h-12 w-full min-w-0 rounded-xl border border-[#dce5df] bg-white px-3.5 py-3 text-base text-[#123337] outline-none transition focus:border-[#214f40] focus:ring-2 focus:ring-[#214f40]/15 disabled:bg-[#f5f7f6] disabled:text-slate-500';
+const primaryClass='inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#214f40] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#193e32] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#214f40] disabled:cursor-wait disabled:opacity-60 sm:w-auto';
+function Field({id,label,error,children}:{id:string;label:string;error?:string;children:React.ReactNode}){return <div className="min-w-0"><label htmlFor={id} className="mb-2 block text-sm font-medium">{label}</label>{children}{error&&<p id={id+'-error'} role="alert" className="mt-1.5 text-xs text-red-700">{error}</p>}</div>;}
+const sections=[{id:'profile',label:'Personal details',description:'Name & contact',icon:User},{id:'addresses',label:'Addresses',description:'Delivery locations',icon:MapPin},{id:'password',label:'Security',description:'Change password',icon:LockKeyhole},{id:'payout',label:'Bank & UPI',description:'Payout details',icon:CreditCard}] as const;
+const shortcuts=[{href:'/customer/orders',label:'My orders',icon:ShoppingBag},{href:'/customer/wishlist',label:'Wishlist',icon:Heart},{href:'/customer/cart',label:'My cart',icon:ShoppingCart},{href:'/customer/dashboard',label:'Overview',icon:LayoutDashboard},{href:'/customer/payments',label:'Payments',icon:CreditCard},{href:'/customer/support',label:'Help & support',icon:HelpCircle}];
 const profileSchema = z.object({
-  full_name: z.string().min(2),
+  full_name: z.string().trim().min(2, "Enter at least 2 characters"),
   phone: z.string().optional(),
 });
 
@@ -33,13 +31,13 @@ const passwordSchema = z.object({
 
 const addressSchema = z.object({
   label: z.string().default("Home"),
-  full_name: z.string().min(2),
-  phone: z.string().min(10),
+  full_name: z.string().trim().min(2, "Enter at least 2 characters"),
+  phone: z.string().regex(/^[6-9]\d{9}$/, "Enter a 10-digit mobile number"),
   line1: z.string().min(5),
   line2: z.string().optional(),
-  city: z.string().min(2),
-  state: z.string().min(2),
-  pincode: z.string().length(6, "6-digit pincode"),
+  city: z.string().trim().min(2, "Enter at least 2 characters"),
+  state: z.string().trim().min(2, "Enter at least 2 characters"),
+  pincode: z.string().regex(/^[1-9]\d{5}$/, "Enter a 6-digit PIN code"),
   country: z.string().default("India"),
   is_default: z.boolean().default(false),
 });
@@ -59,359 +57,37 @@ type PayoutForm = z.infer<typeof payoutSchema>;
 
 type Tab = "profile" | "payout" | "password" | "addresses";
 
-export default function CustomerProfilePage() {
-  const router = useRouter();
-  const { user, setUser, logout, isAuthenticated } = useAuthStore();
-  const [tab, setTab] = useState<Tab>("profile");
-  const [addresses, setAddresses] = useState<Address[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-  const [showAddressForm, setShowAddressForm] = useState(false);
-
-  const profileForm = useForm<ProfileForm>({
-    resolver: zodResolver(profileSchema),
-    defaultValues: { full_name: "", phone: "" },
-  });
-
-  const passwordForm = useForm<PasswordForm>({
-    resolver: zodResolver(passwordSchema),
-  });
-
-  const addressForm = useForm<AddressForm>({
-    resolver: zodResolver(addressSchema),
-    defaultValues: { label: "Home", country: "India", is_default: false },
-  });
-
-  const payoutForm = useForm<PayoutForm>({
-    resolver: zodResolver(payoutSchema),
-  });
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/auth/login");
-      return;
-    }
-
-    Promise.all([
-      authApi.me().then((r) => {
-        setUser(r.data);
-        profileForm.reset({
-          full_name: r.data.full_name,
-          phone: r.data.phone || "",
-        });
-        payoutForm.reset({
-          payout_bank_name: r.data.payout_bank_name || "",
-          payout_account_number: r.data.payout_account_number || "",
-          payout_ifsc_code: r.data.payout_ifsc_code || "",
-          payout_account_holder_name: r.data.payout_account_holder_name || "",
-          payout_upi_id: r.data.payout_upi_id || "",
-        });
-      }),
-      loadAddresses(),
-    ]).finally(() => setIsLoading(false));
-  }, [isAuthenticated]);
-
-  const loadAddresses = async () => {
-    try {
-      const res = await addressApi.list();
-      setAddresses(res.data.items || []);
-    } catch {
-      setAddresses([]);
-    }
-  };
-
-  const onProfileSubmit = async (data: ProfileForm) => {
-    setIsSaving(true);
-    try {
-      const res = await authApi.updateProfile(data);
-      setUser(res.data);
-      toast.success("Profile updated successfully!");
-    } catch (err) {
-      toast.error(getApiError(err));
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const onPasswordSubmit = async (data: PasswordForm) => {
-    setIsSaving(true);
-    try {
-      const changed = await authApi.changePassword({
-        current_password: data.current_password,
-        new_password: data.new_password,
-      });
-      toast.success("Password changed!");
-      passwordForm.reset();
-    } catch (err) {
-      toast.error(getApiError(err));
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const onPayoutSubmit = async (data: PayoutForm) => {
-    setIsSaving(true);
-    try {
-      const res = await authApi.updateProfile({ full_name: user?.full_name || "", ...data });
-      setUser(res.data);
-      toast.success("Payout credentials updated successfully!");
-    } catch (err) {
-      toast.error(getApiError(err));
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const onAddressSubmit = async (data: AddressForm) => {
-    setIsSaving(true);
-    try {
-      await addressApi.create(data);
-      toast.success("Address saved!");
-      setShowAddressForm(false);
-      addressForm.reset();
-      loadAddresses();
-    } catch (err) {
-      toast.error(getApiError(err));
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleDeleteAddress = async (id: string | number) => {
-    if (!confirm("Delete this address?")) return;
-    try {
-      await addressApi.delete(id);
-      toast.success("Address deleted");
-      loadAddresses();
-    } catch (err) {
-      toast.error(getApiError(err));
-    }
-  };
-
-  const handleLogout = () => {
-    logout();
-    router.push("/auth/login");
-  };
-
-  if (isLoading) {
-    return (
-      <div className="h-96 flex items-center justify-center">
-        <Loader2 className="animate-spin text-[#0D0D0D]" size={36} />
-      </div>
-    );
-  }
-
-  return (
-    <div className="max-w-4xl mx-auto space-y-6 text-[#1A1A1A] font-garamond py-4">
-      {/* Header */}
-      <div className="border-b border-[#edf4ef] pb-4">
-        <span className="text-[10px] font-bold tracking-widest text-[#0D0D0D] bg-[#edf4ef] border border-[#dce5df] px-2.5 py-1 rounded-md uppercase inline-block mb-1">
-          ACCOUNT SETTINGS
-        </span>
-        <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-[#1A1A1A]">
-          My Profile &amp; Preferences
-        </h1>
-        <p className="text-xs text-[#808080] mt-0.5">Manage your personal information, address book, and security settings</p>
-      </div>
-
-      {/* User Card */}
-      {user && (
-        <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-            <div className="w-14 h-14 shrink-0 rounded-full bg-[#214f40] text-white font-cormorant font-bold text-2xl flex items-center justify-center border-2 border-gold-400/40">
-              {user.full_name?.charAt(0).toUpperCase() || "C"}
-            </div>
-            <div className="min-w-0 break-words">
-              <h2 className="font-cormorant text-xl font-bold text-[#1A1A1A]">{user.full_name}</h2>
-              <p className="text-xs break-all text-[#808080]">{user.email}</p>
-              <p className="text-[11px] text-[#0D0D0D] font-semibold mt-0.5">
-                Account #{user.account_number} · Joined {formatDate(user.created_at)}
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={handleLogout}
-            className="hidden sm:inline-flex items-center gap-1.5 bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 px-4 py-2 rounded-xl text-xs font-bold transition-colors"
-          >
-            <LogOut size={14} />
-            <span>Sign Out</span>
-          </button>
-        </div>
-      )}
-
-      {/* Navigation Tabs */}
-      <div className="flex gap-2 min-w-0 max-w-full overflow-x-auto pb-1">
-        {[
-          { id: "profile", label: "Profile Info", icon: User },
-          { id: "payout", label: "Payout Bank & UPI", icon: CreditCard },
-          { id: "password", label: "Security Password", icon: Lock },
-          { id: "addresses", label: "Saved Addresses", icon: MapPin },
-        ].map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            onClick={() => setTab(id as Tab)}
-            className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-garamond text-xs font-bold transition-all border ${
-              tab === id
-                ? "bg-[#214f40] text-white border-[#0D0D0D] shadow-xs"
-                : "bg-white text-[#666666] border-[#dce5df] hover:border-[#0D0D0D]"
-            }`}
-          >
-            <Icon size={14} />
-            <span>{label}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Tab Panels */}
-      <div className="bg-white border border-[#dce5df] rounded-3xl p-4 sm:p-6 shadow-xs">
-        {tab === "profile" && (
-          <div className="space-y-4">
-            <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-2">Personal Information</h3>
-            <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4 font-garamond max-w-md">
-              <div>
-                <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Full Name *</label>
-                <input {...profileForm.register("full_name")} className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Phone Number</label>
-                <input {...profileForm.register("phone")} type="tel" className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] focus:outline-none focus:border-[#0D0D0D]" placeholder="+91 98765 43210" />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-[#808080] block mb-1">Email Address</label>
-                <input value={user?.email || ""} disabled className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A] opacity-60 cursor-not-allowed" />
-              </div>
-              <button type="submit" disabled={isSaving} className="bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl font-bold text-xs transition-all shadow-xs">
-                {isSaving ? "Saving..." : "Save Changes"}
-              </button>
-            </form>
-          </div>
-        )}
-
-        {tab === "payout" && (
-          <div className="space-y-4">
-            <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-2">Payout Bank &amp; UPI Credentials</h3>
-            <form onSubmit={payoutForm.handleSubmit(onPayoutSubmit)} className="space-y-4 font-garamond max-w-lg">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Bank Name</label>
-                  <input {...payoutForm.register("payout_bank_name")} className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-semibold bg-white" placeholder="e.g. State Bank of India" />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Account Holder Name</label>
-                  <input {...payoutForm.register("payout_account_holder_name")} className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-semibold bg-white" placeholder="Full name on bank account" />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Account Number</label>
-                  <input {...payoutForm.register("payout_account_number")} className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-mono bg-white" placeholder="Enter account number" />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-[#1A1A1A] block mb-1">IFSC Code</label>
-                  <input {...payoutForm.register("payout_ifsc_code")} className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-mono uppercase bg-white" placeholder="e.g. SBIN0001234" />
-                </div>
-              </div>
-              <div>
-                <label className="text-xs font-bold text-[#1A1A1A] block mb-1">UPI ID (VPA)</label>
-                <input {...payoutForm.register("payout_upi_id")} className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-mono bg-white" placeholder="e.g. name@upi" />
-              </div>
-              <button type="submit" disabled={isSaving} className="bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl font-bold text-xs transition-all shadow-xs">
-                {isSaving ? "Saving..." : "Save Payout Credentials"}
-              </button>
-            </form>
-          </div>
-        )}
-
-        {tab === "password" && (
-          <div className="space-y-4">
-            <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A] border-b border-[#edf4ef] pb-2">Change Security Password</h3>
-            <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4 font-garamond max-w-md">
-              <div>
-                <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Current Password *</label>
-                <input {...passwordForm.register("current_password")} type="password" className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-[#1A1A1A] block mb-1">New Password *</label>
-                <input {...passwordForm.register("new_password")} type="password" className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-[#1A1A1A] block mb-1">Confirm New Password *</label>
-                <input {...passwordForm.register("confirm_password")} type="password" className="w-full bg-white border border-[#dce5df] rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#1A1A1A]" />
-              </div>
-              <button type="submit" disabled={isSaving} className="bg-[#214f40] hover:bg-[#193e32] text-white px-6 py-2.5 rounded-xl font-bold text-xs transition-all shadow-xs">
-                {isSaving ? "Saving..." : "Update Password"}
-              </button>
-            </form>
-          </div>
-        )}
-
-        {tab === "addresses" && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-[#edf4ef] pb-2">
-              <h3 className="font-cormorant text-lg font-bold text-[#1A1A1A]">Saved Shipping Addresses</h3>
-              <button
-                onClick={() => setShowAddressForm(!showAddressForm)}
-                className="inline-flex items-center gap-1 bg-[#214f40] hover:bg-[#193e32] text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-xs"
-              >
-                <Plus size={14} /> Add New
-              </button>
-            </div>
-
-            {showAddressForm && (
-              <form onSubmit={addressForm.handleSubmit(onAddressSubmit)} className="space-y-3 bg-white p-4 rounded-2xl border border-[#dce5df] font-garamond max-w-lg">
-                <div>
-                  <label className="text-xs font-bold block mb-1">Address Label</label>
-                  <input {...addressForm.register("label")} placeholder="Home / Work" className="w-full border rounded-xl px-3 py-2 text-xs" />
-                </div>
-                <div>
-                  <label className="text-xs font-bold block mb-1">Receiver Name</label>
-                  <input {...addressForm.register("full_name")} className="w-full border rounded-xl px-3 py-2 text-xs" />
-                </div>
-                <div>
-                  <label className="text-xs font-bold block mb-1">Phone Number</label>
-                  <input {...addressForm.register("phone")} className="w-full border rounded-xl px-3 py-2 text-xs" />
-                </div>
-                <div>
-                  <label className="text-xs font-bold block mb-1">Street Address Line 1</label>
-                  <input {...addressForm.register("line1")} className="w-full border rounded-xl px-3 py-2 text-xs" />
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="text-xs font-bold block mb-1">City</label>
-                    <input {...addressForm.register("city")} className="w-full border rounded-xl px-3 py-2 text-xs" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold block mb-1">State</label>
-                    <input {...addressForm.register("state")} className="w-full border rounded-xl px-3 py-2 text-xs" />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-xs font-bold block mb-1">Pincode</label>
-                  <input {...addressForm.register("pincode")} className="w-full border rounded-xl px-3 py-2 text-xs" />
-                </div>
-                <button type="submit" disabled={isSaving} className="bg-[#214f40] text-white px-5 py-2.5 rounded-xl font-bold text-xs">
-                  {isSaving ? "Saving..." : "Save Address"}
-                </button>
-              </form>
-            )}
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {addresses.map((addr) => (
-                <div key={addr.id} className="p-4 border border-[#dce5df] rounded-2xl bg-white flex justify-between items-start font-garamond">
-                  <div>
-                    <span className="text-[10px] font-bold bg-[#edf4ef] text-[#2E7D32] px-2 py-0.5 rounded uppercase">{addr.label}</span>
-                    <p className="font-bold text-xs mt-1">{addr.full_name}</p>
-                    <p className="text-xs text-[#666666]">{addr.line1}, {addr.city}, {addr.state} - {addr.pincode}</p>
-                    <p className="text-xs text-[#666666]">{addr.phone}</p>
-                  </div>
-                  <button onClick={() => handleDeleteAddress(addr.id)} className="text-red-600 p-1 hover:bg-red-50 rounded-lg">
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+export default function CustomerProfilePage(){
+ const {user,setUser,logout,isAuthenticated,isLoading:authLoading}=useAuthStore();
+ const [tab,setTab]=useState<Tab>('profile');const [addresses,setAddresses]=useState<Address[]>([]);const [loading,setLoading]=useState(true);const [loadError,setLoadError]=useState('');const [addressError,setAddressError]=useState('');const [saving,setSaving]=useState(false);const [deleting,setDeleting]=useState<string|number|null>(null);const [showAddressForm,setShowAddressForm]=useState(false);const [showPasswords,setShowPasswords]=useState(false);
+ const profileForm=useForm<ProfileForm>({resolver:zodResolver(profileSchema),defaultValues:{full_name:'',phone:''}});
+ const passwordForm=useForm<PasswordForm>({resolver:zodResolver(passwordSchema)});
+ const addressForm=useForm<AddressForm>({resolver:zodResolver(addressSchema),defaultValues:{label:'Home',country:'India',is_default:false}});
+ const payoutForm=useForm<PayoutForm>({resolver:zodResolver(payoutSchema)});
+ const loadAddresses=useCallback(async()=>{setAddressError('');try{const {data}=await addressApi.list();setAddresses(data.items||[]);}catch(e){setAddressError(getApiError(e));}},[]);
+ const resetProfile=profileForm.reset,resetPayout=payoutForm.reset;
+ const loadAccount=useCallback(async()=>{setLoading(true);setLoadError('');try{const {data}=await authApi.me();setUser(data);resetProfile({full_name:data.full_name,phone:data.phone||''});const payout=data.payout_settings||{};resetPayout({payout_bank_name:payout.payout_bank_name||payout.bank_name||data.payout_bank_name||'',payout_account_number:payout.payout_account_number||payout.account_number||data.payout_account_number||'',payout_ifsc_code:payout.payout_ifsc_code||payout.ifsc_code||data.payout_ifsc_code||'',payout_account_holder_name:payout.payout_account_holder_name||payout.account_holder_name||data.payout_account_holder_name||'',payout_upi_id:payout.payout_upi_id||payout.upi_id||data.payout_upi_id||''});}catch(e){setLoadError(getApiError(e));}finally{setLoading(false);}},[setUser,resetProfile,resetPayout]);
+ useEffect(()=>{if(!authLoading&&isAuthenticated){void loadAccount();void loadAddresses();}},[authLoading,isAuthenticated,loadAccount,loadAddresses]);
+ const onProfileSubmit=async(data:ProfileForm)=>{setSaving(true);try{const {data:updated}=await authApi.updateProfile(data);setUser(updated);profileForm.reset({full_name:updated.full_name,phone:updated.phone||''});toast.success('Profile updated');}catch(e){toast.error(getApiError(e));}finally{setSaving(false);}};
+ const onPasswordSubmit=async(data:PasswordForm)=>{setSaving(true);try{const {data:tokens}=await authApi.changePassword({current_password:data.current_password,new_password:data.new_password});setAuthCookies(tokens.access_token,tokens.refresh_token);passwordForm.reset();setShowPasswords(false);toast.success('Password updated');}catch(e){toast.error(getApiError(e));}finally{setSaving(false);}};
+ const onPayoutSubmit=async(data:PayoutForm)=>{setSaving(true);try{const {data:updated}=await authApi.updatePayoutSettings(data);setUser(updated);payoutForm.reset(data);toast.success('Bank and UPI details saved');}catch(e){toast.error(getApiError(e));}finally{setSaving(false);}};
+ const onAddressSubmit=async(data:AddressForm)=>{setSaving(true);try{await addressApi.create(data);setShowAddressForm(false);addressForm.reset({label:'Home',country:'India',is_default:false});await loadAddresses();toast.success('Address saved');}catch(e){toast.error(getApiError(e));}finally{setSaving(false);}};
+ const deleteAddress=async(id:string|number)=>{if(deleting!==null||!window.confirm('Delete this saved address?'))return;setDeleting(id);try{await addressApi.delete(id);await loadAddresses();toast.success('Address deleted');}catch(e){toast.error(getApiError(e));}finally{setDeleting(null);}};
+ const active=sections.find(s=>s.id===tab)!;
+ const submitLabel=(label:string)=><>{saving?<Loader2 size={17} className="animate-spin"/>:<Check size={17}/>} {saving?'Saving…':label}</>;
+ if(loading||authLoading)return <div role="status" className="flex min-h-[50vh] items-center justify-center gap-3 text-sm text-[#526b6e]"><Loader2 size={22} className="animate-spin text-[#214f40]"/>Loading your account…</div>;
+ if(loadError)return <div role="alert" className="mx-auto max-w-xl rounded-2xl border bg-white p-6"><h1 className="text-xl font-semibold">Couldn’t load your profile</h1><p className="mt-3 text-sm text-slate-600">{loadError}</p><button onClick={()=>void loadAccount()} className={primaryClass+' mt-5'}><RotateCcw size={16}/>Try again</button></div>;
+ return <div className="mx-auto w-full max-w-6xl min-w-0 space-y-5 font-inter text-[#123337] sm:space-y-7">
+ <div><Link href="/" className="mb-3 inline-flex min-h-10 items-center gap-2 text-xs font-semibold text-[#526b6e]"><ArrowLeft size={16}/>Back to shopping</Link><h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">My account</h1><p className="mt-2 text-sm leading-6 text-[#63777a]">Your details, deliveries and security, all in one place.</p></div>
+ <section aria-label="Account summary" className="flex min-w-0 flex-wrap items-center gap-4 rounded-2xl border border-[#dce5df] bg-white p-4 shadow-sm sm:p-6"><div aria-hidden="true" className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-[#edf4ef] text-2xl font-semibold text-[#214f40]">{user?.full_name?.charAt(0).toUpperCase()||'C'}</div><div className="min-w-0 flex-1 basis-[160px]"><h2 className="break-words text-lg font-semibold sm:text-xl">{user?.full_name}</h2><p className="mt-1 break-all text-sm text-[#63777a]">{user?.email}</p><div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-[#63777a]">{user?.account_number&&<span className="break-all">Account #{user.account_number}</span>}{user?.created_at&&<span>Joined {formatDate(user.created_at)}</span>}{user?.is_verified&&<span className="inline-flex items-center gap-1 text-[#214f40]"><Check size={12}/>Email verified</span>}</div></div><button onClick={logout} disabled={saving} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-[#dce5df] px-4 text-sm font-semibold transition hover:bg-[#edf4ef] disabled:opacity-50"><LogOut size={16}/>Sign out</button></section>
+ <nav aria-label="Account shortcuts" className="grid grid-cols-3 gap-2 sm:grid-cols-6 sm:gap-3">{shortcuts.map(({href,label,icon:Icon})=><Link key={href} href={href} className="flex min-h-[84px] min-w-0 flex-col items-center justify-center gap-2 rounded-xl border border-[#dce5df] bg-white px-2 py-3 text-center text-xs font-medium transition hover:border-[#9bb7a8] hover:bg-[#f5f8f6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#214f40]"><Icon size={20} className="text-[#315b49]"/><span>{label}</span></Link>)}</nav>
+ <div className="grid min-w-0 gap-4 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-6"><nav aria-label="Profile settings" className="grid min-w-0 grid-cols-2 gap-2 self-start lg:grid-cols-1">{sections.map(({id,label,description,icon:Icon})=><button key={id} type="button" disabled={saving} onClick={()=>setTab(id)} aria-current={tab===id?'page':undefined} aria-controls="profile-settings-panel" className={`flex min-h-[76px] min-w-0 items-center gap-3 rounded-xl border p-3 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#214f40] disabled:opacity-60 ${tab===id?'border-[#214f40] bg-[#edf4ef] text-[#214f40]':'border-[#dce5df] bg-white hover:bg-[#f7f9f8]'}`}><Icon size={19} className="shrink-0"/><span className="min-w-0"><span className="block text-xs font-semibold sm:text-sm">{label}</span><span className="mt-1 hidden text-xs text-[#63777a] min-[360px]:block">{description}</span></span><ChevronRight size={15} className="ml-auto hidden shrink-0 lg:block"/></button>)}</nav>
+ <section id="profile-settings-panel" aria-labelledby="settings-heading" className="min-w-0 rounded-2xl border border-[#dce5df] bg-white p-4 shadow-sm sm:p-6"><div className="mb-6 border-b border-[#e9eeeb] pb-4"><h2 id="settings-heading" className="text-lg font-semibold">{active.label}</h2><p className="mt-1 text-sm leading-6 text-[#63777a]">{tab==='profile'?'Keep your contact details up to date.':tab==='addresses'?'Choose where your furniture goes.':tab==='password'?'Use a strong password to protect your account.':'Manage your saved bank account and UPI details.'}</p></div>
+ {tab==='profile'&&<form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-5"><fieldset disabled={saving} className="grid min-w-0 gap-5 sm:grid-cols-2"><Field id="profile-name" label="Full name" error={profileForm.formState.errors.full_name?.message}><input id="profile-name" autoComplete="name" {...profileForm.register('full_name')} aria-invalid={!!profileForm.formState.errors.full_name} aria-describedby={profileForm.formState.errors.full_name?'profile-name-error':undefined} className={inputClass}/></Field><Field id="profile-phone" label="Phone number (optional)" error={profileForm.formState.errors.phone?.message}><input id="profile-phone" type="tel" autoComplete="tel" {...profileForm.register('phone')} className={inputClass}/></Field><div className="sm:col-span-2"><Field id="profile-email" label="Email address"><input id="profile-email" value={user?.email||''} readOnly autoComplete="email" className={inputClass+' bg-[#f7f9f8] text-slate-500'}/></Field><p className="mt-2 text-xs leading-5 text-[#63777a]">Your sign-in email is shown for reference.</p></div></fieldset><button disabled={saving} className={primaryClass}>{submitLabel('Save changes')}</button></form>}
+ {tab==='payout'&&<form onSubmit={payoutForm.handleSubmit(onPayoutSubmit)} className="space-y-5"><fieldset disabled={saving} className="grid min-w-0 gap-5 sm:grid-cols-2">{([{name:'payout_bank_name',label:'Bank name'},{name:'payout_account_holder_name',label:'Account holder name'},{name:'payout_account_number',label:'Account number'},{name:'payout_ifsc_code',label:'IFSC code'},{name:'payout_upi_id',label:'UPI ID'}] as const).map(({name,label})=><Field key={name} id={name} label={label} error={payoutForm.formState.errors[name]?.message}><input id={name} {...payoutForm.register(name)} autoComplete="off" inputMode={name==='payout_account_number'?'numeric':'text'} className={inputClass}/></Field>)}</fieldset><button disabled={saving} className={primaryClass}>{submitLabel('Save bank & UPI details')}</button></form>}
+ {tab==='password'&&<form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-5"><button type="button" onClick={()=>setShowPasswords(v=>!v)} aria-pressed={showPasswords} className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-[#315b49]">{showPasswords?<EyeOff size={17}/>:<Eye size={17}/>} {showPasswords?'Hide passwords':'Show passwords'}</button><fieldset disabled={saving} className="grid min-w-0 gap-5">{([{name:'current_password',label:'Current password'},{name:'new_password',label:'New password'},{name:'confirm_password',label:'Confirm new password'}] as const).map(({name,label})=><Field key={name} id={name} label={label} error={passwordForm.formState.errors[name]?.message}><input id={name} type={showPasswords?'text':'password'} autoComplete={name==='current_password'?'current-password':'new-password'} {...passwordForm.register(name)} aria-invalid={!!passwordForm.formState.errors[name]} aria-describedby={passwordForm.formState.errors[name]?name+'-error':undefined} className={inputClass}/></Field>)}</fieldset><p className="text-xs leading-5 text-[#63777a]">Use at least 8 characters. If you sign in with Google and have no website password, continue using Google sign-in.</p><button disabled={saving} className={primaryClass}>{submitLabel('Update password')}</button></form>}
+ {tab==='addresses'&&<div className="space-y-5"><button type="button" onClick={()=>setShowAddressForm(v=>!v)} disabled={saving} aria-expanded={showAddressForm} aria-controls="new-address-form" className={primaryClass}><Plus size={17}/>{showAddressForm?'Close address form':'Add new address'}</button>
+ {showAddressForm&&<form id="new-address-form" onSubmit={addressForm.handleSubmit(onAddressSubmit)} className="rounded-xl border border-[#dce5df] bg-[#f8faf9] p-4 sm:p-5"><h3 className="mb-5 font-semibold">New delivery address</h3><fieldset disabled={saving} className="grid min-w-0 gap-4 sm:grid-cols-2">{([{name:'label',label:'Address label',auto:'off'},{name:'full_name',label:'Receiver name',auto:'name'},{name:'phone',label:'Phone number',auto:'tel'},{name:'pincode',label:'PIN code',auto:'postal-code'},{name:'line1',label:'Street address',auto:'address-line1'},{name:'line2',label:'Landmark / address line 2 (optional)',auto:'address-line2'},{name:'city',label:'City / town',auto:'address-level2'},{name:'state',label:'State',auto:'address-level1'},{name:'country',label:'Country',auto:'country-name'}] as const).map(({name,label,auto})=><div key={name} className={name==='line1'||name==='line2'?'min-w-0 sm:col-span-2':'min-w-0'}><Field id={'address-'+name} label={label} error={addressForm.formState.errors[name]?.message}><input id={'address-'+name} autoComplete={auto} type={name==='phone'?'tel':'text'} inputMode={name==='pincode'||name==='phone'?'numeric':'text'} {...addressForm.register(name)} aria-invalid={!!addressForm.formState.errors[name]} aria-describedby={addressForm.formState.errors[name]?'address-'+name+'-error':undefined} className={inputClass}/></Field></div>)}<label className="flex min-h-11 items-center gap-3 text-sm sm:col-span-2"><input type="checkbox" {...addressForm.register('is_default')} className="h-4 w-4 accent-[#214f40]"/>Make this my default address</label></fieldset><div className="mt-5 flex flex-col gap-2 sm:flex-row"><button disabled={saving} className={primaryClass}>{submitLabel('Save address')}</button><button type="button" disabled={saving} onClick={()=>{setShowAddressForm(false);addressForm.reset();}} className="min-h-12 rounded-xl border border-[#dce5df] px-5 text-sm font-semibold">Cancel</button></div></form>}
+ {addressError?<div role="alert" className="rounded-xl border border-[#dce5df] p-4 text-sm"><p>{addressError}</p><button onClick={()=>void loadAddresses()} className="mt-2 min-h-11 font-semibold underline">Retry loading addresses</button></div>:!addresses.length?<div className="rounded-xl border border-dashed border-[#cbd9d0] px-4 py-9 text-center"><MapPin size={28} className="mx-auto text-[#527565]"/><h3 className="mt-3 font-semibold">No saved addresses yet</h3><p className="mt-2 text-sm leading-6 text-[#63777a]">Add your delivery address for a quicker checkout.</p></div>:<div className="grid min-w-0 gap-3 xl:grid-cols-2">{addresses.map(addr=><article key={addr.id} className="min-w-0 rounded-xl border border-[#dce5df] p-4"><div className="flex items-start justify-between gap-2"><div className="flex min-w-0 flex-wrap items-center gap-2"><span className="break-words rounded-md bg-[#edf4ef] px-2 py-1 text-xs font-semibold text-[#214f40]">{addr.label||'Address'}</span>{addr.is_default&&<span className="text-xs text-[#63777a]">Default</span>}</div><button type="button" onClick={()=>void deleteAddress(addr.id)} disabled={deleting!==null||saving} aria-label={'Delete '+(addr.label||'saved')+' address for '+addr.full_name} className="-mr-2 -mt-2 grid h-11 w-11 shrink-0 place-items-center rounded-lg text-[#63777a] hover:bg-red-50 hover:text-red-700 disabled:opacity-50">{deleting===addr.id?<Loader2 size={17} className="animate-spin"/>:<Trash2 size={17}/>}</button></div><h3 className="mt-3 break-words text-sm font-semibold">{addr.full_name}</h3><p className="mt-2 break-words text-sm leading-6 text-[#63777a]">{[addr.line1,addr.line2,addr.city,addr.state,addr.pincode,addr.country].filter(Boolean).join(', ')}</p><p className="mt-2 break-all text-sm text-[#63777a]">{addr.phone}</p></article>)}</div>}</div>}
+ </section></div></div>;
 }
