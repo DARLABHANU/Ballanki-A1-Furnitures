@@ -43,6 +43,7 @@ export default function Footer() {
   return (
     <footer className="hidden md:block bg-white text-slate-800 border-t border-slate-200">
 
+      <div className="mx-auto max-w-7xl px-4 pt-6 text-sm"><Link href="/furniture-vizag" className="font-semibold underline underline-offset-4">Furniture in Vizag &amp; Anakapalle</Link></div>
       {/* ── 1. Trust Badges Banner ── */}
       <div className="bg-white border-b border-slate-200 py-8 px-4 lg:px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-6 text-center">

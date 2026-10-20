@@ -2,6 +2,7 @@
 const nextConfig = {
   distDir: '.next',
   turbopack: { root: __dirname },
+  async redirects(){return [{source:'/contact-us',destination:'/contact',permanent:true},{source:'/privacy-policy',destination:'/privacy',permanent:true},{source:'/terms-of-service',destination:'/terms',permanent:true}];},
   async headers(){return ['/admin/:path*','/auth/:path*','/support/:path*','/promoter/:path*','/customer/orders/:path*','/customer/profile','/customer/payments'].map(source=>({source,headers:[{key:'X-Robots-Tag',value:'noindex, nofollow'}]}));},
   async rewrites() {
     const backend = process.env.BACKEND_URL || 'http://127.0.0.1:8000';
