@@ -48,10 +48,11 @@ async function productAssignment(body,existing){
  const catalog=await readCatalog();
  const category=catalog.categories.find(c=>c.id===body.catalog_category_id&&c.active);
  const type=category?.types.find(t=>t.id===body.catalog_type_id&&t.active);
- if(!category||!type)fail(400,'Select an available category, then a type belonging to that category');
+ if(!category)fail(400,'Select an available product category');
+ if(body.catalog_type_id&&!type)fail(400,'The legacy type does not belong to this category');
  const categoryIds=new Set(catalog.categories.map(c=>c.id));
  const original=body.tags===undefined?(existing?.tags||[]):typeof body.tags==='string'?body.tags.split(','):body.tags;
  if(!Array.isArray(original)||original.some(tag=>typeof tag!=='string'))fail(400,'Provide valid product tags');
- return {catalog_category_id:category.id,catalog_type_id:type.id,subcategory:type.value,tags:[...new Set([...original.filter(tag=>!categoryIds.has(tag)),category.id])]};
+ return {main_category:category.name,catalog_category_id:category.id,catalog_type_id:type?.id||'',subcategory:type?.value||'',tags:[...new Set([...original.filter(tag=>!categoryIds.has(tag)),category.id])]};
 }
 module.exports={readCatalog,publicCatalog,saveCatalog,validate,productAssignment};

@@ -31,5 +31,5 @@ export function useFurnitureCatalog(){
  },[store.refresh]);
  return {...store,loading:!store.ready&&!store.error};
 }
-export function catalogTypeHref(category:CatalogCategory,type:CatalogType){const q=new URLSearchParams({category:category.id,type:type.id,subcategory:type.value});if(category.solidWoodOnly)q.set('construction','solid_wood');return `/customer/products?${q}`;}
+export function catalogTypeHref(category:CatalogCategory,type:CatalogType){return catalogCategoryHref(category);}
 export function catalogCategoryHref(category:CatalogCategory){const q=new URLSearchParams({category:category.id});if(category.solidWoodOnly)q.set('construction','solid_wood');return `/customer/products?${q}`;}

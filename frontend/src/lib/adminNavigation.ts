@@ -4,7 +4,7 @@ export const adminGroups = [
   {href:"/admin/orders",label:"Orders",icon:"orders",description:"Payments, making progress and delivery"},
   {href:"/admin/enquiries",label:"Customer chats",icon:"chats",description:"Messages, price offers and replies"},
   {href:"/admin/products",label:"Products",icon:"products",description:"Inventory, pricing and product images"},
-  {href:"/admin/categories",label:"Categories & types",icon:"categories",description:"Storefront categories, types and pictures"},
+  {href:"/admin/categories",label:"Categories",icon:"categories",description:"Product categories and pictures"},
  ]},
  {label:"Customers & growth",items:[
   {href:"/admin/users",label:"Users",icon:"users",description:"Customer and staff accounts"},

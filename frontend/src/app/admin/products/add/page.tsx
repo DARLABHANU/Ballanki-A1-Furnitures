@@ -124,14 +124,15 @@ export default function AdminAddProductPage() {
     
     if(!Number.isInteger(Number(formData.delivery_duration_days))||Number(formData.delivery_duration_days)<1||Number(formData.delivery_duration_days)>3650){toast.error("Enter total making and delivery time as 1–3650 whole days.");return;}
     const category=furnitureCatalog.categories.find(c=>c.id===storeCategory);
-    const furnitureType=category?.types.find(t=>t.value===formData.subcategory);
-    if(!category||!furnitureType){toast.error("Select a storefront category, then one of its furniture types.");return;}
+    if(!category){toast.error("Select a product category.");return;}
     setIsSubmitting(true);
     try {
       const payload = {
         ...formData,
         catalog_category_id:category.id,
-        catalog_type_id:furnitureType.id,
+        main_category:category.name,
+        catalog_type_id:"",
+        subcategory:"",
         warranty_text: details.warranty_text,
         attributes: { ...Object.fromEntries(details.specifications.split("\n").filter(line=>line.includes(":")).map(line=>{const [key,...value]=line.split(":");return [key.trim(),value.join(":").trim()];})), construction },
         tags: Array.from(new Set([...existingTags.filter(tag=>!storeCategory||!furnitureCatalog.categories.some(c=>c.id===tag)),...(storeCategory?[storeCategory]:furnitureCatalog.categories.filter(c=>c.types.some(t=>t.value===formData.subcategory)).map(c=>c.id))])),
@@ -188,13 +189,7 @@ export default function AdminAddProductPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="font-bold text-[#1A1A1A] block mb-1 text-xs">Category *</label>
-                <select name="main_category" value={formData.main_category} onChange={handleChange} className="w-full bg-white border border-[#dce5df] rounded-xl px-4 py-2 text-xs font-semibold focus:outline-none focus:border-[#0D0D0D]">
-                  <option value="Living Room">Living Room</option>
-                  <option value="Bedroom">Bedroom</option>
-                  <option value="Dining Room">Dining Room</option>
-                  <option value="Home Office">Home Office</option>
-                  <option value="Outdoor">Outdoor</option>
-                </select>
+                <select required aria-label="Product category" value={storeCategory} disabled={!furnitureCatalog.ready} onChange={e=>{categoryInitialized.current=true;setStoreCategory(e.target.value);}} className="w-full rounded-xl border border-[#dce5df] bg-white px-4 py-3 text-sm"><option value="">Select category</option>{furnitureCatalog.categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select>
               </div>
               <div>
                 <label className="font-bold text-[#1A1A1A] block mb-1 text-xs">SKU Code</label>
@@ -290,7 +285,7 @@ export default function AdminAddProductPage() {
         <section className="col-span-1 space-y-4 rounded-2xl border bg-white p-5 lg:col-span-3">
           <h2 className="font-inter text-base font-semibold">Product page details</h2>
           <label className="block text-xs font-semibold">Full product description<textarea name="description" value={formData.description} onChange={handleChange} rows={4} className="mt-2 block w-full rounded-lg border p-3 font-normal"/></label>
-          <label className="block text-xs font-semibold">Storefront category<select required value={storeCategory} onChange={e=>{categoryInitialized.current=true;setStoreCategory(e.target.value);setFormData(previous=>({...previous,subcategory:""}));}} className="mt-2 block w-full rounded-lg border p-3 font-normal"><option value="">Select storefront category</option>{furnitureCatalog.categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label><label className="block text-xs font-semibold">Furniture type<select required disabled={!storeCategory||!furnitureCatalog.ready} name="subcategory" value={formData.subcategory} onChange={handleChange} className="mt-2 block w-full rounded-lg border p-3 font-normal"><option value="">Select furniture type</option>{furnitureCatalog.categories.filter(c=>c.id===storeCategory).map(c=><optgroup key={c.id} label={c.name}>{c.types.map(type=><option key={type.id} value={type.value}>{type.name}</option>)}</optgroup>)}{formData.subcategory&&!furnitureCatalog.categories.some(c=>c.types.some(t=>t.value===formData.subcategory))&&<option value={formData.subcategory}>{formData.subcategory} (existing type)</option>}</select></label>
+
           <label className="block text-xs font-semibold">Total making + delivery time (days)<input required type="number" min="1" max="3650" step="1" inputMode="numeric" name="delivery_duration_days" value={formData.delivery_duration_days} onChange={handleChange} placeholder="e.g. 15" className="mt-2 block w-full rounded-lg border p-3"/><span className="mt-2 block text-xs font-normal leading-5 text-slate-500">Calendar days from the order date, including making, finishing and delivery. Set this separately for each product. The expected delivery date is calculated automatically.</span></label><p className="text-xs leading-5">Available stock is sold first. Additional quantities are pre-booked with a fixed 20% advance on the listed or accepted negotiated price. Payment collection must be enabled separately.</p>
           <p className="text-xs text-slate-500">Only enter verified details. Linked options and room combinations use actual product prices.</p>
           <label className="block text-xs font-semibold">Warranty & service details<textarea value={details.warranty_text} maxLength={2000} onChange={e=>setDetails(d=>({...d,warranty_text:e.target.value}))} rows={3} className="mt-2 block w-full rounded-lg border p-3 font-normal" placeholder="Enter the actual warranty and service terms, if applicable"/></label>

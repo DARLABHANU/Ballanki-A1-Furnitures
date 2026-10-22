@@ -1,19 +1,14 @@
 # Category management
 
-Open **Admin → Categories & Types** (`/admin/categories`).
+The storefront has exactly two levels: Category -> Products. There are no customer or owner subcategory/type controls.
 
-The browsing hierarchy is **Category → Type → Products**, for example **Chairs → Rocking chairs → matching products**. The product form requires an available category and one of its types. Stable category/type IDs are stored on products; legacy products still match through their existing type values.
+- Home category tiles and categories-page cards open matching products immediately.
+- Old /customer/categories?category= links redirect to the category product list. Old type/subcategory links open the parent category; the customer UI clears those old filters.
+- Admin -> Categories supports category names, pictures, visibility and order. Uploaded category images still use Cloudinary. Hide a category without deleting products.
+- Product creation/editing requires one category. The backend accepts category-only products even when a category has no saved legacy types. Product labels use the category name.
+- Existing legacy type metadata remains stored for compatibility and matching existing products. It is not a browsing level and is not deleted or shown in the editor. No production records are migrated or removed by this code change.
+- Categories with solid-wood filtering retain that option. Product availability, pricing, preorder, images and payments are unchanged.
 
-- Add or rename categories and types, upload JPEG/PNG/WebP pictures up to 3 MB, or paste HTTPS image URLs.
-- Use the arrows to change the display order. Uncheck **Show** to hide an item without deleting products.
-- Click **Save changes** to publish. Home, category browsing, navigation and product filters use the same saved catalogue.
-- Existing open pages refresh within 30 seconds, or when the user returns to the tab. New page visits fetch the current version.
-- The product form includes **Storefront category** and furniture type choices from this catalogue. Assign new products there.
-- Renaming changes display labels while preserving internal category IDs and type matching values, so existing product links keep working.
-- A stale save receives a conflict message. Reload the saved version before making further changes.
+Deploy backend first, then frontend. No new environment variables. Admin saves still update home/categories/filter choices via the existing shared catalogue and refresh mechanism.
 
-Deploy the backend and frontend together (backend first). No new environment variables are required. Uploads use the existing Cloudinary settings and the `ballanki/categories` (category images), `ballanki/category-types` (type images), and `ballanki/products` (product images) folders.
-
-The existing categories, types and reference photographs are the initial defaults. The first admin save stores the catalogue in the existing MongoDB `Setting` model under `storefront:categories`. Future deployments do not replace a saved catalogue. There is no production data seeding or product deletion.
-
-Verification: `node backend/tests/catalog-management.cjs`; from `frontend`, `node tests/catalog-store.cjs`, `node tests/catalog-retry.cjs`, and `node node_modules/typescript/bin/tsc --noEmit`. API tests substitute the database in memory and never write to Atlas or Cloudinary.
+Validation: backend/tests/catalog-management.cjs uses in-memory data (no Atlas or Cloudinary writes); frontend/tests/catalog-store.cjs verifies direct product links and shared updates. Production frontend build includes TypeScript validation.

@@ -234,7 +234,7 @@ export const furnitureCategories:FurnitureCategory[] = [
     ]
   }
 ];
-export function categoryBrowserHref(slug:string){return slug?`/customer/categories?category=${encodeURIComponent(slug)}`:'/customer/categories';}
+export function categoryBrowserHref(slug:string){return slug?`/customer/products?category=${encodeURIComponent(slug)}`:'/customer/categories';}
 export function categoryProductsHref(slug:string){return slug?`/customer/products?category=${encodeURIComponent(slug)}`:'/customer/products';}
 export function findFurnitureCategory(slug:string|null){return furnitureCategories.find(c=>c.slug===(slug==='all'?'':slug||''))||furnitureCategories[0];}
 

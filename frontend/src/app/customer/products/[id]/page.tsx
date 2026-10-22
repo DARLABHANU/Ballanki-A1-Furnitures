@@ -116,7 +116,7 @@ export default function ProductDetailPage() {
   const discount=compare>product.price?Math.round((compare-product.price)/compare*100):0;
   const specs: [string,string][] = [
     ["Brand / store",product.brand || "Ballanki A1 Furnitures"],
-    ["Category",product.category?.name || product.main_category || ""], ["Type",product.subcategory || ""], ["Model / SKU",product.sku || ""],
+    ["Category",product.category?.name || product.main_category || ""], ["Model / SKU",product.sku || ""],
     ["Material",product.material || ""], ["Wood",product.wood_type || ""], ["Fabric",product.fabric || ""],
     ["Dimensions",typeof product.dimensions==="string"?product.dimensions:product.dimensions?[product.dimensions.length,product.dimensions.width,product.dimensions.height].map((v,i)=>v!=null?`${v}${["L","W","H"][i]}`:"").filter(Boolean).join(" × ")+` ${product.dimensions.unit||""}`:""],
     ["Weight",product.weight_grams?`${product.weight_grams/1000} kg`:""], ["Availability",madeToOrder?"Made to order":available?"Ready stock":"Out of stock"],
