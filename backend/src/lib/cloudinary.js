@@ -29,6 +29,6 @@ async function uploadProductImage(value, folder = 'ballanki/products') {
     result = await response.json();
   } catch { fail(502, 'Image storage is unavailable. Please retry the upload.'); }
   if (!response.ok || !result.secure_url || !result.public_id || !result.secure_url.startsWith('https://res.cloudinary.com/')) fail(502, 'Image storage rejected the upload. Please check the Cloudinary configuration.');
-  return { url: result.secure_url, public_id: result.public_id };
+  return { url: result.secure_url, public_id: result.public_id, width: result.width, height: result.height };
 }
 module.exports = { uploadProductImage };

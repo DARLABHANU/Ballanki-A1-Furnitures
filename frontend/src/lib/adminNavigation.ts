@@ -7,6 +7,7 @@ export const adminGroups = [
   {href:"/admin/categories",label:"Categories",icon:"categories",description:"Product categories and pictures"},
  ]},
  {label:"Customers & growth",items:[
+  {href:"/admin/promotions",label:"Promotion banners",icon:"marketing",description:"Homepage carousel and seasonal offer banners"},
   {href:"/admin/users",label:"Users",icon:"users",description:"Customer and staff accounts"},
   {href:"/admin/users?role=promoter",label:"Promoters",icon:"promoters",description:"Promoter accounts and referrals"},
   {href:"/admin/coupons",label:"Coupons & offers",icon:"coupons",description:"Discount codes and promotions"},

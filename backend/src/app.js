@@ -8,6 +8,7 @@ app.use('/uploads',express.static(path.resolve(__dirname,'../uploads'),{dotfiles
 app.use('/api/v1',require('./routes/locationRoutes'));
 app.use('/api/v1',require('./routes/pushRoutes'));
 app.use('/api/v1',require('./routes/catalogRoutes'));
+app.use('/api/v1',require('./routes/promotionRoutes'));
 app.use('/api/v1',require('./routes/paymentRoutes'));
 app.use('/api/v1/auth',require('./routes/authRoutes'));
 app.use('/api/v1/products',require('./routes/productRoutes'));
