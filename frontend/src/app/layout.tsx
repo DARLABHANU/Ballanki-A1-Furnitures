@@ -11,6 +11,7 @@ import AuthInitializer from "@/components/AuthInitializer";
 import ImpersonationBanner from "@/components/ImpersonationBanner";
 import SessionGate from "@/components/SessionGate";
 import DeliveryLocationInitializer from "@/components/customer/DeliveryLocationInitializer";
+import AppInstallPrompt from "@/components/AppInstallPrompt";
 import BottomNav from "@/components/layout/BottomNav";
 
 const playfair = Playfair_Display({
@@ -142,6 +143,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         )}
         {!MAINTENANCE_MODE && <DeliveryLocationInitializer />}
         <BottomNav />
+        {!MAINTENANCE_MODE && <AppInstallPrompt />}
         </BrowserPushProvider></GoogleAuthProvider>
       </body>
     </html>

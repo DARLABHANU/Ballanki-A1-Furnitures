@@ -128,7 +128,8 @@ export default function WishlistPage() {
             <div className="md:hidden">
               <div className="bg-white border border-[#dce5df]/70 rounded-2xl shadow-xs overflow-hidden divide-y divide-[#e7ece9]">
                 {displayItems.map((item) => (
-                  <div key={item.id} className="p-3.5 flex items-center gap-3.5 group">
+                  <div key={item.id} className="relative p-3.5 flex items-center gap-3.5 group">
+                    <Link href={`/customer/products/${item.id}`} aria-label={`View ${item.name}`} className="absolute inset-0 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#214f40]" />
                     {/* Thumbnail Image */}
                     <div className="w-20 h-20 rounded-xl overflow-hidden bg-white border border-[#dce5df] flex-shrink-0">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -170,7 +171,7 @@ export default function WishlistPage() {
                     {/* Red Heart Button to Remove */}
                     <button
                       onClick={() => handleRemoveItem(item.id as number)}
-                      className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-red-50 transition-colors flex-shrink-0"
+                      className="relative z-10 w-9 h-9 flex items-center justify-center rounded-full hover:bg-red-50 transition-colors flex-shrink-0"
                       title="Remove from Wishlist"
                       aria-label="Remove from Wishlist"
                     >
@@ -186,13 +187,15 @@ export default function WishlistPage() {
                ══════════════════════════════════════════════ */}
             <div className="hidden md:grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-5">
               {wishlistItems.map((product) => (
-                <div key={product.id} className="bg-white border border-[#dce5df] rounded-2xl overflow-hidden shadow-xs p-4 flex flex-col justify-between space-y-3">
+                <div key={product.id} className="relative bg-white border border-[#dce5df] rounded-2xl overflow-hidden shadow-xs p-4 flex flex-col justify-between space-y-3">
+                  <Link href={`/customer/products/${product.id}`} aria-label={`View ${product.name}`} className="absolute inset-0 z-10 rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#214f40]" />
                   <div className="relative aspect-square rounded-xl overflow-hidden bg-white">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={getProductImage(product.images)} alt={product.name} className="w-full h-full object-cover" />
                     <button
                       onClick={() => handleRemoveItem(product.id)}
-                      className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-xs"
+                      aria-label={`Remove ${product.name} from Wishlist`}
+                      className="absolute z-20 top-2 right-2 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-xs"
                     >
                       <Heart size={16} className="fill-red-500 text-red-500" />
                     </button>
@@ -213,7 +216,7 @@ export default function WishlistPage() {
                       void addItem(product.id, 1).catch(() => {});
                       toast.success("Added to cart!");
                     }}
-                    className="w-full bg-[#214f40] text-white py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5"
+                    className="relative z-20 w-full bg-[#214f40] text-white py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5"
                   >
                     <ShoppingBag size={14} /> Add to Cart
                   </button>
